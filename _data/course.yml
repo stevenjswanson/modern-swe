@@ -1,0 +1,42 @@
+# Everything in the page header and footer. Edited rarely.
+# For the week-to-week schedule, edit _data/talks.json instead.
+
+# Theme: classic | mono | vibrant   (see assets/css/themes.css)
+theme: classic
+
+# Set false to hide the schedule entirely until speakers are confirmed.
+show_schedule: true
+
+eyebrow: "Fall 2026 · CSE 90-SE / CSE 290-SE · 1 Unit"
+title: "Tales of Modern Software Engineering"
+tagline: "How AI is (and isn't) changing how software engineers build the computer systems that power our world"
+
+blurb: "10+ software engineers, 10+ companies, ten weeks: What do SWE jobs look like now — and what should you be learning to prepare for one?"
+
+speakers_blurb: "Speakers from local tech companies, big tech, startups, independent developers, UCSD faculty and UCSD student interns."
+
+# The four questions from the announcement flyer.
+questions:
+  - "What does it really mean when AI writes 90% of the code?"
+  - "Where does AI fail?"
+  - "Where do software engineers add value?"
+  - "So what skills do you need?"
+
+logistics:
+  - label: "When"
+    value: "Mondays, 11:00–11:50 am"
+  - label: "Where"
+    value: "Location TBD"
+  - label: "Enroll"
+    value: "CSE 290-SE (grad) or CSE 90-SE (undergrad)"
+  - label: "Prerequisites"
+    value: "None"
+
+# Shown above the schedule while speakers are still being confirmed.
+# Set to an empty string to remove it once the lineup is set.
+schedule_note: "The speaker lineup is being finalized — dates are set, names are on the way. Check back as the quarter approaches."
+
+footer:
+  organized_by: "Organized by the Department of Computer Science and Engineering, the GenAI in CS Education Consortium, and CSE's Launch AI initiative."
+  contact_name: "Steven Swanson"
+  contact_email: "sjswanson@ucsd.edu"

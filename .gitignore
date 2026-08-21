@@ -1,0 +1,11 @@
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+vendor/
+.bundle/
+.DS_Store
+
+# Not committed: a lockfile generated on this arm64/x86_64-mixed Mac pins
+# Darwin platforms and can break the Linux CI build. CI resolves from Gemfile.
+Gemfile.lock

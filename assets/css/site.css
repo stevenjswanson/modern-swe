@@ -1,0 +1,376 @@
+/* ---------------------------------------------------------------------------
+   SITE LAYER — layout and components.
+
+   This file references ONLY semantic roles (--ink, --bg, --accent, ...) and
+   never a --ucsd-* brand color. Swapping themes must not require touching it.
+--------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;                 /* brand: digital body 12–16px */
+  line-height: var(--ucsd-body-leading, 1.4);
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { max-width: 100%; height: auto; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+a:hover { color: var(--accent-hover); }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.u-visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.wrap {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* --- type scale ----------------------------------------------------------
+   Hierarchy transcribed from the brand brief. Sizes are an extrapolation
+   (the brand publishes no modular scale); case, tracking and leading are not.
+------------------------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: var(--ucsd-h1-leading, 0.85);
+  font-size: clamp(2.75rem, 10vw, 6.5rem);
+  margin: 0;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--ucsd-h3-tracking, 0.08em);
+  line-height: var(--ucsd-h3-leading, 1.3);
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  color: var(--accent);
+  margin: 0 0 var(--space-3);
+}
+
+.section-title {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: var(--ucsd-h2-tracking, 0.175em);
+  line-height: var(--ucsd-h2-leading, 1.6);
+  font-size: 0.9375rem;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Long-form copy. Leading is raised above the brand's 140% because these are
+   multi-line paragraphs, not headline or caption text. Deliberate deviation. */
+.prose { max-width: var(--measure); line-height: 1.55; }
+.prose p { margin: 0 0 var(--space-4); }
+
+/* --- masthead ------------------------------------------------------------
+   Brand rule for web: site name left, campus logo right.
+------------------------------------------------------------------------- */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-weight) solid var(--rule);
+}
+.masthead__name {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  max-width: 30ch;
+  line-height: 1.5;
+}
+.masthead__name:hover { color: var(--ink); }
+.masthead__logo {
+  /* Brand: min width 125px on digital, clear space >= 1 cap height. */
+  width: 150px;
+  min-width: 125px;
+  padding: 0.5em;
+  flex: none;
+}
+
+/* --- hero ---------------------------------------------------------------- */
+.hero { padding-block: clamp(var(--space-7), 8vw, var(--space-9)) var(--space-7); }
+.hero__tagline {
+  font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--muted);
+  max-width: 46ch;
+  margin: var(--space-5) 0 0;
+  text-wrap: pretty;
+}
+
+/* --- question bubbles ----------------------------------------------------
+   Echoes the announcement flyer. Uses the brand's rounded-shape element;
+   radius stays inside the 10–25%-of-shortest-edge rule.
+------------------------------------------------------------------------- */
+.bubbles {
+  list-style: none;
+  margin: var(--space-7) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.bubble {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  font-size: clamp(1rem, 1.8vw, 1.1875rem);
+  line-height: 1.4;
+  max-width: 34rem;
+  border: var(--rule-weight) solid var(--rule);
+  background: var(--bubble);
+  color: var(--bubble-ink);
+}
+/* Alternate alignment and emphasis, as on the flyer. */
+.bubble:nth-child(even) {
+  margin-inline-start: auto;
+  background: var(--band);
+  color: var(--band-ink);
+  border-color: transparent;
+}
+.bubble:nth-child(4) {
+  background: var(--highlight);
+  color: var(--highlight-ink);
+  border-color: transparent;
+}
+
+/* --- blurb + logistics --------------------------------------------------- */
+.blurb {
+  margin: var(--space-7) 0 0;
+  font-size: clamp(1.0625rem, 1.9vw, 1.25rem);
+  line-height: 1.45;
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+.blurb__speakers {
+  margin: var(--space-4) 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.logistics {
+  margin-block: var(--space-7);
+  background: var(--band);
+  color: var(--band-ink);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-5);
+}
+.logistics__label {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.6875rem;
+  color: var(--band-accent);
+  margin: 0 0 var(--space-1);
+}
+.logistics__value { margin: 0; font-size: 1.0625rem; line-height: 1.35; }
+
+/* --- section head -------------------------------------------------------- */
+.section {
+  padding-block: var(--space-7);
+  border-top: var(--rule-weight) solid var(--rule);
+}
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+.section__note {
+  margin: var(--space-3) 0 var(--space-6);
+  color: var(--muted);
+  max-width: var(--measure);
+  line-height: 1.5;
+}
+
+/* --- schedule ------------------------------------------------------------ */
+.schedule { list-style: none; margin: 0; padding: 0; }
+
+.talk {
+  display: grid;
+  grid-template-columns: 9.75rem 1fr;
+  gap: var(--space-5);
+  padding-block: var(--space-5);
+  border-top: var(--rule-weight) solid var(--rule);
+}
+.talk:last-child { border-bottom: var(--rule-weight) solid var(--rule); }
+
+.talk__when { display: flex; flex-direction: column; gap: var(--space-1); }
+.talk__week {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.625rem;
+  color: var(--muted);
+}
+.talk__date {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+.talk__time { font-size: 0.875rem; color: var(--muted); line-height: 1.35; }
+
+.talk__body { min-width: 0; }
+
+.talk__title {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 0 0 var(--space-2);
+  text-wrap: pretty;
+}
+.talk__title a { text-decoration: none; }
+.talk__title a:hover { text-decoration: underline; }
+
+.talk__tba {
+  font-size: 1.125rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.talk__speakers { list-style: none; margin: 0 0 var(--space-3); padding: 0; }
+.talk__speaker { margin-bottom: var(--space-2); line-height: 1.35; }
+.talk__speaker-name { font-weight: 700; }
+.talk__speaker-meta { color: var(--muted); }
+
+.talk__abstract { margin: var(--space-3) 0 0; line-height: 1.55; max-width: var(--measure); }
+
+/* --- resource pills ------------------------------------------------------ */
+.pills { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  border: var(--rule-weight) solid var(--accent);
+  padding: 0.3125rem var(--space-4);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  color: var(--accent);
+  background: transparent;
+}
+.pill:hover { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+
+/* --- status chips -------------------------------------------------------- */
+.chip {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 0.1875rem var(--space-3);
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.625rem;
+  line-height: 1.6;
+  vertical-align: 0.15em;
+  margin-left: var(--space-2);
+}
+.chip--next { background: var(--highlight); color: var(--highlight-ink); }
+.chip--cancelled { background: var(--surface-sunk); color: var(--muted); border: var(--rule-weight) solid var(--rule); }
+
+/* Past talks recede but stay fully legible — dimming is applied to the date
+   column only, never to body text, so contrast ratios are preserved. */
+.talk.is-past .talk__date,
+.talk.is-past .talk__week { opacity: 0.55; }
+
+/* --- footer -------------------------------------------------------------- */
+.footer {
+  border-top: var(--rule-weight) solid var(--rule);
+  padding-block: var(--space-7) var(--space-8);
+  margin-top: var(--space-6);
+}
+.footer__logos {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+.footer__logo-cse { width: 260px; min-width: 125px; }
+/* Co-branding gap per the brand's 2-cap-height rule, divided by a rule. */
+.footer__partner {
+  padding-left: var(--space-6);
+  border-left: var(--rule-weight) solid var(--rule);
+  display: flex;
+  align-items: center;
+}
+/* The consortium logo ships as opaque RGB with no alpha, so on any non-white
+   theme it would render as a bare white rectangle. Putting it on an explicit
+   white card makes that deliberate instead of accidental, and works on every
+   theme. Replace with a transparent asset and this rule can go. */
+.footer__logo-partner {
+  width: 190px;
+  display: block;
+  background: #FFFFFF;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+}
+.footer__text { color: var(--muted); max-width: var(--measure); line-height: 1.5; margin: 0 0 var(--space-3); }
+.footer__contact { margin: 0; line-height: 1.5; }
+
+/* --- narrow screens ------------------------------------------------------ */
+@media (max-width: 40rem) {
+  .talk { grid-template-columns: 1fr; gap: var(--space-3); }
+  .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .talk__date { font-size: 1.25rem; }
+  .bubble { max-width: none; }
+  .bubble:nth-child(even) { margin-inline-start: 0; }
+  .logistics { padding: var(--space-5); }
+  .footer__partner { padding-left: 0; border-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* --- print --------------------------------------------------------------- */
+@media print {
+  .masthead__logo, .pill { color: #000; }
+  body { background: #fff; color: #000; }
+  .bubbles, .footer__logos { display: none; }
+}

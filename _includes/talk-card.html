@@ -1,0 +1,88 @@
+{%- comment -%}
+  Renders one schedule entry.
+  Params: include.talk (object from _data/talks.json), include.week (integer)
+
+  Every field except date/status is optional, so each block guards for empty.
+  A talk with nothing but a date renders as a clean "to be announced" row.
+{%- endcomment -%}
+{%- assign t = include.talk -%}
+
+<li class="talk" data-date="{{ t.date }}">
+  <div class="talk__when">
+    <span class="talk__week">Week {{ include.week }}</span>
+    <span class="talk__date">{{ t.date | date: "%a %b %-d" }}</span>
+    <span class="talk__time">
+      {{- t.time -}}
+      {%- if t.location and t.location != "" %} · {{ t.location }}{% endif -%}
+    </span>
+  </div>
+
+  <div class="talk__body">
+    {%- if t.status == "cancelled" -%}
+      <p class="talk__tba">No meeting this week.<span class="chip chip--cancelled">Cancelled</span></p>
+
+    {%- elsif t.title and t.title != "" -%}
+      <h3 class="talk__title">{{ t.title }}</h3>
+
+      {%- if t.speakers and t.speakers.size > 0 -%}
+        <ul class="talk__speakers">
+          {%- for s in t.speakers -%}
+            <li class="talk__speaker">
+              <span class="talk__speaker-name">
+                {%- if s.links and s.links.size > 0 -%}
+                  <a href="{{ s.links[0].url }}">{{ s.name }}</a>
+                {%- else -%}
+                  {{ s.name }}
+                {%- endif -%}
+              </span>
+              {%- if s.role and s.role != "" or s.org and s.org != "" -%}
+                <span class="talk__speaker-meta">
+                  — {% if s.role and s.role != "" %}{{ s.role }}{% endif %}
+                  {%- if s.role and s.role != "" and s.org and s.org != "" %}, {% endif -%}
+                  {%- if s.org and s.org != "" %}{{ s.org }}{% endif -%}
+                </span>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if t.abstract and t.abstract != "" -%}
+        <p class="talk__abstract">{{ t.abstract }}</p>
+      {%- endif -%}
+
+    {%- elsif t.speakers and t.speakers.size > 0 -%}
+      {%- comment -%} Speaker confirmed, title not yet. {%- endcomment -%}
+      <ul class="talk__speakers">
+        {%- for s in t.speakers -%}
+          <li class="talk__speaker">
+            <span class="talk__speaker-name">{{ s.name }}</span>
+            {%- if s.org and s.org != "" %}<span class="talk__speaker-meta"> — {{ s.org }}</span>{% endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+      <p class="talk__tba">Talk title to be announced.</p>
+
+    {%- else -%}
+      <p class="talk__tba">Speaker to be announced.</p>
+    {%- endif -%}
+
+    {%- assign has_slides = false -%}{%- if t.slides and t.slides.size > 0 %}{% assign has_slides = true %}{% endif -%}
+    {%- assign has_videos = false -%}{%- if t.videos and t.videos.size > 0 %}{% assign has_videos = true %}{% endif -%}
+    {%- assign has_links  = false -%}{%- if t.links  and t.links.size  > 0 %}{% assign has_links  = true %}{% endif -%}
+
+    {%- if has_slides or has_videos or has_links -%}
+      <ul class="pills">
+        {%- for s in t.slides -%}
+          <li><a class="pill" href="{{ s.url | relative_url }}">{{ s.label | default: "Slides" }}</a></li>
+        {%- endfor -%}
+        {%- for v in t.videos -%}
+          <li><a class="pill" href="{{ v.url }}">{{ v.label | default: "Video" }}</a></li>
+        {%- endfor -%}
+        {%- for l in t.links -%}
+          <li><a class="pill" href="{{ l.url }}">{{ l.label | default: "Link" }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</li>

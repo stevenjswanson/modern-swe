@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Re-copy the UCSD brand kit into this repo and report what changed.
+
+The repo has to be self-contained -- GitHub Actions cannot reach ~/Downloads --
+so brand files are copied in, not linked. That means edits to the kit do NOT
+reach the site on their own. Run this after changing the design system.
+
+The variable-name diff is the point. themes.css maps semantic roles onto brand
+tokens BY NAME, and CSS fails silently here: var(--ucsd-navy) pointing at a
+variable that no longer exists produces no color and no error, just a washed-out
+page nobody notices for a week. This makes that visible.
+
+Usage:  bin/sync-brand [path-to-kit]
+Exit:   0 = synced (0 or more changes), 1 = kit not found
+"""
+
+import re
+import shutil
+import sys
+from pathlib import Path
+
+DEFAULT_KIT = Path.home() / "Downloads" / "ucsd-brand-for-claude-design"
+
+REPO = Path(__file__).resolve().parent.parent
+
+# (path within the kit, destination within the repo)
+FILES = [
+    ("05-reference/tokens.css", "assets/css/tokens.css"),
+    ("01-logos/UC San Diego Logo Kit 2024/SVG for Canva/UCSanDiegoLogo-Blue.svg",
+     "assets/img/logos/ucsd-logo-blue.svg"),
+    ("01-logos/UC San Diego Logo Kit 2024/SVG for Canva/UCSanDiegoLogo-White.svg",
+     "assets/img/logos/ucsd-logo-white.svg"),
+]
+
+VAR_RE = re.compile(r"^\s*(--[\w-]+)\s*:\s*(.+?);", re.MULTILINE)
+
+
+def parse_vars(text):
+    """Return {name: value} for CSS custom properties, last definition wins."""
+    return {m.group(1): m.group(2).strip() for m in VAR_RE.finditer(text)}
+
+
+def used_tokens():
+    """Brand tokens actually referenced by themes.css."""
+    themes = REPO / "assets/css/themes.css"
+    if not themes.exists():
+        return set()
+    return set(re.findall(r"var\((--ucsd-[\w-]+)", themes.read_text(encoding="utf-8")))
+
+
+def main():
+    kit = Path(sys.argv[1]).expanduser() if len(sys.argv) > 1 else DEFAULT_KIT
+
+    if not kit.is_dir():
+        print(f"ERROR: brand kit not found at {kit}", file=sys.stderr)
+        print("Pass the path as an argument: bin/sync-brand /path/to/kit", file=sys.stderr)
+        return 1
+
+    tokens_dest = REPO / "assets/css/tokens.css"
+    before = parse_vars(tokens_dest.read_text(encoding="utf-8")) if tokens_dest.exists() else {}
+
+    copied, missing = [], []
+    for src_rel, dst_rel in FILES:
+        src, dst = kit / src_rel, REPO / dst_rel
+        if not src.exists():
+            missing.append(src_rel)
+            continue
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dst)
+        copied.append(dst_rel)
+
+    after = parse_vars(tokens_dest.read_text(encoding="utf-8")) if tokens_dest.exists() else {}
+
+    added = sorted(set(after) - set(before))
+    removed = sorted(set(before) - set(after))
+    changed = sorted(k for k in set(before) & set(after) if before[k] != after[k])
+
+    print(f"kit: {kit}")
+    print(f"copied {len(copied)} file(s)")
+    for m in missing:
+        print(f"  warning: not in kit, left as-is -- {m}")
+
+    if not (added or removed or changed):
+        print("\nNo token changes.")
+        return 0
+
+    print()
+    for k in added:
+        print(f"  + {k}: {after[k]}")
+    for k in changed:
+        print(f"  ~ {k}: {before[k]}  ->  {after[k]}")
+    for k in removed:
+        print(f"  - {k}  (REMOVED)")
+
+    # The part that actually breaks the page.
+    in_use = used_tokens()
+    broken = sorted(set(removed) & in_use)
+    if broken:
+        print("\n!! themes.css references these removed tokens:")
+        for k in broken:
+            print(f"     {k}")
+        print("   They will render as no color at all. Fix themes.css before publishing.")
+    elif removed:
+        print("\n   None of the removed tokens are used by themes.css.")
+
+    if changed:
+        print("\n   Values changed: re-check contrast if any were text or background colors.")
+        print("   Reference: 05-reference/contrast-matrix.json in the kit.")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

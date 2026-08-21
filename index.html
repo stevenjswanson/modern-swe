@@ -1,0 +1,52 @@
+---
+layout: default
+---
+{%- assign course = site.data.course -%}
+{%- assign talks = site.data.talks.talks | sort: "date" -%}
+
+<section class="wrap hero">
+  <p class="eyebrow">{{ course.eyebrow }}</p>
+  <h1 class="display">{{ course.title }}</h1>
+  <p class="hero__tagline">{{ course.tagline }}</p>
+
+  {%- if course.questions and course.questions.size > 0 %}
+  <ul class="bubbles">
+    {%- for q in course.questions %}
+    <li class="bubble">{{ q }}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+
+  <p class="blurb">{{ course.blurb }}</p>
+  <p class="blurb__speakers">{{ course.speakers_blurb }}</p>
+
+  {%- if course.logistics and course.logistics.size > 0 %}
+  <div class="logistics">
+    {%- for item in course.logistics %}
+    <div>
+      <p class="logistics__label">{{ item.label }}</p>
+      <p class="logistics__value">{{ item.value }}</p>
+    </div>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+</section>
+
+{%- if course.show_schedule %}
+<section class="wrap section" id="schedule">
+  <div class="section__head">
+    <h2 class="section-title">Schedule</h2>
+    <p class="talk__time">Fall 2026 · Ten Mondays · Sept 28 – Nov 30</p>
+  </div>
+
+  {%- if course.schedule_note and course.schedule_note != "" %}
+  <p class="section__note">{{ course.schedule_note }}</p>
+  {%- endif %}
+
+  <ol class="schedule">
+    {%- for t in talks %}
+      {% include talk-card.html talk=t week=forloop.index %}
+    {%- endfor %}
+  </ol>
+</section>
+{%- endif %}

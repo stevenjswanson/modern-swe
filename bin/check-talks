@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Validate _data/talks.json before it reaches the site.
+
+JSON is unforgiving and Jekyll is quiet about it: a single trailing comma makes
+the whole data file vanish and the site builds happily with an empty schedule.
+This turns that silent failure into a loud one.
+
+Standard library only -- no install step, runs anywhere Python 3 does.
+
+Usage:  bin/check-talks [path]
+Exit:   0 = clean (warnings allowed), 1 = errors found
+"""
+
+import datetime
+import json
+import sys
+from pathlib import Path
+
+VALID_STATUS = {"tba", "confirmed", "cancelled"}
+KNOWN_KEYS = {
+    "date", "time", "location", "status", "title", "abstract",
+    "speakers", "slides", "videos", "links", "tags",
+}
+LINK_LISTS = ("slides", "videos", "links")
+
+errors = []
+warnings = []
+
+
+def err(where, msg):
+    errors.append(f"{where}: {msg}")
+
+
+def warn(where, msg):
+    warnings.append(f"{where}: {msg}")
+
+
+def check_link_list(where, items, field):
+    if not isinstance(items, list):
+        err(where, f'"{field}" must be a list, got {type(items).__name__}')
+        return
+    for i, item in enumerate(items):
+        at = f"{where} {field}[{i}]"
+        if not isinstance(item, dict):
+            err(at, f"must be an object like " '{"label": "...", "url": "..."}')
+            continue
+        if not str(item.get("url", "")).strip():
+            err(at, 'has no "url" -- it would render as a dead link')
+        if not str(item.get("label", "")).strip():
+            warn(at, 'has no "label"; a generic one will be shown')
+
+
+def check_speakers(where, speakers):
+    if not isinstance(speakers, list):
+        err(where, f'"speakers" must be a list, got {type(speakers).__name__}')
+        return
+    for i, s in enumerate(speakers):
+        at = f"{where} speakers[{i}]"
+        if not isinstance(s, dict):
+            err(at, "must be an object")
+            continue
+        if not str(s.get("name", "")).strip():
+            err(at, 'has no "name"')
+        links = s.get("links")
+        if links is not None:
+            check_link_list(at, links, "links")
+
+
+def main():
+    path = Path(sys.argv[1] if len(sys.argv) > 1 else "_data/talks.json")
+
+    if not path.exists():
+        print(f"ERROR: {path} not found", file=sys.stderr)
+        return 1
+
+    raw = path.read_text(encoding="utf-8")
+    try:
+        doc = json.loads(raw)
+    except json.JSONDecodeError as e:
+        line = raw.splitlines()[e.lineno - 1] if 0 < e.lineno <= len(raw.splitlines()) else ""
+        print(f"ERROR: {path} is not valid JSON", file=sys.stderr)
+        print(f"  line {e.lineno}, column {e.colno}: {e.msg}", file=sys.stderr)
+        if line:
+            print(f"  {line.rstrip()}", file=sys.stderr)
+            print(f"  {' ' * (e.colno - 1)}^", file=sys.stderr)
+        print("  (a trailing comma after the last item is the usual cause)", file=sys.stderr)
+        return 1
+
+    if not isinstance(doc, dict) or not isinstance(doc.get("talks"), list):
+        print('ERROR: expected a top-level object with a "talks" list', file=sys.stderr)
+        return 1
+
+    talks = doc["talks"]
+    seen_dates = {}
+
+    for i, t in enumerate(talks):
+        where = f"talks[{i}]"
+        if not isinstance(t, dict):
+            err(where, "must be an object")
+            continue
+
+        # date
+        raw_date = t.get("date")
+        if not raw_date:
+            err(where, 'missing required field "date"')
+        else:
+            try:
+                d = datetime.date.fromisoformat(str(raw_date))
+            except ValueError:
+                err(where, f'date "{raw_date}" is not a valid YYYY-MM-DD date')
+            else:
+                where = f'talks[{i}] ({raw_date})'
+                if d.weekday() != 0:
+                    warn(where, f"falls on a {d.strftime('%A')}, not a Monday")
+                if raw_date in seen_dates:
+                    err(where, f"duplicate date, already used by talks[{seen_dates[raw_date]}]")
+                else:
+                    seen_dates[raw_date] = i
+
+        # status
+        status = t.get("status")
+        if status is None:
+            err(where, 'missing required field "status"')
+        elif status not in VALID_STATUS:
+            err(where, f'status "{status}" is not one of: {", ".join(sorted(VALID_STATUS))}')
+
+        # a confirmed talk with nobody in it is almost certainly a mistake
+        if status == "confirmed" and not t.get("speakers"):
+            warn(where, 'status is "confirmed" but there are no speakers')
+
+        if t.get("speakers") is not None:
+            check_speakers(where, t["speakers"])
+
+        for field in LINK_LISTS:
+            if t.get(field) is not None:
+                check_link_list(where, t[field], field)
+
+        if t.get("tags") is not None and not isinstance(t["tags"], list):
+            err(where, '"tags" must be a list')
+
+        # typo catcher: "speaker" instead of "speakers", etc.
+        for key in t:
+            if key not in KNOWN_KEYS and not key.startswith("_"):
+                warn(where, f'unknown field "{key}" -- it will be ignored (typo?)')
+
+    for w in warnings:
+        print(f"warning: {w}")
+    for e in errors:
+        print(f"ERROR: {e}", file=sys.stderr)
+
+    n = len(talks)
+    if errors:
+        print(f"\n{len(errors)} error(s) in {n} talk(s) -- not safe to publish", file=sys.stderr)
+        return 1
+
+    tba = sum(1 for t in talks if isinstance(t, dict) and t.get("status") == "tba")
+    print(f"\nOK: {n} talk(s), {n - tba} with speakers, {tba} still TBA"
+          f"{f' -- {len(warnings)} warning(s)' if warnings else ''}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

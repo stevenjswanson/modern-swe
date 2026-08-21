@@ -1,0 +1,41 @@
+/* UC San Diego design tokens - generated from design-tokens.json
+   Source: https://brand.ucsd.edu/ (captured 2026-08-21)
+   Metallic (Pantone 871) is print-only and has no digital value. */
+:root {
+  --ucsd-navy: #182B49;   /* Pantone 2767 | C100 M86 Y42 K42 | R24 G43 B73 */
+  --ucsd-blue: #00629B;   /* Pantone 3015 | C100 M35 Y3 K21 | R0 G98 B155 */
+  --ucsd-yellow: #FFCD00;   /* Pantone 116 | C0 M14 Y100 K0 | R255 G205 B0 */
+  --ucsd-gold: #C69214;   /* Pantone 1245 | C6 M35 Y99 K18 | R198 G146 B20 */
+  --ucsd-turquoise: #00C6D7;   /* Pantone 3115 | C70 M0 Y16 K0 | R0 G198 B215 */
+  --ucsd-magenta: #D462AD;   /* Pantone 674 | C13 M83 Y0 K0 | R212 G98 B173 */
+  --ucsd-sand: #F5F0E6;   /* Pantone 9285 | C4 M6 Y10 K0 | R245 G240 B230 */
+  --ucsd-citron: #F3E500;   /* Pantone 3945 | C3 M0 Y90 K0 | R243 G229 B0 */
+  --ucsd-orange: #FC8900;   /* Pantone 144 | C0 M51 Y100 K0 | R252 G137 B0 */
+  --ucsd-green: #6E963B;   /* Pantone 7490 | C60 M23 Y92 K5 | R110 G150 B59 */
+  --ucsd-black: #000000;   /* Pantone Black | C0 M0 Y0 K100 | R0 G0 B0 */
+  --ucsd-cool-gray: #747678;   /* Pantone Cool Gray 9 | C30 M22 Y17 K57 | R116 G118 B120 */
+  --ucsd-stone: #B6B1A9;   /* Pantone 401 | C10 M11 Y17 K27 | R182 G177 B169 */
+  --ucsd-white: #FFFFFF;   /* no PMS | C0 M0 Y0 K0 | R255 G255 B255 */
+
+  /* combo classic: navy, blue, yellow, white */
+  /* combo formal: navy, gold, stone, white */
+  /* combo monochromatic: navy, blue, turquoise, sand, white */
+  /* combo vibrant-magenta: navy, blue, magenta, yellow, white */
+  /* combo vibrant-turquoise: navy, blue, turquoise, yellow, white */
+
+  --ucsd-font-display: "Refrigerator Deluxe", "Teko", "Arial Narrow", sans-serif;
+  --ucsd-font-sans: "Brix Sans", "Roboto", "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ucsd-font-serif: "Chronicle Text", Georgia, "Times New Roman", serif;
+
+  --ucsd-h1-leading: 0.85;   /* 85%  */
+  --ucsd-h2-leading: 1.60;   /* 160% */
+  --ucsd-h2-tracking: 0.175em; /* 175/1000 em */
+  --ucsd-h3-leading: 1.30;   /* 130% */
+  --ucsd-h3-tracking: 0.080em;
+  --ucsd-body-leading: 1.40; /* 140% */
+  --ucsd-body-size-min: 12px;
+  --ucsd-body-size-max: 16px;
+
+  --ucsd-logo-min-width: 125px;
+  --ucsd-logo-clear-space: 1cap;  /* one cap height of the logotype 'U' */
+}

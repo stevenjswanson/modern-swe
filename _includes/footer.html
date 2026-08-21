@@ -1,0 +1,20 @@
+{%- assign course = site.data.course -%}
+<footer class="wrap footer">
+  <div class="footer__logos">
+    <img class="footer__logo-cse"
+         src="{{ '/assets/img/logos/ucsd-cse-lockup.png' | relative_url }}"
+         alt="UC San Diego Jacobs School of Engineering, Department of Computer Science and Engineering">
+    <span class="footer__partner">
+      <img class="footer__logo-partner"
+           src="{{ '/assets/img/logos/genai-consortium.svg' | relative_url }}"
+           alt="GenAI in CS Education Consortium">
+    </span>
+  </div>
+
+  <p class="footer__text">{{ course.footer.organized_by }}</p>
+
+  <p class="footer__contact">
+    Questions? Contact
+    <a href="mailto:{{ course.footer.contact_email }}">{{ course.footer.contact_name }}</a>.
+  </p>
+</footer>

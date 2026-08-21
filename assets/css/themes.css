@@ -1,0 +1,137 @@
+/* ---------------------------------------------------------------------------
+   THEME LAYER — maps semantic roles onto the raw UCSD brand tokens.
+
+   Only this file and tokens.css know brand color names. site.css must never
+   reference --ucsd-* directly; it uses the semantic roles below. That is what
+   makes the theme a one-word change in _data/course.yml.
+
+   Every text/background pair below is annotated with its WCAG contrast ratio,
+   taken from 05-reference/contrast-matrix.json in the brand kit. Only 23 of
+   the palette's 91 pairs clear AA (4.5:1), so these are not free choices.
+
+   Themes correspond to sanctioned combinations from the brand brief:
+     classic  = Navy, Blue, Yellow, White
+     mono     = Navy, Blue, Turquoise, Sand, White
+     vibrant  = Navy, Blue, Turquoise, Yellow, White
+--------------------------------------------------------------------------- */
+
+/* --- classic: white ground, the most unmistakably UCSD combination -------- */
+[data-theme="classic"] {
+  --bg:             var(--ucsd-white);
+  --surface:        var(--ucsd-white);
+  --surface-sunk:   #F7F8F9;
+
+  --ink:            var(--ucsd-navy);        /* 14.18 on white — AA */
+  --muted:          #5D6B80;                 /* 5.41 on white — AA */
+  --muted:          color-mix(in srgb, var(--ucsd-navy) 70%, var(--bg));
+  --accent:         var(--ucsd-blue);        /* 6.52 on white — AA */
+  --accent-hover:   var(--ucsd-navy);
+
+  --rule:           #D8DBE0;
+  --rule-strong:    var(--ucsd-navy);
+
+  --highlight:      var(--ucsd-yellow);      /* decorative fill */
+  --highlight-ink:  var(--ucsd-black);       /* 13.98 on yellow — AA */
+
+  --band:           var(--ucsd-navy);
+  --band-ink:       var(--ucsd-white);       /* 14.18 on navy — AA */
+  --band-muted:     var(--ucsd-stone);       /* 6.65 on navy — AA */
+  --band-accent:    var(--ucsd-yellow);      /* 9.45 on navy — AA */
+
+  --bubble:         var(--ucsd-white);
+  --bubble-ink:     var(--ucsd-navy);
+}
+
+/* --- mono: sand ground, continuous with the announcement flyer ------------ */
+[data-theme="mono"] {
+  --bg:             var(--ucsd-sand);
+  --surface:        var(--ucsd-white);
+  --surface-sunk:   #EDE7DA;
+
+  --ink:            var(--ucsd-navy);        /* 12.49 on sand, 14.18 on white — AA */
+  --muted:          #5A6678;                 /* 5.13 on sand — AA */
+  --muted:          color-mix(in srgb, var(--ucsd-navy) 70%, var(--bg));
+  --accent:         var(--ucsd-blue);        /* 5.74 on sand — AA */
+  --accent-hover:   var(--ucsd-navy);
+
+  --rule:           #DCD5C6;
+  --rule-strong:    var(--ucsd-navy);
+
+  --highlight:      var(--ucsd-turquoise);   /* decorative fill */
+  --highlight-ink:  var(--ucsd-navy);        /* 6.79 on turquoise — AA */
+
+  --band:           var(--ucsd-navy);
+  --band-ink:       var(--ucsd-sand);        /* 12.49 on navy — AA */
+  --band-muted:     var(--ucsd-stone);       /* 6.65 on navy — AA */
+  --band-accent:    var(--ucsd-turquoise);   /* 6.79 on navy — AA */
+
+  --bubble:         var(--ucsd-white);
+  --bubble-ink:     var(--ucsd-navy);
+}
+
+/* --- vibrant: white ground, closest to the flyer's energy ----------------- */
+[data-theme="vibrant"] {
+  --bg:             var(--ucsd-white);
+  --surface:        var(--ucsd-white);
+  --surface-sunk:   #F2FBFC;
+
+  --ink:            var(--ucsd-navy);        /* 14.18 on white — AA */
+  --muted:          #5D6B80;                 /* 5.41 on white — AA */
+  --muted:          color-mix(in srgb, var(--ucsd-navy) 70%, var(--bg));
+  --accent:         var(--ucsd-blue);        /* 6.52 on white — AA */
+  --accent-hover:   var(--ucsd-navy);
+
+  --rule:           #CDE9ED;
+  --rule-strong:    var(--ucsd-turquoise);
+
+  --highlight:      var(--ucsd-turquoise);   /* decorative fill */
+  --highlight-ink:  var(--ucsd-navy);        /* 6.79 on turquoise — AA */
+
+  --band:           var(--ucsd-navy);
+  --band-ink:       var(--ucsd-white);       /* 14.18 on navy — AA */
+  --band-muted:     var(--ucsd-turquoise);   /* 6.79 on navy — AA */
+  --band-accent:    var(--ucsd-yellow);      /* 9.45 on navy — AA */
+
+  --bubble:         var(--ucsd-white);
+  --bubble-ink:     var(--ucsd-navy);
+}
+
+/* --- shared, theme-independent -------------------------------------------
+   The brand publishes no spacing scale, grid, breakpoints, or component
+   specs (see section 7 of the brand brief). Everything below is an
+   extrapolation for this site, not UCSD policy.
+-------------------------------------------------------------------------- */
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --measure: 62ch;          /* readable line length for body copy */
+  --page-max: 68rem;
+  --page-pad: clamp(1.25rem, 5vw, 3rem);
+
+  /* Brand rule: corner radius 10–25% of the shape's shortest edge. */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999px;
+
+  --rule-weight: 1px;       /* brand: "err thinner rather than thicker" */
+}
+
+/* --- type aliases ---------------------------------------------------------
+   These point at the stacks in tokens.css, which lead with the licensed faces
+   (Refrigerator Deluxe, Brix Sans) and fall through to the free substitutes we
+   actually load (Teko, Roboto). If the department ever licenses the real faces,
+   they take over automatically with no CSS change.
+-------------------------------------------------------------------------- */
+:root {
+  --font-display: var(--ucsd-font-display);
+  --font-sans:    var(--ucsd-font-sans);
+}
