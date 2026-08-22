@@ -290,33 +290,32 @@ a:hover { color: var(--accent-hover); }
 .footer__logos {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-5);
   flex-wrap: wrap;
   margin-bottom: var(--space-5);
 }
-.footer__logo-cse { width: 260px; min-width: 125px; }
-/* Co-branding gap per the brand's 2-cap-height rule, divided by a rule. */
-.footer__partner {
-  padding-left: var(--space-6);
-  border-left: var(--rule-weight) solid var(--rule);
+
+/* Equal-height cells so every divider is the same length regardless of how
+   tall the mark inside it is. The rule between the UC San Diego lockup and the
+   partner marks is the brand's co-branding divider; the rest repeat it so four
+   marks of different shapes read as a row rather than a jumble. */
+.footer__logo {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
-  flex-wrap: wrap;
+  min-height: 88px;
 }
+.footer__logo + .footer__logo {
+  border-left: var(--rule-weight) solid var(--rule);
+  padding-left: var(--space-5);
+}
+
+.footer__logo-cse { width: 260px; min-width: 125px; }
+.footer__logo-launch { height: 88px; width: auto; display: block; }
+.footer__logo-alumni { width: 185px; display: block; }
 /* The consortium logo ships as opaque RGB with no alpha, so on any non-white
    theme it would render as a bare white rectangle. Putting it on an explicit
    white card makes that deliberate instead of accidental, and works on every
    theme. Replace with a transparent asset and this rule can go. */
-.footer__logo-launch {
-  height: 88px;
-  width: auto;
-  display: block;
-}
-.footer__logo-alumni {
-  width: 185px;
-  display: block;
-}
 .footer__logo-partner {
   width: 190px;
   display: block;
@@ -333,7 +332,15 @@ a:hover { color: var(--accent-hover); }
   .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .talk__date { font-size: 1.25rem; }
   .logistics { padding: var(--space-5); }
-  .footer__partner { padding-left: 0; border-left: 0; }
+}
+
+/* The logo row fits on one line down to about 1024px. Below that it wraps, and
+   a divider stranded at the start of a wrapped line reads as a mistake -- so the
+   dividers come off at exactly the width where wrapping starts, not at the
+   phone breakpoint. */
+@media (max-width: 64rem) {
+  .footer__logo + .footer__logo { padding-left: 0; border-left: 0; }
+  .footer__logo { min-height: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
