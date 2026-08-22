@@ -9,14 +9,6 @@ layout: default
   <h1 class="display">{{ course.title }}</h1>
   <p class="hero__tagline">{{ course.tagline }}</p>
 
-  {%- if course.questions and course.questions.size > 0 %}
-  <ul class="bubbles">
-    {%- for q in course.questions %}
-    <li class="bubble">{{ q }}</li>
-    {%- endfor %}
-  </ul>
-  {%- endif %}
-
   <p class="blurb">{{ course.blurb }}</p>
   <p class="blurb__speakers">{{ course.speakers_blurb }}</p>
 

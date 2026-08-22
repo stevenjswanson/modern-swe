@@ -15,13 +15,6 @@ blurb: "10+ software engineers, 10+ companies, ten weeks: What do SWE jobs look 
 
 speakers_blurb: "Speakers from local tech companies, big tech, startups, independent developers, UCSD faculty and UCSD student interns."
 
-# The four questions from the announcement flyer.
-questions:
-  - "What does it really mean when AI writes 90% of the code?"
-  - "Where does AI fail?"
-  - "Where do software engineers add value?"
-  - "So what skills do you need?"
-
 logistics:
   - label: "When"
     value: "Mondays, 11:00–11:50 am"

@@ -128,42 +128,6 @@ a:hover { color: var(--accent-hover); }
   text-wrap: pretty;
 }
 
-/* --- question bubbles ----------------------------------------------------
-   Echoes the announcement flyer. Uses the brand's rounded-shape element;
-   radius stays inside the 10–25%-of-shortest-edge rule.
-------------------------------------------------------------------------- */
-.bubbles {
-  list-style: none;
-  margin: var(--space-7) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.bubble {
-  position: relative;
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  font-size: clamp(1rem, 1.8vw, 1.1875rem);
-  line-height: 1.4;
-  max-width: 34rem;
-  border: var(--rule-weight) solid var(--rule);
-  background: var(--bubble);
-  color: var(--bubble-ink);
-}
-/* Alternate alignment and emphasis, as on the flyer. */
-.bubble:nth-child(even) {
-  margin-inline-start: auto;
-  background: var(--band);
-  color: var(--band-ink);
-  border-color: transparent;
-}
-.bubble:nth-child(4) {
-  background: var(--highlight);
-  color: var(--highlight-ink);
-  border-color: transparent;
-}
-
 /* --- blurb + logistics --------------------------------------------------- */
 .blurb {
   margin: var(--space-7) 0 0;
@@ -358,8 +322,6 @@ a:hover { color: var(--accent-hover); }
   .talk { grid-template-columns: 1fr; gap: var(--space-3); }
   .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .talk__date { font-size: 1.25rem; }
-  .bubble { max-width: none; }
-  .bubble:nth-child(even) { margin-inline-start: 0; }
   .logistics { padding: var(--space-5); }
   .footer__partner { padding-left: 0; border-left: 0; }
 }
@@ -372,5 +334,5 @@ a:hover { color: var(--accent-hover); }
 @media print {
   .masthead__logo, .pill { color: #000; }
   body { background: #fff; color: #000; }
-  .bubbles, .footer__logos { display: none; }
+  .footer__logos { display: none; }
 }

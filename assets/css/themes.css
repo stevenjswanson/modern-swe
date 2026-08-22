@@ -37,9 +37,6 @@
   --band-ink:       var(--ucsd-white);       /* 14.18 on navy — AA */
   --band-muted:     var(--ucsd-stone);       /* 6.65 on navy — AA */
   --band-accent:    var(--ucsd-yellow);      /* 9.45 on navy — AA */
-
-  --bubble:         var(--ucsd-white);
-  --bubble-ink:     var(--ucsd-navy);
 }
 
 /* --- mono: sand ground, continuous with the announcement flyer ------------ */
@@ -64,9 +61,6 @@
   --band-ink:       var(--ucsd-sand);        /* 12.49 on navy — AA */
   --band-muted:     var(--ucsd-stone);       /* 6.65 on navy — AA */
   --band-accent:    var(--ucsd-turquoise);   /* 6.79 on navy — AA */
-
-  --bubble:         var(--ucsd-white);
-  --bubble-ink:     var(--ucsd-navy);
 }
 
 /* --- vibrant: white ground, closest to the flyer's energy ----------------- */
@@ -91,9 +85,6 @@
   --band-ink:       var(--ucsd-white);       /* 14.18 on navy — AA */
   --band-muted:     var(--ucsd-turquoise);   /* 6.79 on navy — AA */
   --band-accent:    var(--ucsd-yellow);      /* 9.45 on navy — AA */
-
-  --bubble:         var(--ucsd-white);
-  --bubble-ink:     var(--ucsd-navy);
 }
 
 /* --- shared, theme-independent -------------------------------------------
