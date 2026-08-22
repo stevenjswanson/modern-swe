@@ -154,10 +154,13 @@ a:hover { color: var(--accent-hover); }
    system, so they get the accent color to be findable at a glance.
    Yellow on navy is 9.45:1 and turquoise on navy 6.79:1, both AA. */
 .sid {
+  display: inline-block;
   color: var(--band-accent);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   font-weight: 500;
+  font-size: 0.9375rem;
+  white-space: nowrap;
 }
 
 /* --- section head -------------------------------------------------------- */
