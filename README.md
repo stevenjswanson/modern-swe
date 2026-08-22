@@ -129,24 +129,34 @@ in the brand kit rather than eyeballing it.
 ## Running it locally
 
 ```bash
-bundle install
-bundle exec jekyll serve
+bin/serve
 ```
 
 Then open <http://localhost:4000/modern-swe/>.
 
-> **Note for this Mac specifically:** the Homebrew tree here is x86_64 while the
-> machine is arm64, so gems with native extensions build for the wrong
-> architecture. If Jekyll fails to load with an "incompatible architecture"
-> error, rebuild the offending gem with:
+Note the `/modern-swe/` on the end — the bare <http://localhost:4000/> returns
+404, because the site is built with a base URL to match where GitHub Pages
+serves it.
+
+Edits to `_data/`, `_includes/`, `_layouts/` and `assets/` rebuild automatically;
+refresh the browser to see them. Changes to `_config.yml` need a restart.
+
+`bin/serve` validates `talks.json` before starting, so a typo there stops you
+immediately rather than silently rendering an empty schedule.
+
+> **Why a wrapper instead of `bundle exec jekyll serve`?** The Homebrew tree on
+> this Mac is x86_64 while the machine is arm64, so the system gem directory
+> holds native extensions built for the wrong architecture. Jekyll works fine
+> from the user gem directory (`~/.gem`) — it just has to be found first, which
+> is all `bin/serve` does. On a normally configured machine
+> `bundle exec jekyll serve` is all you need, and CI (Linux) is unaffected.
+>
+> If you ever rebuild the Ruby install and hit an "incompatible architecture"
+> error, the fix for a given gem is:
 >
 > ```bash
 > arch -x86_64 gem install ffi -v 1.15.5 -- --with-cflags="-arch x86_64"
 > ```
->
-> This does not affect CI, which builds on Linux.
-
----
 
 ## Adding a page
 

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Preview the site locally at http://localhost:4000/modern-swe/
+#
+# This wrapper exists because of a quirk of this Mac, not of Jekyll: the
+# Homebrew tree here is x86_64 while the machine is arm64, so the system gem
+# directory contains native extensions built for the wrong architecture. Jekyll
+# and its dependencies live in the user gem directory (~/.gem) and work fine --
+# they just have to be found FIRST. Scoping GEM_HOME/GEM_PATH does that.
+#
+# On a normally configured machine, `bundle exec jekyll serve` is all you need.
+
+set -euo pipefail
+
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO"
+
+USER_GEMS="$HOME/.gem/ruby/2.7.0"
+
+if [ -x "$USER_GEMS/bin/jekyll" ]; then
+  export GEM_HOME="$USER_GEMS"
+  export GEM_PATH="$USER_GEMS"
+  export PATH="$USER_GEMS/bin:/usr/local/opt/ruby/bin:$PATH"
+elif ! command -v jekyll >/dev/null 2>&1; then
+  echo "Jekyll not found." >&2
+  echo "Try: gem install jekyll -v 4.2.0 --user-install" >&2
+  exit 1
+fi
+
+# Catch a broken talks.json before starting, with a readable message.
+if ! python3 bin/check-talks >/dev/null 2>&1; then
+  python3 bin/check-talks || true
+  echo "" >&2
+  echo "Fix the errors above, then run bin/serve again." >&2
+  exit 1
+fi
+
+echo "Serving http://localhost:4000/modern-swe/   (ctrl-c to stop)"
+echo "Edits to _data/, _includes/ and assets/ rebuild automatically -- refresh the browser."
+echo ""
+
+exec jekyll serve --port 4000 "$@"
