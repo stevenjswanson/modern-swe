@@ -128,21 +128,7 @@ a:hover { color: var(--accent-hover); }
   text-wrap: pretty;
 }
 
-/* --- blurb + logistics --------------------------------------------------- */
-.blurb {
-  margin: var(--space-7) 0 0;
-  font-size: clamp(1.0625rem, 1.9vw, 1.25rem);
-  line-height: 1.45;
-  max-width: var(--measure);
-  text-wrap: pretty;
-}
-.blurb__speakers {
-  margin: var(--space-4) 0 0;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
+/* --- logistics ---------------------------------------------------------- */
 .logistics {
   margin-block: var(--space-7);
   background: var(--band);
