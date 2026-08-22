@@ -11,6 +11,12 @@ eyebrow: "Fall 2026 · CSE 090-SE / CSE 290-SE · 1 Unit"
 title: "Tales of Modern Software Engineering"
 tagline: "How AI is (and isn't) changing how software engineers build the computer systems that power our world"
 
+# Body copy under the tagline. A list, so paragraphs can be added or
+# reordered without touching any template.
+description:
+  - "Each week, practicing software engineers and system builders will share their experience and answer your questions about building software in the age of generative AI."
+  - "If you register for credit, you will need to attend 70% of the days to pass the course. Roll will be taken."
+
 logistics:
   - label: "When"
     value: "Mondays, 11:00–11:50 am"

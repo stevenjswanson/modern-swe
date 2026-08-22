@@ -9,6 +9,14 @@ layout: default
   <h1 class="display">{{ course.title }}</h1>
   <p class="hero__tagline">{{ course.tagline }}</p>
 
+  {%- if course.description and course.description.size > 0 %}
+  <div class="intro">
+    {%- for para in course.description %}
+    <p>{{ para }}</p>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+
   {%- if course.logistics and course.logistics.size > 0 %}
   <div class="logistics">
     {%- for item in course.logistics %}
