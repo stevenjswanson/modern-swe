@@ -7,7 +7,7 @@ theme: classic
 # Set false to hide the schedule entirely until speakers are confirmed.
 show_schedule: true
 
-eyebrow: "Fall 2026 · CSE 90-SE / CSE 290-SE · 1 Unit"
+eyebrow: "Fall 2026 · CSE 090-SE / CSE 290-SE · 1 Unit"
 title: "Tales of Modern Software Engineering"
 tagline: "How AI is (and isn't) changing how software engineers build the computer systems that power our world"
 
@@ -17,7 +17,7 @@ logistics:
   - label: "Where"
     value: "Location TBD"
   - label: "Enroll"
-    value: "CSE 290-SE (grad)<br><span class='sid'>TSS Sec. ID: SE00155014</span><br>CSE 90-SE (undergrad)<br><span class='sid'>TSS Sec. ID: SE00159590</span>"
+    value: "CSE 290-SE (grad)<br><span class='sid'>TSS Sec. ID: SE00155014</span><br>CSE 090-SE (undergrad)<br><span class='sid'>TSS Sec. ID: SE00159590</span>"
   - label: "Prerequisites"
     value: "None"
 

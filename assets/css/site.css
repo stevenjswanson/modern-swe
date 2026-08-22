@@ -309,8 +309,12 @@ a:hover { color: var(--accent-hover); }
    white card makes that deliberate instead of accidental, and works on every
    theme. Replace with a transparent asset and this rule can go. */
 .footer__logo-launch {
-  height: 76px;
+  height: 88px;
   width: auto;
+  display: block;
+}
+.footer__logo-alumni {
+  width: 185px;
   display: block;
 }
 .footer__logo-partner {

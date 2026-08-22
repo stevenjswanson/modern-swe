@@ -2,7 +2,7 @@
 
 Source for <https://stevenjswanson.github.io/modern-swe/>
 
-CSE 90-SE / CSE 290-SE, UC San Diego, Fall 2026.
+CSE 090-SE / CSE 290-SE, UC San Diego, Fall 2026.
 
 The site is static. Push to `main` and GitHub Actions rebuilds and publishes it,
 usually within a minute or two.
