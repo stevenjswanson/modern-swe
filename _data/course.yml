@@ -17,7 +17,7 @@ logistics:
   - label: "Where"
     value: "Location TBD"
   - label: "Enroll"
-    value: "CSE 290-SE (grad) or<br>CSE 90-SE (undergrad)"
+    value: "CSE 290-SE (grad)<br><span class='sid'>SE00155014</span><br>CSE 90-SE (undergrad)<br><span class='sid'>SE00159590</span>"
   - label: "Prerequisites"
     value: "None"
 

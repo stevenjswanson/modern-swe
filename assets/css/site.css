@@ -150,6 +150,16 @@ a:hover { color: var(--accent-hover); }
 }
 .logistics__value { margin: 0; font-size: 1.0625rem; line-height: 1.35; }
 
+/* TSS section IDs — the string students actually type into the enrollment
+   system, so they get the accent color to be findable at a glance.
+   Yellow on navy is 9.45:1 and turquoise on navy 6.79:1, both AA. */
+.sid {
+  color: var(--band-accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
 /* --- section head -------------------------------------------------------- */
 .section {
   padding-block: var(--space-7);
@@ -288,11 +298,18 @@ a:hover { color: var(--accent-hover); }
   border-left: var(--rule-weight) solid var(--rule);
   display: flex;
   align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
 }
 /* The consortium logo ships as opaque RGB with no alpha, so on any non-white
    theme it would render as a bare white rectangle. Putting it on an explicit
    white card makes that deliberate instead of accidental, and works on every
    theme. Replace with a transparent asset and this rule can go. */
+.footer__logo-launch {
+  height: 76px;
+  width: auto;
+  display: block;
+}
 .footer__logo-partner {
   width: 190px;
   display: block;
