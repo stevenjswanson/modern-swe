@@ -63,11 +63,30 @@ A filled-in one looks like this:
 - **Only `date` and `status` are required.** Leave anything else empty and the
   page just omits it.
 - **`status`** is one of `tba`, `confirmed`, or `cancelled`.
+- **`tentative`** is `true` or `false`. A tentative talk is **not shown on the
+  live site** — its row renders as "Speaker to be announced" — until either
+  `show_tentative: true` in `_data/course.yml` (reveals all of them, each with a
+  "Tentative" chip) or that talk's own `tentative` is set to `false`. This lets
+  unconfirmed names sit safely in the file before anyone has said yes.
 - **`speakers`, `slides`, `videos`, and `links` are lists.** Two speakers? Add a
   second object. Three videos? Add a third. Nothing else has to change.
 - **Past vs. upcoming is automatic.** It is computed in the browser from the
   date, so you never have to mark a talk as finished.
 - **Order does not matter.** Entries are sorted by date when the page is built.
+
+### Publishing a speaker once they confirm
+
+Set that talk's `"tentative": false` and push. That is the whole change.
+
+To preview everything, including unconfirmed speakers, flip `show_tentative` to
+`true` in `_data/course.yml` and run `bin/serve` — but set it back to `false`
+before pushing, or every tentative name goes live.
+
+### A note on personal data
+
+`talks.json` is in a public repo. Anything written there is one `git push` from
+being on the open web, whether or not the page displays it. Keep speaker email
+addresses and phone numbers out of it — the site never needs them.
 
 ### Adding slides and videos later
 

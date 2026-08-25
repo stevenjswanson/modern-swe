@@ -7,6 +7,15 @@
 {%- endcomment -%}
 {%- assign t = include.talk -%}
 
+{%- comment -%}
+  A tentative talk stays hidden until course.show_tentative is true, so
+  unconfirmed names can live in talks.json without appearing on the live site.
+{%- endcomment -%}
+{%- assign reveal = true -%}
+{%- if t.tentative and site.data.course.show_tentative != true -%}
+  {%- assign reveal = false -%}
+{%- endif -%}
+
 <li class="talk" data-date="{{ t.date }}">
   <div class="talk__when">
     <span class="talk__week">Week {{ include.week }}</span>
@@ -21,57 +30,56 @@
     {%- if t.status == "cancelled" -%}
       <p class="talk__tba">No meeting this week.<span class="chip chip--cancelled">Cancelled</span></p>
 
-    {%- elsif t.title and t.title != "" -%}
-      <h3 class="talk__title">{{ t.title }}</h3>
+    {%- elsif reveal == false -%}
+      <p class="talk__tba">Speaker to be announced.</p>
 
-      {%- if t.speakers and t.speakers.size > 0 -%}
+    {%- elsif t.title != "" or t.speakers.size > 0 -%}
+
+      {%- if t.title and t.title != "" -%}
+        <h3 class="talk__title">{{ t.title }}{% if t.tentative %}<span class="chip chip--tentative">Tentative</span>{% endif %}</h3>
+      {%- endif -%}
+
+      {%- comment -%}
+        One speaker list for every case, so a talk with a title and a talk
+        without one can never render their speakers differently.
+      {%- endcomment -%}
+      {%- if t.speakers.size > 0 -%}
         <ul class="talk__speakers">
           {%- for s in t.speakers -%}
             <li class="talk__speaker">
               <span class="talk__speaker-name">
-                {%- if s.links and s.links.size > 0 -%}
+                {%- if s.links.size > 0 -%}
                   <a href="{{ s.links[0].url }}">{{ s.name }}</a>
                 {%- else -%}
                   {{ s.name }}
                 {%- endif -%}
               </span>
-              {%- if s.role and s.role != "" or s.org and s.org != "" -%}
-                <span class="talk__speaker-meta">
-                  — {% if s.role and s.role != "" %}{{ s.role }}{% endif %}
-                  {%- if s.role and s.role != "" and s.org and s.org != "" %}, {% endif -%}
-                  {%- if s.org and s.org != "" %}{{ s.org }}{% endif -%}
-                </span>
+              {%- assign meta = "" -%}
+              {%- if s.role and s.role != "" -%}{%- assign meta = s.role -%}{%- endif -%}
+              {%- if s.org and s.org != "" -%}
+                {%- if meta != "" -%}{%- assign meta = meta | append: ", " | append: s.org -%}
+                {%- else -%}{%- assign meta = s.org -%}{%- endif -%}
               {%- endif -%}
+              {%- if meta != "" %}<span class="talk__speaker-meta"> — {{ meta }}</span>{% endif -%}
+              {%- if s.bio and s.bio != "" %}<span class="talk__speaker-bio">{{ s.bio }}</span>{% endif -%}
             </li>
           {%- endfor -%}
         </ul>
+      {%- endif -%}
+
+      {%- if t.title == "" or t.title == nil -%}
+        <p class="talk__tba">Talk title to be announced.{% if t.tentative %}<span class="chip chip--tentative">Tentative</span>{% endif %}</p>
       {%- endif -%}
 
       {%- if t.abstract and t.abstract != "" -%}
         <p class="talk__abstract">{{ t.abstract }}</p>
       {%- endif -%}
 
-    {%- elsif t.speakers and t.speakers.size > 0 -%}
-      {%- comment -%} Speaker confirmed, title not yet. {%- endcomment -%}
-      <ul class="talk__speakers">
-        {%- for s in t.speakers -%}
-          <li class="talk__speaker">
-            <span class="talk__speaker-name">{{ s.name }}</span>
-            {%- if s.org and s.org != "" %}<span class="talk__speaker-meta"> — {{ s.org }}</span>{% endif -%}
-          </li>
-        {%- endfor -%}
-      </ul>
-      <p class="talk__tba">Talk title to be announced.</p>
-
     {%- else -%}
       <p class="talk__tba">Speaker to be announced.</p>
     {%- endif -%}
 
-    {%- assign has_slides = false -%}{%- if t.slides and t.slides.size > 0 %}{% assign has_slides = true %}{% endif -%}
-    {%- assign has_videos = false -%}{%- if t.videos and t.videos.size > 0 %}{% assign has_videos = true %}{% endif -%}
-    {%- assign has_links  = false -%}{%- if t.links  and t.links.size  > 0 %}{% assign has_links  = true %}{% endif -%}
-
-    {%- if has_slides or has_videos or has_links -%}
+    {%- if t.slides.size > 0 or t.videos.size > 0 or t.links.size > 0 -%}
       <ul class="pills">
         {%- for s in t.slides -%}
           <li><a class="pill" href="{{ s.url | relative_url }}">{{ s.label | default: "Slides" }}</a></li>

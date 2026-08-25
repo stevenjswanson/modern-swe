@@ -7,6 +7,12 @@ theme: classic
 # Set false to hide the schedule entirely until speakers are confirmed.
 show_schedule: true
 
+# Speakers marked "tentative": true in talks.json are NOT shown publicly while
+# this is false -- their rows render as "Speaker to be announced". Flip to true
+# to show them all with a "Tentative" chip, or set a single speaker's
+# "tentative": false in talks.json to publish just that one.
+show_tentative: false
+
 eyebrow: "Fall 2026 · CSE 090-SE / CSE 290-SE · 1 Unit"
 title: "Tales of Modern Software Engineering"
 tagline: "How AI is (and isn't) changing how software engineers build the computer systems that power our world"

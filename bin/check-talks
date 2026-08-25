@@ -18,7 +18,7 @@ from pathlib import Path
 
 VALID_STATUS = {"tba", "confirmed", "cancelled"}
 KNOWN_KEYS = {
-    "date", "time", "location", "status", "title", "abstract",
+    "date", "time", "location", "status", "tentative", "title", "abstract",
     "speakers", "slides", "videos", "links", "tags",
 }
 LINK_LISTS = ("slides", "videos", "links")
@@ -124,9 +124,13 @@ def main():
         elif status not in VALID_STATUS:
             err(where, f'status "{status}" is not one of: {", ".join(sorted(VALID_STATUS))}')
 
-        # a confirmed talk with nobody in it is almost certainly a mistake
-        if status == "confirmed" and not t.get("speakers"):
-            warn(where, 'status is "confirmed" but there are no speakers')
+        # A confirmed slot with neither a speaker nor a title is almost certainly
+        # a mistake; a panel with a title but no named speakers is fine.
+        if status == "confirmed" and not t.get("speakers") and not str(t.get("title", "")).strip():
+            warn(where, 'status is "confirmed" but there is no speaker and no title')
+
+        if "tentative" in t and not isinstance(t["tentative"], bool):
+            err(where, f'"tentative" must be true or false, got {t["tentative"]!r}')
 
         if t.get("speakers") is not None:
             check_speakers(where, t["speakers"])
@@ -154,7 +158,8 @@ def main():
         return 1
 
     tba = sum(1 for t in talks if isinstance(t, dict) and t.get("status") == "tba")
-    print(f"\nOK: {n} talk(s), {n - tba} with speakers, {tba} still TBA"
+    tent = sum(1 for t in talks if isinstance(t, dict) and t.get("tentative") is True)
+    print(f"\nOK: {n} talk(s), {n - tba} filled in, {tba} still TBA, {tent} tentative"
           f"{f' -- {len(warnings)} warning(s)' if warnings else ''}")
     return 0
 

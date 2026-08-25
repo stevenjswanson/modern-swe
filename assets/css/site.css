@@ -260,6 +260,14 @@ a:hover { color: var(--accent-hover); }
 .talk__speaker-name { font-weight: 700; }
 .talk__speaker-meta { color: var(--muted); }
 
+.talk__speaker-bio {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin-top: var(--space-1);
+  max-width: var(--measure);
+}
 .talk__abstract { margin: var(--space-3) 0 0; line-height: 1.55; max-width: var(--measure); }
 
 /* --- resource pills ------------------------------------------------------ */
@@ -295,6 +303,11 @@ a:hover { color: var(--accent-hover); }
   margin-left: var(--space-2);
 }
 .chip--next { background: var(--highlight); color: var(--highlight-ink); }
+.chip--tentative {
+  background: transparent;
+  color: var(--muted);
+  border: var(--rule-weight) solid var(--rule);
+}
 .chip--cancelled { background: var(--surface-sunk); color: var(--muted); border: var(--rule-weight) solid var(--rule); }
 
 /* Past talks recede but stay fully legible — dimming is applied to the date

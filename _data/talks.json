@@ -5,10 +5,19 @@
       "date": "2026-09-28",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
+      "status": "confirmed",
+      "tentative": true,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Kylie Taitano",
+          "role": "Engineering Manager, Intuit",
+          "org": "",
+          "bio": "",
+          "links": []
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
@@ -18,10 +27,40 @@
       "date": "2026-10-05",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
+      "status": "confirmed",
+      "tentative": true,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Tony Wu",
+          "role": "",
+          "org": "Whova",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Louis Lesmana",
+          "role": "",
+          "org": "Whova",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Haochen Huang",
+          "role": "",
+          "org": "Whova",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Rahul Chityala",
+          "role": "",
+          "org": "Whova",
+          "bio": "",
+          "links": []
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
@@ -31,10 +70,24 @@
       "date": "2026-10-12",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
+      "status": "confirmed",
+      "tentative": true,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Bill Pugh",
+          "role": "Professor Emeritus, University of Maryland",
+          "org": "",
+          "bio": "Invented the skip list and the Omega test, co-authored the FindBugs static analysis tool, and led the revision of the Java memory model (JSR 133).",
+          "links": [
+            {
+              "label": "Bio",
+              "url": "https://www.cs.umd.edu/~pugh/bio.html"
+            }
+          ]
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
@@ -44,8 +97,9 @@
       "date": "2026-10-19",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
-      "title": "",
+      "status": "confirmed",
+      "tentative": false,
+      "title": "Panel: UC San Diego Student Interns, Summer 2026",
       "abstract": "",
       "speakers": [],
       "slides": [],
@@ -57,10 +111,19 @@
       "date": "2026-10-26",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
+      "status": "confirmed",
+      "tentative": true,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Roy Guo",
+          "role": "Game Developer",
+          "org": "",
+          "bio": "",
+          "links": []
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
@@ -71,6 +134,7 @@
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
       "status": "tba",
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [],
@@ -83,10 +147,47 @@
       "date": "2026-11-09",
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
-      "status": "tba",
-      "title": "",
+      "status": "confirmed",
+      "tentative": true,
+      "title": "Panel: Current and Future CSE Faculty",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Dan Fu",
+          "role": "Assistant Professor, UC San Diego · VP of Kernels, Together AI",
+          "org": "",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Deian Stefan",
+          "role": "Associate Professor, UC San Diego · Co-founder & Chief Scientist, Cubist",
+          "org": "",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Tianyu Gao",
+          "role": "Incoming Assistant Professor, UC San Diego · Research Scientist, Meta",
+          "org": "",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "Arun Kumar",
+          "role": "Professor, UC San Diego · Co-founder & CTO, RapidFire AI",
+          "org": "",
+          "bio": "",
+          "links": []
+        },
+        {
+          "name": "George Porter",
+          "role": "Professor, UC San Diego · Sr. Principal Engineer, AWS S3",
+          "org": "",
+          "bio": "",
+          "links": []
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
@@ -97,6 +198,7 @@
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
       "status": "tba",
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [],
@@ -110,6 +212,7 @@
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
       "status": "tba",
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [],
@@ -123,6 +226,7 @@
       "time": "11:00–11:50",
       "location": "Atkinson Hall",
       "status": "tba",
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [],
