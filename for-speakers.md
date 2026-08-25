@@ -25,8 +25,8 @@ rideshare, and where we will meet.</p>
 
 | | Walk to the auditorium |
 |---|---|
-| **Lot 503** — small lot just west of Atkinson Hall | about **3 minutes** (250 m) |
-| **Hopkins Parking Structure** — larger, more likely to have space | about **7 minutes** (560 m) |
+| **Lot 503** — small lot just west of Atkinson Hall | about **3 minutes** (230 m) |
+| **Hopkins Parking Structure** — larger, more likely to have space | about **7 minutes** (545 m) |
 
 Park in spaces marked with a **white V** (visitor). Pay through the **ParkMobile**
 app using **zone 4752**, or at the pay kiosk by the **7th-floor elevators** in the
@@ -38,14 +38,15 @@ change — please confirm at the kiosk when you arrive.*
 
 ## Arriving by Uber or Lyft
 
-Set your destination to **Atkinson Hall, UC San Diego**. Campus building names
-confuse some drivers, so this link drops a pin on the exact spot:
+Atkinson Hall's street address is **3195 Voigt Dr, La Jolla, CA 92093** — that
+works in Uber, Lyft and any map app. Do *not* use the campus mailing address,
+9500 Gilman Drive; it will drop you on the far side of campus.
 
-**[Navigate to Atkinson Hall &rarr;](https://www.google.com/maps/dir/?api=1&destination=32.8824734%2C-117.2347302)**
+This link drops a pin directly on the auditorium:
 
-You can also paste the coordinates `32.8824734, -117.2347302` straight into Uber
-or Lyft. The campus mailing address, 9500 Gilman Drive, will *not* get you to the
-right building.
+**[Navigate to the auditorium &rarr;](https://www.google.com/maps/dir/?api=1&destination=32.8823428%2C-117.2341962)**
+
+Or paste the coordinates `32.8823428, -117.2341962` straight into the app.
 
 ## Where we'll meet
 

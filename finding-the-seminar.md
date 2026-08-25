@@ -25,7 +25,8 @@ from Geisel Library. If you already know the **Computer Science & Engineering
 building (EBU3B)**, Atkinson Hall is right next door to the northwest — the two
 are officially EBU3a and EBU3b.
 
-The **bear sculpture** is the easiest landmark. The auditorium is on the ground floor.
+The **bear sculpture** is the easiest landmark — the auditorium is on the ground
+floor, a few steps from it. The building's street address is 3195 Voigt Dr.
 
 **No food or drink other than water** is allowed in the auditorium.
 
