@@ -281,6 +281,8 @@ a:hover { color: var(--accent-hover); }
   transition: transform 120ms ease, background-color 120ms ease;
 }
 .logistics__cta span { transition: transform 120ms ease; }
+/* Names the audience without competing with the action. */
+.logistics__cta-who { font-weight: 500; opacity: 0.75; }
 .logistics__cta:hover {
   background: var(--band-ink);
   color: var(--band);

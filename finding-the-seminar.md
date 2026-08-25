@@ -33,7 +33,7 @@ floor, a few steps from it. The building's street address is 3195 Voigt Dr.
 </div>
 
 <p class="page-aside">Speaking at the seminar?
-<a href="{{ '/for-speakers/' | relative_url }}">Directions, parking and rideshare for speakers &rarr;</a></p>
+<a href="{{ '/for-speakers/' | relative_url }}">Arrival logistics for speakers &rarr;</a></p>
 
 <p class="map-credit">Map rendered from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> data,
 &copy; OpenStreetMap contributors.</p>

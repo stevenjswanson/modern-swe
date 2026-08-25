@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Directions for Speakers
+title: Arrival Logistics
 permalink: /for-speakers/
 ---
 
 <section class="wrap section">
-<h1 class="page-title">Directions for Speakers</h1>
+<h1 class="page-title">Arrival Logistics</h1>
 
 <p class="page-lead">Thank you for speaking. Everything you need to get here is on this page — parking,
 rideshare, and where we will meet.</p>

@@ -6,7 +6,7 @@
       "time": "",
       "location": "",
       "status": "confirmed",
-      "tentative": true,
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [
@@ -71,7 +71,7 @@
       "time": "",
       "location": "",
       "status": "confirmed",
-      "tentative": true,
+      "tentative": false,
       "title": "",
       "abstract": "",
       "speakers": [
