@@ -200,23 +200,6 @@ a:hover { color: var(--accent-hover); }
 /* Wide content must scroll inside itself, never the page. */
 .prose { overflow-x: auto; }
 
-/* --- section-level call to action ---------------------------------------- */
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin: var(--space-6) 0 0;
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-pill);
-  background: var(--band);
-  color: var(--band-ink);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-.cta:hover { background: var(--accent); color: var(--surface); }
-
 /* --- masthead nav --------------------------------------------------------- */
 .masthead__nav {
   display: flex;
@@ -265,11 +248,40 @@ a:hover { color: var(--accent-hover); }
   background: var(--band);
   color: var(--band-ink);
   border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-6);
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+.logistics__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   gap: var(--space-5);
 }
+
+/* Sits inside the band, so it needs to read against navy rather than the page.
+   Yellow on navy is 9.45:1 and navy on yellow 9.45:1 — AA either way. */
+.logistics__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--band-accent);
+  color: var(--band);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+.logistics__cta span { transition: transform 120ms ease; }
+.logistics__cta:hover {
+  background: var(--band-ink);
+  color: var(--band);
+}
+.logistics__cta:hover span { transform: translateX(3px); }
+.logistics__cta:focus-visible { outline-color: var(--band-accent); }
 .logistics__label {
   font-family: var(--font-sans);
   font-weight: 900;
@@ -516,6 +528,7 @@ a:hover { color: var(--accent-hover); }
   .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .talk__date { font-size: 1.25rem; }
   .logistics { padding: var(--space-5); }
+  .logistics__cta { display: flex; justify-content: center; width: 100%; }
 }
 
 /* The logo row fits on one line down to about 1024px. Below that it wraps, and

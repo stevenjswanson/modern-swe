@@ -19,18 +19,19 @@ layout: default
 
   {%- if course.logistics and course.logistics.size > 0 %}
   <div class="logistics">
-    {%- for item in course.logistics %}
-    <div>
-      <p class="logistics__label">{{ item.label }}</p>
-      <p class="logistics__value">{{ item.value }}</p>
+    <div class="logistics__grid">
+      {%- for item in course.logistics %}
+      <div>
+        <p class="logistics__label">{{ item.label }}</p>
+        <p class="logistics__value">{{ item.value }}</p>
+      </div>
+      {%- endfor %}
     </div>
-    {%- endfor %}
+    <a class="logistics__cta" href="{{ '/finding-the-seminar/' | relative_url }}">
+      Maps, parking and directions <span aria-hidden="true">&rarr;</span>
+    </a>
   </div>
   {%- endif %}
-
-  <a class="cta" href="{{ '/finding-the-seminar/' | relative_url }}">
-    Finding the seminar — maps, parking and directions &rarr;
-  </a>
 </section>
 
 {%- if course.show_schedule %}
