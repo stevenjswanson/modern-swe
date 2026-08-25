@@ -29,10 +29,17 @@
   <div class="talk__when">
     <span class="talk__week">Week {{ include.week }}</span>
     <span class="talk__date">{{ t.date | date: "%a %b %-d" }}</span>
+    {%- comment -%}
+      Both are usually empty: every week is at the same time and place, which the
+      logistics box states once. Either one still renders if a week differs.
+    {%- endcomment -%}
+    {%- if t.time != "" or t.location != "" -%}
     <span class="talk__time">
       {{- t.time -}}
-      {%- if t.location and t.location != "" %} · {{ t.location }}{% endif -%}
+      {%- if t.time != "" and t.location != "" %} · {% endif -%}
+      {{- t.location -}}
     </span>
+    {%- endif -%}
   </div>
 
   <div class="talk__body">
