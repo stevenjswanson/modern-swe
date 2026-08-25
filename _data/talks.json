@@ -29,12 +29,12 @@
       "location": "",
       "status": "confirmed",
       "tentative": true,
-      "title": "",
+      "title": "Generative AI and Software Engineering at Whova",
       "abstract": "",
       "speakers": [
         {
           "name": "Tony Wu",
-          "role": "",
+          "role": "Senior Software Engineer",
           "org": "Whova",
           "bio": "",
           "links": []
@@ -79,11 +79,15 @@
           "name": "Bill Pugh",
           "role": "Professor Emeritus, University of Maryland",
           "org": "",
-          "bio": "Invented the skip list and the Omega test, co-authored the FindBugs static analysis tool, and led the revision of the Java memory model (JSR 133).",
+          "bio": "Invented the skip list and the Omega test, co-authored the FindBugs static analysis tool, and led the revision of the Java memory model (JSR 133). Came out of retirement to create CMSC398Z “Coding with AI” at Maryland, a course on building software with chatbots, AI-powered IDEs and command-line coding agents.",
           "links": [
             {
               "label": "Bio",
               "url": "https://www.cs.umd.edu/~pugh/bio.html"
+            },
+            {
+              "label": "Coding with AI (CMSC398Z)",
+              "url": "https://www.cs.umd.edu/class/fall2025/cmsc398z/"
             }
           ]
         }
@@ -154,7 +158,7 @@
       "speakers": [
         {
           "name": "Dan Fu",
-          "role": "Assistant Professor, UC San Diego · VP of Kernels, Together AI",
+          "role": "Incoming Assistant Professor, UC San Diego · VP of Kernels, Together AI",
           "org": "",
           "bio": "",
           "links": []
