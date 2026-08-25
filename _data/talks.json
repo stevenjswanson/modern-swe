@@ -4,7 +4,7 @@
     {
       "date": "2026-09-28",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": true,
       "title": "",
@@ -26,7 +26,7 @@
     {
       "date": "2026-10-05",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": true,
       "title": "",
@@ -69,7 +69,7 @@
     {
       "date": "2026-10-12",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": true,
       "title": "",
@@ -96,7 +96,7 @@
     {
       "date": "2026-10-19",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": false,
       "title": "Panel: UC San Diego Student Interns, Summer 2026",
@@ -110,7 +110,7 @@
     {
       "date": "2026-10-26",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": true,
       "title": "",
@@ -132,7 +132,7 @@
     {
       "date": "2026-11-02",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "tba",
       "tentative": false,
       "title": "",
@@ -146,7 +146,7 @@
     {
       "date": "2026-11-09",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "confirmed",
       "tentative": true,
       "title": "Panel: Current and Future CSE Faculty",
@@ -196,7 +196,7 @@
     {
       "date": "2026-11-16",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "tba",
       "tentative": false,
       "title": "",
@@ -210,7 +210,7 @@
     {
       "date": "2026-11-23",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "tba",
       "tentative": false,
       "title": "",
@@ -224,7 +224,7 @@
     {
       "date": "2026-11-30",
       "time": "11:00–11:50",
-      "location": "Atkinson Hall",
+      "location": "",
       "status": "tba",
       "tentative": false,
       "title": "",

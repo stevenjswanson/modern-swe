@@ -63,30 +63,42 @@ A filled-in one looks like this:
 - **Only `date` and `status` are required.** Leave anything else empty and the
   page just omits it.
 - **`status`** is one of `tba`, `confirmed`, or `cancelled`.
-- **`tentative`** is `true` or `false`. A tentative talk is **not shown on the
-  live site** — its row renders as "Speaker to be announced" — until either
-  `show_tentative: true` in `_data/course.yml` (reveals all of them, each with a
-  "Tentative" chip) or that talk's own `tentative` is set to `false`. This lets
-  unconfirmed names sit safely in the file before anyone has said yes.
+- **`tentative`** is `true` or `false`. Tentative speakers are **visible when
+  you run the site locally** and **hidden on the published site**, where the row
+  renders as "Speaker to be announced". So you always see the real schedule while
+  working, and unconfirmed names never go out. See below.
 - **`speakers`, `slides`, `videos`, and `links` are lists.** Two speakers? Add a
   second object. Three videos? Add a third. Nothing else has to change.
 - **Past vs. upcoming is automatic.** It is computed in the browser from the
   date, so you never have to mark a talk as finished.
 - **Order does not matter.** Entries are sorted by date when the page is built.
 
-### Publishing a speaker once they confirm
+### Tentative speakers: local vs. published
 
-Set that talk's `"tentative": false` and push. That is the whole change.
+|  | Tentative speakers |
+|---|---|
+| `bin/serve` or a local build | **shown**, with a yellow "Local preview" banner at the top |
+| The published site (CI) | **hidden** — the row reads "Speaker to be announced" |
 
-To preview everything, including unconfirmed speakers, flip `show_tentative` to
-`true` in `_data/course.yml` and run `bin/serve` — but set it back to `false`
-before pushing, or every tentative name goes live.
+CI builds with `JEKYLL_ENV=production`, which is what draws the line. You do not
+have to remember to flip anything before pushing, and pushing a half-finished
+schedule will not leak a name.
+
+**To publish a speaker once they confirm:** set that talk's `"tentative": false`
+and push. That is the whole change.
+
+**To publish every tentative speaker at once** (each gets a "Tentative" chip),
+set `show_tentative: true` in `_data/course.yml`. That one *does* affect the
+live site.
 
 ### A note on personal data
 
 `talks.json` is in a public repo. Anything written there is one `git push` from
 being on the open web, whether or not the page displays it. Keep speaker email
 addresses and phone numbers out of it — the site never needs them.
+
+`bin/check-talks` **fails the build** if it finds an email address anywhere in
+`talks.json`, so this is enforced rather than merely requested.
 
 ### Adding slides and videos later
 

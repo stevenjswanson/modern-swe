@@ -13,10 +13,16 @@ Exit:   0 = clean (warnings allowed), 1 = errors found
 
 import datetime
 import json
+import re
 import sys
 from pathlib import Path
 
 VALID_STATUS = {"tba", "confirmed", "cancelled"}
+
+# This repo is public, so anything in talks.json is one push from the open web
+# whether or not the page renders it. Speaker contact addresses have no reason
+# to be here -- the site never uses them.
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 KNOWN_KEYS = {
     "date", "time", "location", "status", "tentative", "title", "abstract",
     "speakers", "slides", "videos", "links", "tags",
@@ -92,6 +98,16 @@ def main():
 
     talks = doc["talks"]
     seen_dates = {}
+
+    # Scan the raw text: catches an address in any field, including ones this
+    # validator does not otherwise know about.
+    for lineno, line in enumerate(raw.splitlines(), 1):
+        for addr in EMAIL_RE.findall(line):
+            if addr.startswith("mailto:"):
+                continue
+            err(f"line {lineno}",
+                f"contains an email address ({addr}) -- this repo is public; "
+                "speaker contact details do not belong in talks.json")
 
     for i, t in enumerate(talks):
         where = f"talks[{i}]"

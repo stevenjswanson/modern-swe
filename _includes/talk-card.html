@@ -8,12 +8,21 @@
 {%- assign t = include.talk -%}
 
 {%- comment -%}
-  A tentative talk stays hidden until course.show_tentative is true, so
-  unconfirmed names can live in talks.json without appearing on the live site.
+  Tentative talks are visible locally but hidden on the published site, so you
+  can see the real schedule while you work without unconfirmed names going out.
+
+  Revealed when ANY of these holds:
+    - the talk is not tentative
+    - course.show_tentative is true (deliberate publish of all of them)
+    - we are not building for production, i.e. bin/serve or a local build
+
+  CI sets JEKYLL_ENV=production, so the deployed site always hides them.
 {%- endcomment -%}
 {%- assign reveal = true -%}
-{%- if t.tentative and site.data.course.show_tentative != true -%}
+{%- if t.tentative -%}
   {%- assign reveal = false -%}
+  {%- if site.data.course.show_tentative == true -%}{%- assign reveal = true -%}{%- endif -%}
+  {%- if jekyll.environment != "production" -%}{%- assign reveal = true -%}{%- endif -%}
 {%- endif -%}
 
 <li class="talk" data-date="{{ t.date }}">

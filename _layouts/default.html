@@ -30,6 +30,21 @@
 
 <a class="u-visually-hidden" href="#main">Skip to content</a>
 
+{%- comment -%}
+  Local preview only. Never rendered by CI, which builds with
+  JEKYLL_ENV=production.
+{%- endcomment -%}
+{%- if jekyll.environment != "production" and course.show_tentative != true -%}
+  {%- assign hidden_count = 0 -%}
+  {%- for t in site.data.talks.talks -%}
+    {%- if t.tentative -%}{%- assign hidden_count = hidden_count | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if hidden_count > 0 -%}
+<p class="devbar">Local preview — showing {{ hidden_count }} tentative
+{% if hidden_count == 1 %}speaker{% else %}speakers{% endif %} that the published site hides.</p>
+  {%- endif -%}
+{%- endif -%}
+
 <header class="wrap masthead">
   <a class="masthead__name" href="{{ '/' | relative_url }}">{{ course.title }}</a>
   <a class="masthead__logo" href="https://ucsd.edu" aria-label="UC San Diego">
