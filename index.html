@@ -27,9 +27,14 @@ layout: default
       </div>
       {%- endfor %}
     </div>
-    <a class="logistics__cta" href="{{ '/finding-the-seminar/' | relative_url }}">
-      Maps, parking and directions <span aria-hidden="true">&rarr;</span>
-    </a>
+    <div class="logistics__actions">
+      <a class="logistics__cta" href="{{ '/finding-the-seminar/' | relative_url }}">
+        Finding the seminar <span aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="logistics__cta logistics__cta--ghost" href="{{ '/for-speakers/' | relative_url }}">
+        Directions for speakers <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
   </div>
   {%- endif %}
 </section>

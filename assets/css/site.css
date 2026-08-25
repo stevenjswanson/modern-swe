@@ -258,11 +258,16 @@ a:hover { color: var(--accent-hover); }
 
 /* Sits inside the band, so it needs to read against navy rather than the page.
    Yellow on navy is 9.45:1 and navy on yellow 9.45:1 — AA either way. */
+.logistics__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
 .logistics__cta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-6);
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
   background: var(--band-accent);
@@ -282,6 +287,26 @@ a:hover { color: var(--accent-hover); }
 }
 .logistics__cta:hover span { transform: translateX(3px); }
 .logistics__cta:focus-visible { outline-color: var(--band-accent); }
+
+/* Secondary action — outlined so the two buttons do not compete.
+   Band ink on navy is the same pair as the body text in this box. */
+.logistics__cta--ghost {
+  background: transparent;
+  color: var(--band-ink);
+  box-shadow: inset 0 0 0 var(--rule-weight) var(--band-accent);
+}
+.logistics__cta--ghost:hover {
+  background: var(--band-accent);
+  color: var(--band);
+}
+
+/* Cross-link between the two directions pages. */
+.page-aside {
+  margin: var(--space-7) 0 0;
+  padding-top: var(--space-5);
+  border-top: var(--rule-weight) solid var(--rule);
+  color: var(--muted);
+}
 .logistics__label {
   font-family: var(--font-sans);
   font-weight: 900;
@@ -528,6 +553,7 @@ a:hover { color: var(--accent-hover); }
   .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .talk__date { font-size: 1.25rem; }
   .logistics { padding: var(--space-5); }
+  .logistics__actions { flex-direction: column; }
   .logistics__cta { display: flex; justify-content: center; width: 100%; }
 }
 
