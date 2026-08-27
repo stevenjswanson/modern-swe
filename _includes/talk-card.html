@@ -18,11 +18,29 @@
 
   CI sets JEKYLL_ENV=production, so the deployed site always hides them.
 {%- endcomment -%}
+{%- comment -%}
+  show_unconfirmed is the single gate both the talk and its individual speakers
+  use, so a slot and a person can never disagree about what counts as safe to
+  publish. A speaker carries their own "tentative" flag because a slot can be
+  settled while one participant is not: the Nov 9 panel has a firm date and
+  five invitees, only some of whom have agreed to it.
+{%- endcomment -%}
+{%- assign show_unconfirmed = false -%}
+{%- if site.data.course.show_tentative == true -%}{%- assign show_unconfirmed = true -%}{%- endif -%}
+{%- if jekyll.environment != "production" -%}{%- assign show_unconfirmed = true -%}{%- endif -%}
+
 {%- assign reveal = true -%}
-{%- if t.tentative -%}
-  {%- assign reveal = false -%}
-  {%- if site.data.course.show_tentative == true -%}{%- assign reveal = true -%}{%- endif -%}
-  {%- if jekyll.environment != "production" -%}{%- assign reveal = true -%}{%- endif -%}
+{%- if t.tentative and show_unconfirmed == false -%}{%- assign reveal = false -%}{%- endif -%}
+
+{%- comment -%}
+  Split the speakers once, up front, so the list below and the "and others"
+  note cannot fall out of step with each other.
+{%- endcomment -%}
+{%- assign shown_speakers = t.speakers -%}
+{%- assign hidden_speaker_count = 0 -%}
+{%- if show_unconfirmed == false -%}
+  {%- assign shown_speakers = t.speakers | where_exp: "s", "s.tentative != true" -%}
+  {%- assign hidden_speaker_count = t.speakers.size | minus: shown_speakers.size -%}
 {%- endif -%}
 
 <li class="talk" data-date="{{ t.date }}">
@@ -59,9 +77,9 @@
         One speaker list for every case, so a talk with a title and a talk
         without one can never render their speakers differently.
       {%- endcomment -%}
-      {%- if t.speakers.size > 0 -%}
+      {%- if shown_speakers.size > 0 -%}
         <ul class="talk__speakers">
-          {%- for s in t.speakers -%}
+          {%- for s in shown_speakers -%}
             <li class="talk__speaker">
               <span class="talk__speaker-name">
                 {%- if s.links.size > 0 -%}
@@ -69,6 +87,7 @@
                 {%- else -%}
                   {{ s.name }}
                 {%- endif -%}
+                {%- if s.tentative %}<span class="chip chip--tentative">Tentative</span>{% endif -%}
               </span>
               {%- assign meta = "" -%}
               {%- if s.role and s.role != "" -%}{%- assign meta = s.role -%}{%- endif -%}
@@ -81,6 +100,25 @@
             </li>
           {%- endfor -%}
         </ul>
+      {%- endif -%}
+
+      {%- comment -%}
+        Some invitees are held back. Saying so keeps a partly-confirmed panel
+        honest: the reader sees that the list is incomplete rather than
+        assuming these are all the participants.
+      {%- endcomment -%}
+      {%- if hidden_speaker_count > 0 -%}
+        <p class="talk__tba">
+          {%- if shown_speakers.size > 0 -%}
+            {%- if hidden_speaker_count == 1 -%}
+              One more panelist to be announced.
+            {%- else -%}
+              {{ hidden_speaker_count }} more panelists to be announced.
+            {%- endif -%}
+          {%- else -%}
+            Speaker to be announced.
+          {%- endif -%}
+        </p>
       {%- endif -%}
 
       {%- if t.title == "" or t.title == nil -%}

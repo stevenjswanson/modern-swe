@@ -1,0 +1,146 @@
+{
+  "_comment": "Outreach state for the seminar. Deliberately contains NO email addresses: this repo is public. Addresses live in _outreach/contacts.local.json, which is gitignored. Updated by the check-speaker-replies skill; see .claude/skills/check-speaker-replies/SKILL.md.",
+  "last_checked": "2026-08-27T01:30:00Z",
+  "people": [
+    {
+      "name": "Kylie Taitano",
+      "contact_key": "kylie-taitano",
+      "talk_date": "2026-09-28",
+      "invited_by": "steve",
+      "status": "confirmed",
+      "threads": [
+        "19fabb06b4d9db5f"
+      ],
+      "last_seen_message": "1a039256f1785f36",
+      "last_seen_at": "2026-08-25T13:38:46Z",
+      "notes": "Shares a thread with the Whova group; it began as outreach to YY Zhou. Confirmed 9/28. Said she would send the remaining items by the end of the week of Aug 24 — check whether the logistics form and video release actually arrived.",
+      "logistics_form_due": "2026-09-11"
+    },
+    {
+      "name": "Whova group (Rahul Chityala, Tony Wu, Louis Lesmana, Haochen Huang)",
+      "contact_key": "whova",
+      "talk_date": "2026-10-05",
+      "invited_by": "steve",
+      "status": "confirmed",
+      "threads": [
+        "19fabb06b4d9db5f"
+      ],
+      "last_seen_message": "1a03b83ccb94af62",
+      "last_seen_at": "2026-08-26T00:41:13Z",
+      "notes": "Introduced by YY Zhou; Rahul Chityala answers for the group of four. Confirmed Oct 5 on 2026-08-25 18:39Z: \"Yes, that date works for us and we are interested in the meetings with students afterwards.\" He also flagged that the video release attachment was missing; Steve sent the link at 18:47Z and asked for names/titles at 18:49Z, and Rahul replied 00:41Z: \"Thank you, the link works well. We will send you the necessary information as soon as possible.\" Awaiting names as they should appear, titles, bios, headshots, release forms. NOTE: shares thread 19fabb06b4d9db5f with Kylie Taitano -- read the tail per sender. [2026-08-27 check] No new mail since 00:41Z. Names as they should appear, titles, bios, headshots and release forms are still outstanding. Published on the site as of this check.",
+      "logistics_form_due": "2026-09-11"
+    },
+    {
+      "name": "Bill Pugh",
+      "contact_key": "bill-pugh",
+      "talk_date": "2026-10-12",
+      "invited_by": "leo",
+      "status": "confirmed",
+      "threads": [
+        "1a021186ab8c9b7f",
+        "1a039d212d10321c"
+      ],
+      "last_seen_message": "1a039f99aa49b435",
+      "last_seen_at": "2026-08-25T17:28:07Z",
+      "notes": "Leo owns this relationship and is his host for the day. Bill accepted to Leo off-thread before any reply was visible in Steve's mail, then confirmed Oct 12 in Leo's planning thread: \"Yes, Oct 12th works very well for me. More soon.\" The canonical example of why this skill searches by address, not by thread id. Owes the speaker logistics form (format, headshot, bio, title, abstract, video release, parking) by Sept 11.",
+      "logistics_form_due": "2026-09-11"
+    },
+    {
+      "name": "Roy Guo",
+      "contact_key": "roy-guo",
+      "talk_date": "2026-10-26",
+      "invited_by": "steve",
+      "status": "invited",
+      "threads": [
+        "19fd27aefea445b1"
+      ],
+      "last_seen_message": "1a037a2288224e7d",
+      "last_seen_at": "2026-08-25T06:36:08Z",
+      "notes": "Introduced by Geoff Voelker, who is bcc'd/cc'd on the thread. [2026-08-27 check] Still no reply to the Oct 26 offer sent 2026-08-25 06:27Z; the newest message in the thread is Steve's own. He was warm on Aug 6 (\"thrilled to be invited\") but that predates the date assignment, so this is not a date confirmation. The only scheduled speaker with no date agreed."
+    },
+    {
+      "name": "Faculty panel (Deian Stefan, Dan Fu, Tianyu Gao, Arun Kumar, George Porter)",
+      "contact_key": "faculty-panel",
+      "talk_date": "2026-11-09",
+      "invited_by": "steve",
+      "status": "partial",
+      "threads": [
+        "1a0379bb38a9773b",
+        "1a034854c62364ca",
+        "19fec8a1fd8fb9f9"
+      ],
+      "last_seen_message": "1a03c48a495e0ba3",
+      "last_seen_at": "2026-08-26T04:16:13Z",
+      "notes": "Five invitees who reply separately. 4 of 5 have confirmed Nov 9; only George Porter is outstanding, and he also owes an answer on joining by Zoom. [2026-08-27 check] No new mail since Arun's 04:16Z confirmation. Arun was still flagged tentative on the site despite having confirmed -- corrected this check. George remains speaker-level tentative.",
+      "members": [
+        {
+          "name": "Dan Fu",
+          "status": "confirmed",
+          "quote": "November 9 works for me!",
+          "at": "2026-08-25T21:56:01Z"
+        },
+        {
+          "name": "Tianyu Gao",
+          "status": "confirmed",
+          "quote": "Nov 9 works for me too!",
+          "at": "2026-08-25T22:59:45Z"
+        },
+        {
+          "name": "Deian Stefan",
+          "status": "confirmed",
+          "quote": "works for me too!",
+          "at": "2026-08-25T23:08:26Z",
+          "note": "Replied from his cseweb address, not the one he was invited at. Both are in contacts.local.json."
+        },
+        {
+          "name": "Arun Kumar",
+          "status": "confirmed",
+          "quote": "Cool, thanks for these details, Steve. Nov 9 works for me too. I'll send the other details tomorrow.",
+          "at": "2026-08-26T04:16:13Z"
+        },
+        {
+          "name": "George Porter",
+          "status": "interested",
+          "quote": "I'd definitely be interested in representing an industry perspective on this.",
+          "at": "2026-08-25T03:25:49Z",
+          "note": "Pre-date. Also has not answered Steve's note that Nov 9 would require him to join by Zoom."
+        }
+      ]
+    },
+    {
+      "name": "Artur Borycki (Teradata)",
+      "contact_key": "artur-borycki",
+      "talk_date": null,
+      "invited_by": "wil-dyer-cap",
+      "status": "interested",
+      "threads": [
+        "1a03af72b0b2f010"
+      ],
+      "last_seen_message": "1a03af72b0b2f010",
+      "last_seen_at": "2026-08-25T22:07:11Z",
+      "notes": "New lead, not yet in talks.json. Introduced by Wil Dyer (Jacobs School Corporate Affiliates Program) after CSE asked CAP for industry speakers. Artur: \"Yes I will be happy to do it. Probably the best will be October (except Week of October 18th). We can probably also target November if October would not work.\" October Mondays are all taken; Nov 2/16/23/30 are open. Awaiting a reply from Steve. Wil asked to keep him and Cody Noghera copied. Separately, Wil Dyer wrote 2026-08-25 20:21Z on the older CAP thread (19fcf2dbea832bc7) that he is working contacts at Apple, Teradata, Sailplane.ai, TikTok and Visa -- more CAP leads may follow."
+    }
+  ],
+  "leads": [
+    {
+      "name": "Deian Stefan's suggestions",
+      "source_thread": "1a021954816890c4",
+      "at": "2026-08-25T23:05:10Z",
+      "notes": "Bobby Holley (CTO of Firefox) or a Mozilla Distinguished Engineer; Michael Yaglian (leads an engineering team at Bloomberg). Not yet contacted."
+    },
+    {
+      "name": "Ross Maniaci",
+      "source_thread": "1a03c6be99bc9c67",
+      "at": "2026-08-26T05:14:45Z",
+      "contact_key": "ross-maniaci",
+      "notes": "Met at the SDIOS meetup (intro via Kevin); Steve emailed 04:55Z, Ross replied 19 minutes later. Senior Mobile Software Engineer at RadioMobile; 15+ yrs mobile (native iOS, React Native, Android); previously Omnipod 5 at Insulet and CGM software at Dexcom. Heavy Claude Code and Copilot user. Offered: \"I'd be glad to share more specific examples ... I'd also be happy to chat sometime.\" Not yet invited to speak -- this is an offer to talk, not a seminar commitment. Strong fit: regulated, reliability-critical mobile software, a domain no other speaker covers."
+    },
+    {
+      "name": "Scott Sykora",
+      "source_thread": "1a006f1b957239b6",
+      "at": "2026-08-26T22:23:17Z",
+      "contact_key": "scott-sykora",
+      "notes": "Steve sent him the availability form on 2026-08-15 after meeting him; he replied 2026-08-26 22:23Z. He did NOT answer about his own availability -- he replied about a beta app (partforge.ai) and offered three referral names: (1) someone running a local engineering lab building cameras for submarines, more ME than software; (2) a software engineer at Google working remotely on their AI requirements; (3) 'Ben', a former graphic-designer colleague now a lighting installation artist using TouchDesigner -- not a software engineer but builds with complex software. Scott's own words: \"I think you might be able to find better people though other connection. I'm just not really part of the local scene.\" Needs a reply from Steve on both the app and which names to pursue."
+    }
+  ]
+}

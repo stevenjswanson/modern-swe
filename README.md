@@ -91,6 +91,35 @@ and push. That is the whole change.
 set `show_tentative: true` in `_data/course.yml`. That one *does* affect the
 live site.
 
+### Tentative individuals inside a confirmed slot
+
+A slot can be settled while one of its people is not. This happens with panels:
+the date is fixed and most panelists have agreed, but one or two have not yet
+answered. Marking the whole talk tentative would hide everybody, which
+overstates the uncertainty.
+
+So a **speaker** carries its own `tentative` flag, using the same rule as the
+talk:
+
+```json
+{
+  "date": "2026-11-09",
+  "tentative": false,
+  "speakers": [
+    { "name": "Dan Fu",       "tentative": false, "role": "..." },
+    { "name": "Arun Kumar",   "tentative": true,  "role": "..." }
+  ]
+}
+```
+
+The published site lists the confirmed people, omits the tentative ones, and
+adds "*N* more panelists to be announced" so the list does not read as complete.
+Locally, everyone appears, with a "Tentative" chip on the unconfirmed ones.
+
+Omitting the field means confirmed, so existing entries need no change. Setting
+it inside an already-tentative talk does nothing — the talk-level flag hides the
+whole slot — and `bin/check-talks` warns if you do.
+
 ### A note on personal data
 
 `talks.json` is in a public repo. Anything written there is one `git push` from

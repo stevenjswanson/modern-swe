@@ -9,3 +9,6 @@ vendor/
 # Not committed: a lockfile generated on this arm64/x86_64-mixed Mac pins
 # Darwin platforms and can break the Linux CI build. CI resolves from Gemfile.
 Gemfile.lock
+
+# Outreach contact details: personal email addresses, not for a public repo.
+_outreach/contacts.local.json

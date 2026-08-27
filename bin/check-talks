@@ -27,6 +27,9 @@ KNOWN_KEYS = {
     "date", "time", "location", "status", "tentative", "title", "abstract",
     "speakers", "slides", "videos", "links", "tags",
 }
+# A speaker may be tentative on their own: a slot can have a firm date while one
+# invitee has not yet agreed to it (a partly-confirmed panel).
+SPEAKER_KEYS = {"name", "tentative", "role", "org", "bio", "links"}
 LINK_LISTS = ("slides", "videos", "links")
 
 errors = []
@@ -56,7 +59,7 @@ def check_link_list(where, items, field):
             warn(at, 'has no "label"; a generic one will be shown')
 
 
-def check_speakers(where, speakers):
+def check_speakers(where, speakers, talk_tentative):
     if not isinstance(speakers, list):
         err(where, f'"speakers" must be a list, got {type(speakers).__name__}')
         return
@@ -67,9 +70,19 @@ def check_speakers(where, speakers):
             continue
         if not str(s.get("name", "")).strip():
             err(at, 'has no "name"')
+        if "tentative" in s and not isinstance(s["tentative"], bool):
+            err(at, f'"tentative" must be true or false, got {s["tentative"]!r}')
+        # A tentative slot already hides everyone in it, so a per-speaker flag
+        # there is dead weight -- and worse, it implies the others are settled.
+        if talk_tentative and s.get("tentative") is True:
+            warn(at, 'is marked tentative inside an already-tentative talk; '
+                     "the talk-level flag hides the whole slot, so this has no effect")
         links = s.get("links")
         if links is not None:
             check_link_list(at, links, "links")
+        for key in s:
+            if key not in SPEAKER_KEYS and not key.startswith("_"):
+                warn(at, f'unknown field "{key}" -- it will be ignored (typo?)')
 
 
 def main():
@@ -149,7 +162,7 @@ def main():
             err(where, f'"tentative" must be true or false, got {t["tentative"]!r}')
 
         if t.get("speakers") is not None:
-            check_speakers(where, t["speakers"])
+            check_speakers(where, t["speakers"], t.get("tentative") is True)
 
         for field in LINK_LISTS:
             if t.get(field) is not None:
@@ -175,7 +188,17 @@ def main():
 
     tba = sum(1 for t in talks if isinstance(t, dict) and t.get("status") == "tba")
     tent = sum(1 for t in talks if isinstance(t, dict) and t.get("tentative") is True)
+    tent_sp = sum(
+        1
+        for t in talks
+        if isinstance(t, dict) and t.get("tentative") is not True
+        for s in (t.get("speakers") or [])
+        if isinstance(s, dict) and s.get("tentative") is True
+    )
+    # Speakers held back inside otherwise-public slots are counted separately:
+    # they are the ones a reader of the live site would notice missing.
     print(f"\nOK: {n} talk(s), {n - tba} filled in, {tba} still TBA, {tent} tentative"
+          f"{f', {tent_sp} tentative speaker(s) in published slots' if tent_sp else ''}"
           f"{f' -- {len(warnings)} warning(s)' if warnings else ''}")
     return 0
 
