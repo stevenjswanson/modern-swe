@@ -23,6 +23,11 @@ quietly. The sections below are organized around the specific ways it fails.
 3. **Never report status without checking first** — `tracking.json` is a cache,
    and a cache is a record of the past, not a statement about now (Step 0).
 
+A check is not only about dates. Speakers also send **materials** — bios,
+headshots, signed releases — and those need collecting (Step 3.5) and, for
+anything destined for the public site, the user's eyes before publishing
+(Step 3.6).
+
 All three exist because all three have already failed here, each in a different
 place in the pipeline: the reply was in a thread nobody was watching; the reply
 was in a watched thread but hidden by a truncated preview; the reply had arrived
@@ -100,6 +105,21 @@ the co-organizers. Then search a window that starts a little before
 
 The Gmail search tool is `mcp__e07e6999-df03-48af-a0fe-acbe1033eb1e__search_threads`.
 
+> **The parameter is `query`, not `q`.** Passing `q` fails, and for four consecutive
+> checks (2026-09-14 to 2026-09-16) it failed as a bare `Tool execution failed`
+> with no schema hint, which reads exactly like a server outage. It was diagnosed
+> only when the server started returning `Unknown name "q"`. Four checks ran with
+> Rule 1 silently disabled, re-reading recorded thread ids and nothing else --
+> the precise failure this skill exists to prevent. The first correct call found
+> two things those checks had missed.
+>
+> **So: if search fails twice in a row, re-fetch the tool schema before concluding
+> the server is down.** `ToolSearch` with
+> `select:mcp__e07e6999-df03-48af-a0fe-acbe1033eb1e__search_threads` prints the
+> current parameters. A malformed call and a dead server look identical from the
+> outside; only the schema tells them apart. Never record more than one check as
+> 'degraded' without doing this.
+
 ```
 in:anywhere newer_than:7d {from:addr1 from:addr2 from:addr3 ...}
 ```
@@ -159,17 +179,55 @@ sent mail. Both times the preview showed five messages from four weeks earlier,
 and both times that preview was read as "nothing new." The data was in hand and
 thrown away at the triage step.
 
-A cheap way to catch the same class of error: for each person, compare the
-newest message in `get_thread` against the `last_seen_message` recorded in
-`tracking.json`. If the recorded id is not the final message, there is new
-content — regardless of what any preview suggested. Do that comparison in code,
-not by eye:
+**This rule has now failed twice, the same way both times.** The second was
+Roy Guo: he sent his entire intake package -- headshot, signed release, bio,
+title, abstract, parking, and "I will be traveling to SD from Seattle" -- and
+the next check reported nothing from him. The address search returned his
+thread. The preview showed five messages ending four days earlier. It was not
+opened.
+
+Read that carefully, because the lesson is not "try harder." Both times the
+rule was stated mechanically and *executed as judgment*: open the threads whose
+preview looks new, skip the ones that look old. A preview that looks old is the
+symptom, so that triage is guaranteed to miss exactly the messages this skill
+exists to find. Resolve alone does not fix it -- it failed even with the rule
+in bold and a worked example attached.
+
+### Make the rule produce evidence
+
+Do not keep "which threads did I open?" in your head. Write the ids down first,
+then tick them off, so a skipped thread is visible rather than forgotten:
 
 ```bash
-python3 - <<'PY'
-# newest id from get_thread output vs tracking.json last_seen_message
-PY
+# right after the Step 2 search, before opening anything
+printf '%s\n' <id> <id> <id> ... > /tmp/threads-to-open.txt
+wc -l < /tmp/threads-to-open.txt    # this many get_thread calls, no fewer
 ```
+
+Then run the diff **in code**. This is the backstop that would have caught both
+misses, and it is one command. Build `tails` from the get_thread results (thread
+id -> id of its final message) and compare against what is on record:
+
+```bash
+python3 - <<'SCRIPT'
+import json
+tails = {}   # fill in: {thread_id: last_message_id} from your get_thread calls
+trk = json.load(open('_outreach/tracking.json'))
+for p in trk['people']:
+    # thread_tails maps EACH thread to the last message seen in that thread.
+    # A single last_seen_message per person cannot be compared against several
+    # threads -- that ambiguity makes the check fire on shared threads (Kylie's
+    # tail belongs to Rahul) and on anyone with two threads (Bill).
+    for th, seen in p.get('thread_tails', {}).items():
+        if th not in tails:
+            print('NOT OPENED :', p['contact_key'], th)
+        elif tails[th] != seen:
+            print('NEW CONTENT:', p['contact_key'], th)
+SCRIPT
+```
+
+`NOT OPENED` means you skipped a thread the search returned. That is the bug,
+every time -- go back and open it before writing a word of the report.
 
 Once a thread is open, use `messageFormat: "MINIMAL"` to scan its shape and
 `"PLAIN_TEXT"` for the body of anything that looks like a decision. Snippets cut
@@ -180,6 +238,216 @@ both Kylie Taitano and the four Whova engineers. "This thread has been handled"
 is not a fact about the thread; it is a fact about one person in it. Walk the
 tail message by message and attribute each to a sender before concluding
 anything about anyone.
+
+## Step 3.5: Collect the materials speakers send
+
+Confirmed speakers owe a package: a short bio, a headshot, a talk title and
+abstract where applicable, and a **signed video release**. These arrive as
+ordinary replies — a line of text and an attachment — and they are easy to walk
+past while looking for date confirmations. Arun Kumar's bio and signed release
+came in the same thread as the panel scheduling, three messages after his "Nov 9
+works for me."
+
+So for every message you open, check `attachments` / `attachmentIds`. Any
+message from a speaker with a PDF or image attached is almost certainly part of
+this package.
+
+**Saving an attachment.** There is no attachment-download tool on the Gmail
+server here. Fetch the message with `messageFormat: "RAW"` — it will overflow
+the output limit and be written to a file, which is what you want — then decode
+it:
+
+```bash
+python3 - <<'PY'
+import json, base64, email, os
+raw = json.load(open("<overflow-file>"))["raw"]
+msg = email.message_from_bytes(base64.urlsafe_b64decode(raw + "="*(-len(raw)%4)))
+out = "_speakers/<date>-<slug>/releases"   # or the talk dir for bios/headshots
+os.makedirs(out, exist_ok=True)
+for part in msg.walk():
+    fn = part.get_filename()
+    if fn:
+        open(os.path.join(out, fn), "wb").write(part.get_payload(decode=True))
+        print("saved", fn)
+PY
+```
+
+**Where things go**, and why it matters — see `_speakers/README.md`:
+
+- `_speakers/<date>-<slug>/materials.md` — bios, titles, abstracts, and a note
+  of what is still missing. Tracked in git; this text is bound for the public
+  schedule anyway.
+- `_speakers/<date>-<slug>/releases/` — signed release PDFs. **Gitignored.**
+  This repository is public, and a signed release carries the speaker's
+  handwritten signature. Committing one publishes it to the open web, and git
+  history keeps it published even after a delete. Keeping it off the rendered
+  site is not sufficient protection; the repo is the exposure.
+
+`_speakers/` is excluded from Jekyll twice over — leading underscore, plus an
+entry in `_config.yml` — so none of it is ever served. After adding files,
+confirm with a production build that nothing new appears under `_site/`.
+
+Record in `tracking.json` what arrived and what is still outstanding, so the
+Sept 11 deadline can be chased per person rather than in the aggregate.
+
+**Also update the speaker's `materials` record in `_data/talks.json`**, so
+status lives next to the person rather than only in the outreach notes:
+
+```json
+"materials": {
+  "release": { "signed": true, "path": "_speakers/.../ucsd-model-release-form-ArunSigned.pdf" },
+  "headshot": { "have": true, "approved": true, "path": "_speakers/.../headshots/x.jpg" }
+}
+```
+
+`path` is repo-root-relative and required when `signed` is true. The template
+never renders any of it. Because the release PDFs are gitignored, a `path`
+pointing at a file that is not in the working copy is normal on a fresh clone
+and in CI — the validator warns rather than failing, since an error there would
+block the deploy over a file that is absent by design.
+
+### The nine things every confirmed speaker owes
+
+Tracked per speaker in `materials` in `_data/talks.json`, so "what is still
+missing" is answerable per person instead of by rereading the mail:
+
+1. **Format** — presentation, panel, or interview. *Infer it*: a talk billed
+   "Panel: ..." makes its speakers panelists. Say what you inferred so they can
+   correct it.
+2. **Name and title** as they want it shown (`display_name`).
+3. **Headshot** — see below.
+4. **Short bio** (the speaker's `bio` field).
+5. **Talk title** — only for `format: presentation`; lives on the talk.
+6. **Abstract** — same.
+7. **Signed video release**.
+8. **Parking** — needed or not.
+9. **Travel** — whether they are coming from outside San Diego, in which case
+   staff follow up about travel and reimbursement.
+
+`bin/check-talks` reports `N/M intake complete`, and the dashboard lists what
+each person still owes.
+
+### Inferring travel, and never trusting the inference
+
+Guess from what you already know — UC San Diego faculty are local; a speaker at
+a San Diego company is local; someone at another university is not — and record
+it as `travel: {local, confirmed, note}`. **Set `confirmed: false` on anything
+you inferred**, put the reasoning in `note`, and ask the speaker to confirm in
+the same email. `bin/check-talks` warns on every unconfirmed guess, because
+booking flights off an assumption is the expensive mistake.
+
+Only set `confirmed: true` when the speaker said so themselves, or when their
+own message settles it — Bill sent his flight times, which is better than any
+inference.
+
+### Headshots: sourcing is the risky part
+
+You may look one up rather than making the speaker dig one out, but **the
+failure mode is publishing a photo of the wrong person**, which is worse than
+having no photo at all. So:
+
+- Take it from a page that is unambiguously *theirs*: their institutional
+  faculty page, their lab page, their employer's official team page. A personal
+  academic URL like `cseweb.ucsd.edu/~arunkk` is ideal — it is self-published by
+  the person named.
+- **Never take an image off a general image search.** Common names collide, and
+  a search result carries no proof of identity.
+- **Look at the image before proposing it.** Read the file. Confirm it is one
+  person, a portrait, and plausibly the person described. A filename is not
+  evidence.
+- Record `source` and `verified` alongside `proposed_url`; the validator errors
+  if a proposed image has no `source`.
+- Check the resolution — roughly 1000px on the long edge or better for it to
+  hold up on screen. Downscale for the repo.
+- **Always ask permission**, with `approved: null` until they answer. It is
+  their likeness, and a photo they did not choose may be one they dislike.
+
+## Step 3.6: Show bios before they go on the site
+
+A bio is public text about a real person, written by them. Put it in front of
+the user before it reaches `talks.json` — never paste it straight in.
+
+Quote it in full, give the **word count**, and compare it to what is already on
+the schedule so length is judged against neighbours rather than in a vacuum:
+
+```bash
+python3 - <<'PY'
+import json
+for t in json.load(open("_data/talks.json"))["talks"]:
+    for s in t["speakers"]:
+        if s.get("bio"):
+            print(f'{len(s["bio"].split()):>4}w  {s["name"]}')
+PY
+```
+
+Then offer a trimmed version alongside the original and let the user pick. Two
+things worth flagging when you do:
+
+- **Overlap with `role`.** The schedule already renders each speaker's role and
+  org, so a bio that reopens with the same title reads as a stutter on the page.
+- **What the seminar is about.** Lines about how the person's team actually
+  builds software earn their place here; general research-area summary usually
+  does not.
+
+Wait for the user's choice. Editing someone's self-written bio is not a call to
+make silently.
+
+## Step 3.7: Draft the follow-up
+
+When a speaker sends something, draft a reply into `_outreach`-tracked threads
+with `create_draft` — **never send**. Two rules keep the drafts useful:
+
+- **Only draft where you would not be pre-empting the user or a co-organizer.**
+  Draft when the last message in a thread is the speaker's and the thread is
+  addressed to the user. Skip when a co-organizer owns the relationship (Bill's
+  travel mail is addressed to Leo), and skip when the reply needs substance you
+  do not have — a question about someone's product, or a date that has not been
+  chosen. Flag those in the report instead; a thank-you that dodges the actual
+  question is worse than no draft.
+- **List what is still outstanding**, drawn from the nine items above, trimmed
+  to what that person actually still owes. Attach a deadline to the list ("if
+  you could get them to me this week") — a list with no ask attached is easy to
+  set aside.
+- **Inferences are a judgment call, not an automatic paragraph.** Stating them
+  for correction ("we have you down as a panelist and as local, let me know if
+  either is wrong") is what the validator's warnings want, but Steve cut
+  exactly that paragraph from the Kylie draft as clutter. Offer it, expect it
+  to go, and do not treat the email as the guaranteed route to confirming a
+  travel guess.
+
+- **Put Leo Porter (`leporter@ucsd.edu`) on every speaker email.** He co-invites
+  and co-hosts, and speakers reply to him as often as to the user -- that is how
+  Bill Pugh's confirmation ended up in a thread the recheck was not watching. A
+  draft that leaves him off can route the answer out of view.
+
+Check `list_drafts` first — if a draft already exists on that thread, the user
+may have started one by hand, and a second is noise. An *empty* shell draft
+(salutation and signature only) is the exception: write a proper threaded one
+and tell the user to discard the shell, since `update_draft` would detach it.
+
+### Start from the recorded templates
+
+`_outreach/templates/` holds messages Steve has actually sent, with notes on
+what he cut from the drafted version. Read the relevant one before composing:
+
+- `pre-talk-meeting.md` — asking a confirmed speaker for the 30-minute Zoom
+  chat and chasing their outstanding intake items.
+
+The house style these record is consistent and worth internalizing: no agenda
+for a short meeting, no countdown to the talk date, link to the site instead of
+restating time and place, and cut roughly half of whatever reads as complete.
+When a draft comes back edited, update the template — the edits are the signal.
+
+Two traps on this Gmail server, both hit in practice:
+
+- `update_draft` **detaches the draft from its thread** — the returned
+  `threadId` becomes the draft's own id. Get the content right in the initial
+  `create_draft` (which threads correctly via `replyToMessageId`) rather than
+  patching afterwards.
+- `htmlBody` is **escaped on the way in**, so markup arrives as visible tags.
+  Send plain text.
+- There is no delete-draft tool here, so a bad draft cannot be cleaned up —
+  which is the real reason to get it right the first time.
 
 ## Step 4: Classify each person honestly
 
@@ -195,6 +463,15 @@ reply from being scored as a commitment:
 | `declined` | Said no, or proposed only dates that do not work. |
 | `invited` | Invitation sent, nothing back yet. |
 | `gap` | In `talks.json` as tentative, but no outreach on record at all. |
+
+**Some threads are with brokers, not speakers.** Alex Gantman is finding
+someone from Qualcomm; Ben Ochoa declined for himself but named a developer in
+his Carlsbad office; Wil Dyer works the CAP list; Geoff Voelker and YY Zhou each
+made an introduction that became a speaker. Mark these `"kind": "broker"` in
+`tracking.json`. They matter for two reasons: a broker going quiet costs a slot
+just as surely as a speaker going quiet, and the person they eventually name is
+a speaker nobody has on record yet. Chase the broker, and when a name appears,
+add that person in their own right.
 
 Two distinctions worth preserving because they have already caused a wrong
 conclusion:
@@ -225,7 +502,9 @@ thing most worth surfacing.
 
 ## Step 6: Report
 
-Lead with what changed. The user has read the unchanged rows before.
+Lead with what changed. The user has read the unchanged rows before. Materials
+that arrived, and materials still missing against the Sept 11 deadline, belong
+in this report as much as date confirmations do.
 
 ```
 ## New since <last_checked>
@@ -287,6 +566,33 @@ If the loose sweep in Step 2 surfaced a new address for someone, add it to
 
 This step is what makes the next run a diff instead of a re-derivation. Skipping
 it is how a check silently becomes a full re-read that misses things.
+
+## Step 9: Regenerate the dashboard
+
+Finish every check by running:
+
+```bash
+bin/speaker-dashboard
+```
+
+It re-reads `_data/talks.json` and `_outreach/tracking.json` and writes
+`_outreach/dashboard.html`, then opens it. Add `--text` for a terminal table, or
+`--no-open` to write without launching a browser (use that when the user did not
+ask to see it, so a check does not fling a window at them unprompted).
+
+Run it **after** Step 8, never before: it renders whatever is in `tracking.json`,
+so running it against un-updated state produces a confident-looking page
+describing the previous check. It stamps itself with `last_checked` and shows a
+stale banner past a few hours, which is the guard — but the stamp is only honest
+if Step 8 actually ran first.
+
+The dashboard is deliberately generated rather than saved. A published snapshot
+would freeze and drift exactly the way the cache did in Step 0; regenerating is
+what keeps it tied to real state. The output is gitignored and `_outreach/` is
+excluded from Jekyll, so nothing here reaches the site.
+
+Mention the two or three items it flags under "Needs attention" in your report
+rather than making the user go read the page.
 
 ## A note on names
 

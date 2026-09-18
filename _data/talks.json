@@ -7,15 +7,37 @@
       "location": "",
       "status": "confirmed",
       "tentative": false,
-      "title": "",
-      "abstract": "",
+      "title": "From a 2.8 GPA to Leading AI Platform Development at Scale",
+      "abstract": "In a world that rewards perfect curation, by both humans and AI, it's easy to believe a successful career in tech means landing every move with a perfect 10. The engineers who thrive are the ones who run toward challenges and welcome failure as a close friend. Kylie shares twelve years of that, from graduating UCSD with a 2.8 GPA to leading AI platform development at scale at Intuit.",
       "speakers": [
         {
           "name": "Kylie Taitano",
-          "role": "Engineering Manager, Intuit",
+          "role": "Manager, Software Engineering · Intuit · UCSD BS in Computer Science '14",
           "org": "",
-          "bio": "",
-          "links": []
+          "bio": "Kylie serves on the UC San Diego CSE Alumni Advisory Board. She spent nine years as a software engineer at Intuit before becoming a manager, and now leads the TurboTax Online platform teams behind the backend services and AI capabilities that serve tens of millions of customers a year. She also co-founded Code With Her, a San Diego nonprofit that has brought coding workshops and mentorship to thousands of students from underrepresented communities. When she's not championing tech and culture, you can usually find her chasing sunsets (and her two dogs, Bo and Butter) at Fiesta Island Dog Beach.",
+          "links": [],
+          "materials": {
+            "format": "presentation",
+            "display_name": "Kylie Taitano, Manager, Software Engineering | Intuit | UCSD BS in Computer Science '14",
+            "headshot": {
+              "have": true,
+              "proposed_url": "",
+              "source": "sent by Kylie Taitano herself, 2026-09-16 05:22Z",
+              "verified": "viewed 2026-09-16: single-person portrait, 2160x1620, Geisel Library backdrop",
+              "approved": true,
+              "path": "_speakers/2026-09-28-kylie-taitano/headshots/kylie-taitano.jpg"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-09-28-kylie-taitano/releases/ucsd-model-release-form-KylieTaitano.pdf"
+            },
+            "parking": false,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "Kylie, 2026-09-16: \"I'll be taking the trolley!\""
+            }
+          }
         }
       ],
       "slides": [],
@@ -34,31 +56,119 @@
       "speakers": [
         {
           "name": "Tony Wu",
-          "role": "Senior Software Engineer",
+          "role": "Engineering Manager",
           "org": "Whova",
-          "bio": "",
-          "links": []
+          "bio": "Tony Wu is an Engineering Manager at Whova, an all-in-one event management platform based in San Diego. An Electrical Engineering graduate from the University of Waterloo, he joined Whova in 2018 and currently leads the Mobile and Data teams. Outside of work, he enjoys cooking, traveling, and photography.",
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "Tony Wu",
+            "headshot": {
+              "have": true,
+              "proposed_url": "",
+              "source": "sent by Rahul Chityala for all four, 2026-09-14 19:00Z",
+              "verified": "viewed 2026-09-14: single-person portrait, 500x500; matched to person by Content-ID order in the HTML body",
+              "approved": true,
+              "path": "_speakers/2026-10-05-whova/headshots/tony-wu.jpeg"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-10-05-whova/releases/ucsd-model-release-form-signed-tony.pdf"
+            },
+            "parking": true,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "Rahul, 2026-07-31: \"we are all in San Diego\""
+            }
+          }
         },
         {
           "name": "Louis Lesmana",
-          "role": "",
+          "role": "Engineering Manager",
           "org": "Whova",
-          "bio": "",
-          "links": []
+          "bio": "Louis Lesmana is an Engineering Manager at Whova, where he has worked since joining the company in 2016 after graduating from UC San Diego. He started his career as a software engineer working on the company's early projects and has since taken on responsibilities across software engineering, technical project management, and quality engineering. Outside of work, Louis enjoys traveling, exploring new places, and finding good coffee.",
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "Louis Lesmana",
+            "headshot": {
+              "have": true,
+              "proposed_url": "",
+              "source": "sent by Rahul Chityala for all four, 2026-09-14 19:00Z",
+              "verified": "viewed 2026-09-14: single-person portrait, 674x674; matched to person by Content-ID order in the HTML body",
+              "approved": true,
+              "path": "_speakers/2026-10-05-whova/headshots/louis-lesmana.png"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-10-05-whova/releases/UCSD-Model-Image-Release-signed-Louis-Lesmana.pdf"
+            },
+            "parking": true,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "Rahul, 2026-07-31: \"we are all in San Diego\""
+            }
+          }
         },
         {
           "name": "Haochen Huang",
-          "role": "",
+          "role": "Engineering Manager",
           "org": "Whova",
-          "bio": "",
-          "links": []
+          "bio": "Haochen is an Engineering Manager at Whova. He leads the infrastructure team, helping build secure and reliable software. He holds a PhD in computer science from UC San Diego and joined Whova in 2023.",
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "Haochen Huang",
+            "headshot": {
+              "have": true,
+              "proposed_url": "",
+              "source": "sent by Rahul Chityala for all four, 2026-09-14 19:00Z",
+              "verified": "viewed 2026-09-14: single-person portrait, 800x800; matched to person by Content-ID order in the HTML body",
+              "approved": true,
+              "path": "_speakers/2026-10-05-whova/headshots/haochen-huang.png"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-10-05-whova/releases/ucsd-model-release-form-Haochen-Huang.pdf"
+            },
+            "parking": true,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "Rahul, 2026-07-31: \"we are all in San Diego\""
+            }
+          }
         },
         {
           "name": "Rahul Chityala",
-          "role": "",
+          "role": "Engineering Manager",
           "org": "Whova",
-          "bio": "",
-          "links": []
+          "bio": "Rahul Chityala is an Engineering Manager at Whova, an event management company whose software runs conferences and trade shows worldwide. He leads the teams behind the company's event registration platform and other core functionalities of the event management system. He joined Whova as an engineer in 2020 and holds a BS in Computer Science from the University of Wisconsin–Madison.",
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "Rahul Chityala",
+            "headshot": {
+              "have": true,
+              "proposed_url": "",
+              "source": "sent by Rahul Chityala for all four, 2026-09-14 19:00Z",
+              "verified": "viewed 2026-09-14: single-person portrait, 1767x1621; matched to person by Content-ID order in the HTML body",
+              "approved": true,
+              "path": "_speakers/2026-10-05-whova/headshots/rahul-chityala.png"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-10-05-whova/releases/ucsd-model-release-form-signed.pdf"
+            },
+            "parking": true,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "Rahul, 2026-07-31: \"we are all in San Diego\""
+            }
+          }
         }
       ],
       "slides": [],
@@ -80,7 +190,26 @@
           "role": "Professor Emeritus, University of Maryland",
           "org": "",
           "bio": "",
-          "links": []
+          "links": [],
+          "materials": {
+            "format": null,
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": false,
+              "confirmed": true,
+              "note": "University of Maryland; sent his own flight times 2026-08-27"
+            }
+          }
         }
       ],
       "slides": [],
@@ -107,16 +236,37 @@
       "time": "",
       "location": "",
       "status": "confirmed",
-      "tentative": true,
-      "title": "",
-      "abstract": "",
+      "tentative": false,
+      "title": "AI, Games, and Software Engineering: Inside XBOX",
+      "abstract": "Drawing on my work at XBOX, this talk looks at how AI is changing the way engineers prototype, explore codebases, and increasingly work with agents — and at how it's reshaping game development, from tooling to creative process. I'll share where AI meaningfully amplifies engineers, where it falls short, and why technical judgment still matters.",
       "speakers": [
         {
           "name": "Roy Guo",
           "role": "Game Developer",
           "org": "",
-          "bio": "",
-          "links": []
+          "bio": "Roy Guo is a senior software engineer at Microsoft working on XBOX shopping experiences across web, PC, and console. A UC San Diego and UC Berkeley computer science graduate, he has worked across full-stack development, cloud infrastructure, and game technology. Today, his work focuses on applying AI to software engineering and building consumer experiences at XBOX.",
+          "links": [],
+          "materials": {
+            "format": "presentation",
+            "display_name": "Roy Guo",
+            "headshot": {
+              "have": true,
+              "source": "sent by Roy himself, 2026-08-29 03:25Z, thread 19fd27aefea445b1",
+              "verified": "viewed 2026-08-29: single-person portrait, 1271x1271",
+              "approved": true,
+              "path": "_speakers/2026-10-26-roy-guo/headshots/roy-guo.png"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-10-26-roy-guo/releases/ucsd-model-release-form-RoyGuoSigned.pdf"
+            },
+            "parking": true,
+            "travel": {
+              "local": false,
+              "confirmed": true,
+              "note": "Roy, 2026-08-29: \"I will be traveling to SD from Seattle.\" Microsoft/XBOX."
+            }
+          }
         }
       ],
       "slides": [],
@@ -153,7 +303,26 @@
           "role": "Incoming Assistant Professor, UC San Diego · VP of Kernels, Together AI",
           "org": "",
           "bio": "",
-          "links": []
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "UC San Diego"
+            }
+          }
         },
         {
           "name": "Deian Stefan",
@@ -161,7 +330,26 @@
           "role": "Associate Professor, UC San Diego · Co-founder & Chief Scientist, Cubist",
           "org": "",
           "bio": "",
-          "links": []
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "UC San Diego"
+            }
+          }
         },
         {
           "name": "Tianyu Gao",
@@ -169,15 +357,56 @@
           "role": "Incoming Assistant Professor, UC San Diego · Research Scientist, Meta",
           "org": "",
           "bio": "",
-          "links": []
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "UC San Diego"
+            }
+          }
         },
         {
           "name": "Arun Kumar",
           "tentative": false,
           "role": "Professor, UC San Diego · Co-founder & CTO, RapidFire AI",
           "org": "",
-          "bio": "",
-          "links": []
+          "bio": "Cofounder and CTO of RapidFire AI (and UCSD CSE Professor), which helps AI developers rapidly customize LLM pipelines. He leads a team of 6 to 8 across engineering, product, and services, and RapidFire AI uses reasoning and coding agents both internally and in the product itself.",
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "",
+            "headshot": {
+              "have": true,
+              "proposed_url": "https://cseweb.ucsd.edu/~arunkk/FaceCropSD.JPG",
+              "source": "his own UC San Diego faculty page, cseweb.ucsd.edu/~arunkk",
+              "verified": "viewed 2026-08-27: single-person portrait, 2028x1824; approved by Arun 2026-08-27 23:30Z: \"Yes, please use this headshot.\"",
+              "approved": true,
+              "path": "_speakers/2026-11-09-faculty-panel/headshots/arun-kumar-proposed.jpg"
+            },
+            "release": {
+              "signed": true,
+              "path": "_speakers/2026-11-09-faculty-panel/releases/ucsd-model-release-form-ArunSigned.pdf"
+            },
+            "parking": null,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "UC San Diego"
+            }
+          }
         },
         {
           "name": "George Porter",
@@ -185,7 +414,26 @@
           "role": "Professor, UC San Diego · Sr. Principal Engineer, AWS S3",
           "org": "",
           "bio": "",
-          "links": []
+          "links": [],
+          "materials": {
+            "format": "panel",
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": true,
+              "confirmed": true,
+              "note": "UC San Diego"
+            }
+          }
         }
       ],
       "slides": [],
@@ -225,11 +473,39 @@
       "date": "2026-11-30",
       "time": "",
       "location": "",
-      "status": "tba",
+      "status": "confirmed",
       "tentative": false,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Austin Henley",
+          "tentative": false,
+          "role": "",
+          "org": "Carnegie Mellon University",
+          "bio": "",
+          "links": [],
+          "materials": {
+            "format": "presentation",
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": false,
+              "confirmed": false,
+              "note": "GUESS: Carnegie Mellon, so Pittsburgh -- not local. Ask him to confirm before anyone books."
+            }
+          }
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],

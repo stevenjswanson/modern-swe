@@ -1,0 +1,362 @@
+#!/usr/bin/env python3
+"""Render the speaker pipeline as a local dashboard.
+
+Reads _data/talks.json (what the site will publish) and _outreach/tracking.json
+(what the mailbox said at the last check) and shows them side by side, because
+the interesting problems live in the gap between the two: someone who confirmed
+by email but is still hidden on the site, or a slot published with a panelist
+who never agreed to the date.
+
+This is deliberately a *generator*, not a saved page. It re-reads both files
+every run, so it is exactly as current as the last mail check -- and it says so,
+loudly, at the top. A dashboard that looks authoritative while being hours stale
+is worse than no dashboard; that mistake has already been made here.
+
+Standard library only. Nothing here is ever served: _outreach/ is excluded in
+_config.yml and the generated HTML is gitignored.
+
+Usage:  bin/speaker-dashboard [--text] [--no-open] [-o PATH]
+"""
+
+import argparse
+import datetime
+import html
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+TALKS = ROOT / "_data" / "talks.json"
+TRACKING = ROOT / "_outreach" / "tracking.json"
+CONTACTS = ROOT / "_outreach" / "contacts.local.json"
+DEFAULT_OUT = ROOT / "_outreach" / "dashboard.html"
+
+# Past this many hours, the check is old enough that the dashboard should stop
+# presenting itself as a picture of now. Speakers have replied within minutes of
+# a check finishing, so this is a hint, not a guarantee of freshness.
+STALE_HOURS = 6
+
+
+def load(path):
+    if not path.exists():
+        sys.exit(f"missing {path.relative_to(ROOT)} -- run from the repo, after a check")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def parse_ts(s):
+    if not s:
+        return None
+    try:
+        return datetime.datetime.fromisoformat(s.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def age_words(delta):
+    m = int(delta.total_seconds() // 60)
+    if m < 1:
+        return "just now"
+    if m < 60:
+        return f"{m} min ago"
+    h = m // 60
+    if h < 24:
+        return f"{h}h {m % 60}m ago"
+    return f"{h // 24}d {h % 24}h ago"
+
+
+def _travel_guess(speaker):
+    """An unconfirmed local/remote inference, which must not be acted on."""
+    tr = (speaker.get("materials") or {}).get("travel") or {}
+    if tr.get("local") is not None and not tr.get("confirmed"):
+        return "local" if tr["local"] else "traveling"
+    return None
+
+
+def missing_items(speaker, talk):
+    """Mirrors bin/check-talks: the intake items this speaker still owes."""
+    m = speaker.get("materials") or {}
+    out = []
+    if not m.get("format"):
+        out.append("format")
+    if not str(m.get("display_name", "")).strip():
+        out.append("name")
+    if not (m.get("headshot") or {}).get("have"):
+        out.append("headshot")
+    if not str(speaker.get("bio", "")).strip():
+        out.append("bio")
+    if m.get("format") == "presentation":
+        if not str(talk.get("title", "")).strip():
+            out.append("title")
+        if not str(talk.get("abstract", "")).strip():
+            out.append("abstract")
+    if not (m.get("release") or {}).get("signed"):
+        out.append("release")
+    if m.get("parking") is None:
+        out.append("parking")
+    if (m.get("travel") or {}).get("local") is None:
+        out.append("travel")
+    return out
+
+
+def build_rows(talks, tracking):
+    """One row per speaker, plus a row per empty/TBA slot, in date order."""
+    by_date = {p["talk_date"]: p for p in tracking["people"] if p.get("talk_date")}
+    rows = []
+    for t in sorted(talks["talks"], key=lambda x: x["date"]):
+        person = by_date.get(t["date"], {})
+        members = {m["name"]: m for m in person.get("members", [])}
+        slot = ("cancelled" if t["status"] == "cancelled" else
+                "TBA" if t["status"] == "tba" else
+                "tentative" if t.get("tentative") else "published")
+        if not t["speakers"]:
+            rows.append({
+                "date": t["date"], "slot": slot, "name": t.get("title") or "—",
+                "role": "", "reply": person.get("status", ""), "quote": "",
+                "hidden": slot in ("tentative", "TBA"), "bio": False,
+                "release": None, "due": person.get("logistics_form_due"),
+                "needs": [], "travel_guess": None, "is_slot_row": True,
+            })
+            continue
+        for s in t["speakers"]:
+            m = members.get(s["name"], {})
+            reply = m.get("status") or person.get("status", "")
+            rows.append({
+                "date": t["date"], "slot": slot, "name": s["name"],
+                "role": s.get("role") or s.get("org") or "",
+                "reply": reply, "quote": m.get("quote", ""),
+                "hidden": slot in ("tentative", "TBA") or bool(s.get("tentative")),
+                "bio": bool(s.get("bio")),
+                "release": ((s.get("materials") or {}).get("release") or {}).get("signed"),
+                "needs": missing_items(s, t),
+                "travel_guess": _travel_guess(s),
+                "due": person.get("logistics_form_due"),
+                "is_slot_row": False,
+            })
+    return rows
+
+
+def find_issues(rows, tracking, now):
+    """Things that need a human. Ordered most-actionable first."""
+    out = []
+    for r in rows:
+        if r["reply"] == "confirmed" and r["hidden"]:
+            out.append(("publish", f'{r["name"]} confirmed but is still hidden on the site '
+                                   f'({r["date"]}) — flip tentative to false'))
+    for r in rows:
+        if r["reply"] == "interested" and not r["hidden"] and not r["is_slot_row"]:
+            out.append(("check", f'{r["name"]} is published for {r["date"]} but has not '
+                                 "confirmed that date"))
+    # One line, not one per person: ten near-identical rows drown out the items
+    # that actually differ from each other.
+    missing = [r for r in rows if r["reply"] == "confirmed" and r["release"] is False]
+    if missing:
+        soonest = min((r["due"] for r in missing if r["due"]), default=None)
+        names = ", ".join(r["name"] for r in missing[:6])
+        if len(missing) > 6:
+            names += f", +{len(missing) - 6} more"
+        due = f" — earliest deadline {soonest}" if soonest else ""
+        out.append(("paperwork",
+                    f"{len(missing)} confirmed speaker(s) owe a signed release{due}: {names}"))
+    guesses = [r for r in rows if r.get("travel_guess")]
+    if guesses:
+        out.append(("verify", "unconfirmed travel guess for " + ", ".join(
+            f'{r["name"]} ({r["travel_guess"]})' for r in guesses) +
+            " — confirm before anyone books"))
+    for p in tracking["people"]:
+        if p.get("status") == "interested" and not p.get("talk_date"):
+            out.append(("waiting", f'{p["name"]} is waiting on a reply from you — no date offered yet'))
+    for n in tracking.get("notes", []):
+        out.append(("note", n.get("text", "")))
+    return out
+
+
+def text_report(talks, tracking, rows, issues, now, checked):
+    w = sys.stdout.write
+    age = age_words(now - checked) if checked else "unknown"
+    w(f"\nSpeaker pipeline — mailbox last checked {checked:%Y-%m-%d %H:%M}Z ({age})\n")
+    if checked and (now - checked).total_seconds() / 3600 > STALE_HOURS:
+        w("  ** stale — run /check-speaker-replies before trusting this **\n")
+    w("\n")
+    w(f"  {'DATE':<12} {'SPEAKER':<20} {'REPLY':<11} {'SITE':<7} STILL OWES\n")
+    for r in rows:
+        site = "hidden" if r["hidden"] else "live"
+        owes = ", ".join(r["needs"]) if r["needs"] else ("—" if not r["is_slot_row"] else "")
+        w(f"  {r['date']:<12} {r['name'][:20]:<20} {r['reply']:<11} {site:<7} {owes}\n")
+    if issues:
+        w("\n  Needs attention\n")
+        for kind, msg in issues:
+            w(f"    [{kind}] {msg}\n")
+    leads = tracking.get("leads", [])
+    if leads:
+        w(f"\n  Leads not yet on the schedule ({len(leads)})\n")
+        for l in leads:
+            w(f"    {l['name']}\n")
+    w("\n")
+
+
+CSS = """
+:root{--bg:#fbfbfa;--card:#fff;--ink:#1a1a18;--muted:#6b6b66;--rule:#e3e3de;
+--ok:#1f7a4d;--warn:#8a5a00;--bad:#a33;--accent:#00629b;--chip:#f0f0ec}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 24px 64px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{color:var(--muted);font-size:.875rem;margin-bottom:24px}
+.banner{padding:12px 16px;border-radius:8px;margin:0 0 24px;font-size:.9rem}
+.banner.fresh{background:#eef7f1;border:1px solid #cfe6da;color:var(--ok)}
+.banner.stale{background:#fdf4e3;border:1px solid #f0dcb0;color:var(--warn)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:12px;margin-bottom:28px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:14px 16px}
+.card .n{font-size:1.6rem;font-weight:650;line-height:1.1}
+.card .l{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+h2{font-size:1rem;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--card)}
+table{width:100%;min-width:640px;border-collapse:collapse}
+td:first-child{white-space:nowrap}
+th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
+color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--rule);font-weight:600}
+td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tr.datestart td{border-top:2px solid var(--rule)}
+.name{font-weight:600}
+.role{color:var(--muted);font-size:.82rem}
+.q{color:var(--muted);font-size:.82rem;font-style:italic;margin-top:3px}
+.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.72rem;
+font-weight:600;background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.ok{background:#e8f4ee;color:var(--ok)}
+.chip.warn{background:#fdf1dc;color:var(--warn)}
+.chip.bad{background:#fae9e9;color:var(--bad)}
+.chip.live{background:#e7f0f7;color:var(--accent)}
+.issues{list-style:none;padding:0;margin:0}
+.issues li{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--warn);
+border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:.9rem}
+.issues li.publish{border-left-color:var(--ok)}
+.issues li.check,.issues li.waiting{border-left-color:var(--bad)}
+.issues li .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+color:var(--muted);margin-right:8px}
+.foot{color:var(--muted);font-size:.8rem;margin-top:32px;border-top:1px solid var(--rule);
+padding-top:12px}
+code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:.85em}
+"""
+
+
+def chip(text, cls=""):
+    return f'<span class="chip {cls}">{html.escape(text)}</span>'
+
+
+def html_report(talks, tracking, rows, issues, now, checked):
+    age = age_words(now - checked) if checked else "unknown"
+    stale = checked and (now - checked).total_seconds() / 3600 > STALE_HOURS
+
+    confirmed = sum(1 for r in rows if r["reply"] == "confirmed" and not r["is_slot_row"])
+    people = sum(1 for r in rows if not r["is_slot_row"])
+    releases = sum(1 for r in rows if r["release"] is True)
+    tba = sum(1 for t in talks["talks"] if t["status"] == "tba")
+
+    banner = (f'<div class="banner stale"><strong>Possibly out of date.</strong> '
+              f'The mailbox was last checked {age}. Run <code>/check-speaker-replies</code> '
+              f'to refresh — speakers have replied within minutes of a check finishing.</div>'
+              if stale else
+              f'<div class="banner fresh">Mailbox checked {age}. '
+              f'This reflects mail as of that moment, not necessarily right now.</div>')
+
+    cards = "".join(
+        f'<div class="card"><div class="n">{n}</div><div class="l">{html.escape(l)}</div></div>'
+        for n, l in [(f"{confirmed}/{people}", "speakers confirmed"),
+                     (f"{releases}/{people}", "signed releases"),
+                     (tba, "slots still TBA"),
+                     (len(tracking.get("leads", [])), "leads in reserve")])
+
+    body, last_date = [], None
+    for r in rows:
+        cls = ' class="datestart"' if r["date"] != last_date else ""
+        last_date = r["date"]
+        reply = {"confirmed": ("confirmed", "ok"), "interested": ("interested", "warn"),
+                 "invited": ("invited", ""), "declined": ("declined", "bad"),
+                 "partial": ("partial", "warn")}.get(r["reply"], (r["reply"] or "—", ""))
+        site = chip("hidden", "") if r["hidden"] else chip("live", "live")
+        if r["is_slot_row"]:
+            owes = ""
+        elif r["needs"]:
+            owes = " ".join(chip(n, "warn") for n in r["needs"])
+        else:
+            owes = chip("complete", "ok")
+        quote = r["quote"]
+        q = f'<div class="q">&ldquo;{html.escape(quote)}&rdquo;</div>' if quote else ""
+        role = f'<div class="role">{html.escape(r["role"])}</div>' if r["role"] else ""
+        slot_chip = chip(r["slot"], "live" if r["slot"] == "published" else "")
+        body.append(
+            f'<tr{cls}><td>{r["date"]}</td><td>{slot_chip}</td>'
+            f'<td><span class="name">{html.escape(r["name"])}</span>{role}{q}</td>'
+            f'<td>{chip(*reply)}</td><td>{site}</td><td>{owes}</td></tr>')
+
+    issue_html = "".join(
+        f'<li class="{html.escape(k)}"><span class="k">{html.escape(k)}</span>{html.escape(m)}</li>'
+        for k, m in issues) or '<li>Nothing outstanding.</li>'
+
+    leads = "".join(
+        f'<li><span class="k">lead</span><strong>{html.escape(l["name"])}</strong> — '
+        f'{html.escape(l.get("notes",""))[:220]}</li>'
+        for l in tracking.get("leads", []))
+
+    return f"""<!doctype html><meta charset="utf-8">
+<title>Speaker pipeline — Tales of Modern SWE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>{CSS}</style>
+<div class="wrap">
+<h1>Speaker pipeline</h1>
+<div class="sub">Tales of Modern Software Engineering · CSE 090-SE / 290-SE · Fall 2026<br>
+Generated {now:%Y-%m-%d %H:%M}Z from <code>_data/talks.json</code> and
+<code>_outreach/tracking.json</code></div>
+{banner}
+<div class="cards">{cards}</div>
+<h2>Needs attention</h2><ul class="issues">{issue_html}</ul>
+<h2>Schedule</h2>
+<div class="scroll"><table>
+<tr><th>Date</th><th>Slot</th><th>Speaker</th><th>Reply</th><th>Site</th><th>Still owes</th></tr>
+{''.join(body)}</table></div>
+{f'<h2>Leads not yet scheduled</h2><ul class="issues">{leads}</ul>' if leads else ''}
+<div class="foot">Regenerate with <code>bin/speaker-dashboard</code>. This file is
+gitignored and <code>_outreach/</code> is excluded from Jekyll, so none of it reaches
+the website.</div>
+</div>"""
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--text", action="store_true", help="print to the terminal instead")
+    ap.add_argument("--no-open", action="store_true", help="write the file but do not open it")
+    ap.add_argument("-o", "--out", type=Path, default=DEFAULT_OUT)
+    args = ap.parse_args()
+
+    talks, tracking = load(TALKS), load(TRACKING)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    checked = parse_ts(tracking.get("last_checked"))
+    rows = build_rows(talks, tracking)
+    issues = find_issues(rows, tracking, now)
+
+    if not CONTACTS.exists():
+        print("note: _outreach/contacts.local.json is missing, so the last check could not "
+              "have searched by address.", file=sys.stderr)
+
+    if args.text:
+        text_report(talks, tracking, rows, issues, now, checked)
+        return 0
+
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(html_report(talks, tracking, rows, issues, now, checked), encoding="utf-8")
+    print(f"wrote {args.out.relative_to(ROOT)}")
+    if not args.no_open:
+        opener = {"darwin": "open"}.get(sys.platform, "xdg-open")
+        try:
+            subprocess.run([opener, str(args.out)], check=False)
+        except FileNotFoundError:
+            print(f"open it yourself: file://{args.out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

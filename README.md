@@ -91,6 +91,52 @@ and push. That is the whole change.
 set `show_tentative: true` in `_data/course.yml`. That one *does* affect the
 live site.
 
+### What we need from each speaker (`materials`)
+
+Every speaker carries a `materials` record tracking the nine things a confirmed
+speaker owes, so "what is still missing" is answerable per person:
+
+```json
+"materials": {
+  "format": "panel",
+  "display_name": "",
+  "headshot": {
+    "have": false,
+    "proposed_url": "https://cseweb.ucsd.edu/~arunkk/FaceCropSD.JPG",
+    "source": "his own UC San Diego faculty page",
+    "verified": "viewed 2026-08-27: single-person portrait, 2028x1824",
+    "approved": null,
+    "path": "_speakers/2026-11-09-faculty-panel/headshots/arun-kumar-proposed.jpg"
+  },
+  "release": { "signed": true, "path": "_speakers/.../ucsd-model-release-form-ArunSigned.pdf" },
+  "parking": null,
+  "travel": { "local": true, "confirmed": true, "note": "UC San Diego" }
+}
+```
+
+The nine items are format, display name, headshot, bio, talk title, abstract,
+signed release, parking, and travel. Title and abstract only count when
+`format` is `presentation`, and they live on the talk. `bin/check-talks`
+reports `N/M intake complete`; `bin/speaker-dashboard` lists what each person
+still owes.
+
+**Inferred values must be marked unconfirmed.** `format` can be inferred from
+the talk (a "Panel: ..." talk makes its speakers panelists) and `travel` from
+where someone works — but a guess gets `confirmed: false` and a `note` saying
+why, and the validator warns until the speaker confirms it. Booking flights off
+an assumption is the expensive mistake.
+
+**Headshots:** `source` is required on any proposed image, and the validator
+errors without it. Take images only from a page that is unambiguously the
+speaker's own, never from an image search, and look at the file before
+proposing it — publishing a photo of the wrong person is worse than having
+none. `approved` stays `null` until the speaker says yes.
+
+**Signed release PDFs are gitignored** — they carry the speaker's signature and
+this repo is public. On a fresh clone or in CI the file a `path` names will not
+exist, and `bin/check-talks` says so as a *warning*, never an error, so a file
+that is absent by design cannot block the deploy. See `_speakers/README.md`.
+
 ### Tentative individuals inside a confirmed slot
 
 A slot can be settled while one of its people is not. This happens with panels:
@@ -137,6 +183,36 @@ Slides can either be a URL, or a PDF committed to `assets/slides/` and
 referenced as `/assets/slides/whatever.pdf`.
 
 ---
+
+## The course flier
+
+`assets/flier/` holds the PDF and PNG. Leo attaches the PDF to speaker
+invitations, so treat this as the canonical copy instead of mailing around a
+version from someone's Downloads folder.
+
+It is not linked from any page, but it does build into the site, so it can be
+pasted into an email as
+`https://stevenjswanson.github.io/modern-swe/assets/flier/modern-swe-flier.pdf`.
+
+Nothing validates the flier against `_data/course.yml` — it is an image. If the
+room, meeting time, or TSS section IDs change, the flier goes stale silently.
+
+## Speaker pipeline dashboard
+
+```bash
+bin/speaker-dashboard          # writes _outreach/dashboard.html and opens it
+bin/speaker-dashboard --text   # same thing as a terminal table
+```
+
+Shows every speaker's reply status next to whether they are actually live on the
+site, plus outstanding releases, unanswered invitations, and leads not yet
+scheduled. It is generated fresh each run from `_data/talks.json` and
+`_outreach/tracking.json`, and stamps itself with when the mailbox was last
+checked — a dashboard that looks current while being hours stale is worse than
+none. The `check-speaker-replies` skill regenerates it at the end of every check.
+
+Output is gitignored, and `_outreach/` is excluded from Jekyll, so none of it
+reaches the website.
 
 ## Before you push
 

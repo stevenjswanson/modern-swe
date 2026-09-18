@@ -16,6 +16,8 @@ exclude:
   - .github
   - .gitignore
   - _outreach
+  - _speakers
+  - assets/flier/README.md
 
 # No plugins required. Adding one later means adding it here AND to the Gemfile.
 plugins: []

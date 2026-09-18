@@ -13,6 +13,7 @@ Exit:   0 = clean (warnings allowed), 1 = errors found
 
 import datetime
 import json
+import pathlib
 import re
 import sys
 from pathlib import Path
@@ -29,7 +30,8 @@ KNOWN_KEYS = {
 }
 # A speaker may be tentative on their own: a slot can have a firm date while one
 # invitee has not yet agreed to it (a partly-confirmed panel).
-SPEAKER_KEYS = {"name", "tentative", "role", "org", "bio", "links"}
+SPEAKER_KEYS = {"name", "tentative", "role", "org", "bio", "materials", "links"}
+VALID_FORMATS = {"presentation", "panel", "interview"}
 LINK_LISTS = ("slides", "videos", "links")
 
 errors = []
@@ -59,7 +61,139 @@ def check_link_list(where, items, field):
             warn(at, 'has no "label"; a generic one will be shown')
 
 
-def check_speakers(where, speakers, talk_tentative):
+def check_release(where, rel):
+    """Validate the signed-video-release record on one speaker.
+
+    Shape:  {"signed": false}                       -- not received
+            {"signed": true, "path": "_speakers/..."}  -- received
+
+    The file itself is deliberately absent from git (it carries the speaker's
+    signature and this repo is public), so a missing file is a WARNING, never an
+    error. CI checks out a clean tree where these never exist, and blocking the
+    deploy over that would be wrong.
+    """
+    if not isinstance(rel, dict):
+        err(where, '"release" must be an object like {"signed": false}')
+        return
+    for key in rel:
+        if key not in {"signed", "path"}:
+            warn(f"{where} release", f'unknown field "{key}" -- it will be ignored (typo?)')
+
+    signed = rel.get("signed")
+    if not isinstance(signed, bool):
+        err(f"{where} release", f'"signed" must be true or false, got {signed!r}')
+        return
+
+    path = rel.get("path")
+    if signed:
+        if not isinstance(path, str) or not path.strip():
+            err(f"{where} release", '"signed" is true but there is no "path" to the form')
+            return
+        if path.startswith("/") or ".." in Path(path).parts:
+            err(f"{where} release", f'path "{path}" must be relative to the repo root '
+                                    "and must not climb out of it")
+        elif not path.startswith("_speakers/"):
+            warn(f"{where} release", f'path "{path}" is outside _speakers/; releases belong '
+                                     "there so Jekyll never serves them")
+        elif not Path(path).exists():
+            warn(f"{where} release",
+                 f"{path} is not in this working copy -- expected on a fresh clone or in CI, "
+                 "since signed releases are gitignored")
+    elif path:
+        warn(f"{where} release", '"signed" is false but a "path" is set; '
+                                 "set signed to true or drop the path")
+
+
+def check_materials(where, m, talk):
+    """Validate one speaker's intake checklist.
+
+    The nine things a confirmed speaker owes us (format, display name, headshot,
+    bio, title, abstract, signed release, parking, travel) are tracked here so
+    "what is still missing" is answerable per person rather than by rereading
+    the mail. Title and abstract are only owed when the format is a
+    presentation, and they live on the talk, not the speaker.
+
+    Inferred values are allowed but must be marked unconfirmed, so a guess about
+    someone's travel needs never quietly hardens into a fact.
+    """
+    if not isinstance(m, dict):
+        err(where, '"materials" must be an object')
+        return
+    for key in m:
+        if key not in {"format", "display_name", "headshot", "release", "parking", "travel"}:
+            warn(f"{where} materials", f'unknown field "{key}" -- it will be ignored (typo?)')
+
+    fmt = m.get("format")
+    if fmt is not None and fmt not in VALID_FORMATS:
+        err(f"{where} materials", f'format "{fmt}" is not one of: {", ".join(sorted(VALID_FORMATS))}')
+
+    hs = m.get("headshot")
+    if hs is not None:
+        if not isinstance(hs, dict):
+            err(f"{where} materials", '"headshot" must be an object')
+        else:
+            for k in hs:
+                if k not in {"have", "proposed_url", "source", "verified", "approved", "path"}:
+                    warn(f"{where} materials headshot", f'unknown field "{k}"')
+            if str(hs.get("proposed_url", "")).strip() and not str(hs.get("source", "")).strip():
+                err(f"{where} materials headshot",
+                    "a proposed image has no \"source\" -- record where it came from; an image "
+                    "of the wrong person is the failure mode here")
+            if hs.get("have") and not str(hs.get("path", "")).strip():
+                err(f"{where} materials headshot", '"have" is true but there is no "path"')
+            if hs.get("approved") is False:
+                warn(f"{where} materials headshot",
+                     "the speaker declined the proposed image -- ask them for one")
+            if str(hs.get("proposed_url", "")).strip() and hs.get("approved") is None:
+                warn(f"{where} materials headshot",
+                     "an image was proposed but the speaker has not approved it yet")
+
+    if "release" in m:
+        check_release(f"{where} materials", m["release"])
+
+    if m.get("parking") not in (None, True, False):
+        err(f"{where} materials", f'"parking" must be true, false, or null, got {m["parking"]!r}')
+
+    tr = m.get("travel")
+    if tr is not None:
+        if not isinstance(tr, dict):
+            err(f"{where} materials", '"travel" must be an object')
+        elif tr.get("local") not in (None, True, False):
+            err(f"{where} materials travel", f'"local" must be true, false, or null, '
+                                             f'got {tr["local"]!r}')
+        elif tr.get("local") is not None and not tr.get("confirmed"):
+            warn(f"{where} materials travel",
+                 "local/remote is a guess the speaker has not confirmed -- "
+                 "check it before booking anything")
+
+
+def missing_items(speaker, talk):
+    """The intake items this speaker still owes, by the numbering in the ask."""
+    m = speaker.get("materials") or {}
+    out = []
+    if not m.get("format"):
+        out.append("format")
+    if not str(m.get("display_name", "")).strip():
+        out.append("display name")
+    if not (m.get("headshot") or {}).get("have"):
+        out.append("headshot")
+    if not str(speaker.get("bio", "")).strip():
+        out.append("bio")
+    if m.get("format") == "presentation":
+        if not str(talk.get("title", "")).strip():
+            out.append("talk title")
+        if not str(talk.get("abstract", "")).strip():
+            out.append("abstract")
+    if not (m.get("release") or {}).get("signed"):
+        out.append("signed release")
+    if m.get("parking") is None:
+        out.append("parking")
+    if (m.get("travel") or {}).get("local") is None:
+        out.append("travel")
+    return out
+
+
+def check_speakers(where, speakers, talk_tentative, talk):
     if not isinstance(speakers, list):
         err(where, f'"speakers" must be a list, got {type(speakers).__name__}')
         return
@@ -77,6 +211,9 @@ def check_speakers(where, speakers, talk_tentative):
         if talk_tentative and s.get("tentative") is True:
             warn(at, 'is marked tentative inside an already-tentative talk; '
                      "the talk-level flag hides the whole slot, so this has no effect")
+        if "materials" in s:
+            check_materials(at, s["materials"], talk)
+
         links = s.get("links")
         if links is not None:
             check_link_list(at, links, "links")
@@ -122,6 +259,25 @@ def main():
                 f"contains an email address ({addr}) -- this repo is public; "
                 "speaker contact details do not belong in talks.json")
 
+    # tracking.json is tracked in git too, and its free-text notes are written by
+    # hand during outreach checks -- which is exactly how two personal addresses
+    # (a speaker's work address and a lead's private Gmail) ended up staged for a
+    # public push on 2026-09-18 and were caught at the last moment. The talks.json
+    # scan above would never have seen them, because it only reads talks.json.
+    # Addresses live only in contacts.local.json, which is gitignored; reference a
+    # contact_key here instead. Note this scanner does not read itself -- do not
+    # paste a real address into this file as an example.
+    trk = pathlib.Path("_outreach/tracking.json")
+    if trk.is_file():
+        for lineno, line in enumerate(trk.read_text().splitlines(), 1):
+            for addr in EMAIL_RE.findall(line):
+                if addr.startswith("mailto:"):
+                    continue
+                err(f"_outreach/tracking.json line {lineno}",
+                    f"contains an email address ({addr}) -- this file is tracked and "
+                    "this repo is public; put addresses in contacts.local.json and "
+                    "refer to the contact_key here")
+
     for i, t in enumerate(talks):
         where = f"talks[{i}]"
         if not isinstance(t, dict):
@@ -162,7 +318,7 @@ def main():
             err(where, f'"tentative" must be true or false, got {t["tentative"]!r}')
 
         if t.get("speakers") is not None:
-            check_speakers(where, t["speakers"], t.get("tentative") is True)
+            check_speakers(where, t["speakers"], t.get("tentative") is True, t)
 
         for field in LINK_LISTS:
             if t.get(field) is not None:
@@ -188,6 +344,14 @@ def main():
 
     tba = sum(1 for t in talks if isinstance(t, dict) and t.get("status") == "tba")
     tent = sum(1 for t in talks if isinstance(t, dict) and t.get("tentative") is True)
+    people = [s for t in talks if isinstance(t, dict)
+              for s in (t.get("speakers") or []) if isinstance(s, dict)]
+    complete = sum(1 for t in talks if isinstance(t, dict)
+                   for s in (t.get("speakers") or [])
+                   if isinstance(s, dict) and not missing_items(s, t))
+    rel_have = sum(1 for s in people
+                   if ((s.get("materials") or {}).get("release") or {}).get("signed") is True)
+    rel_total = len(people)
     tent_sp = sum(
         1
         for t in talks
@@ -199,6 +363,8 @@ def main():
     # they are the ones a reader of the live site would notice missing.
     print(f"\nOK: {n} talk(s), {n - tba} filled in, {tba} still TBA, {tent} tentative"
           f"{f', {tent_sp} tentative speaker(s) in published slots' if tent_sp else ''}"
+          f"{f', {rel_have}/{rel_total} signed release(s)' if rel_total else ''}"
+          f"{f', {complete}/{rel_total} intake complete' if rel_total else ''}"
           f"{f' -- {len(warnings)} warning(s)' if warnings else ''}")
     return 0
 
