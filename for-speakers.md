@@ -63,6 +63,28 @@ To find the chair's office, **room 266**:
 It is about a one-minute walk between the two buildings. If you get lost, call or
 email and we will come find you.
 
+## What we need from you
+
+So we can put your talk on the schedule and record it, please send:
+
+1. **Which format you'd prefer** — a presentation, a panel, or a fireside-chat
+   style interview
+2. **Your name and title** exactly as you'd like them to appear
+3. **A head shot**
+4. **A short bio** — a few sentences; the entries on the
+   [schedule]({{ '/' | relative_url }}) show the length that works
+5. **A talk title and a short abstract**, if you are giving a presentation
+6. **A signed video release**, if you are willing and allowed to sign it:
+   [UCSD Model Image Authorization and Release (PDF)](https://univcomms.ucsd.edu/_files/photo-video/ucsd-model-release-form.pdf)
+7. **Whether you'll need parking** on campus
+8. **Whether you're travelling from outside San Diego** — if so, our operations
+   coordinator will follow up about flights, hotel and reimbursement
+
+Recording is optional. We would like to share the talks with the broader CS
+community, but a release is not required in order to speak, and some employers
+will not permit one. If you do sign, the media team will run the video by you
+before anything is published.
+
 </div>
 
 <p class="page-aside">Looking for the seminar as a student?

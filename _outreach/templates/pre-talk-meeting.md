@@ -83,9 +83,28 @@ doubt, cut.
 
 ## Mechanics
 
-- **Paste the release URL bare.** Composing in the Gmail web UI rewrapped it
-  as a `google.com/url?q=...` redirect, which went out looking broken. It
-  still resolves, but the plain URL is what you want.
+- **Gmail mangles every URL in a draft, and you cannot stop it from here.**
+  The API writes clean URLs; the moment the draft is opened in the Gmail web
+  composer, each one is rewritten as
+  `https://www.google.com/url?q=<real url>&source=gmail&ust=<timestamp>&sa=E`,
+  and that survives into the sent mail. Sometimes only the `href` is wrapped
+  and the visible text merely looks ugly. Sometimes the *visible text* gets
+  `&source=gmail&ust=...&sa=E` welded onto the end of the real URL, which is a
+  dead link for anyone who copies rather than clicks — that happened to the
+  seminar URL in Bill's draft.
+
+  Two defences, in order:
+
+  1. **Carry one URL, not several.** Send people to
+     `stevenjswanson.github.io/modern-swe/for-speakers/`, which now lists the
+     whole intake checklist and links the release form itself. One short,
+     human-recoverable address beats two long ones, and a mangled version of it
+     is still legible enough to retype.
+  2. **Read the draft back before it is sent** and grep for `source=gmail`. If
+     the visible text is broken, the fix in Gmail is to select the URL and
+     paste it again with Cmd-Shift-V (paste without formatting); Gmail leaves
+     plain text alone and only rewraps its own rich-text link objects. Do not
+     reach for `update_draft` — it detaches the draft from its thread.
 - Reply into the speaker's existing thread via `replyToMessageId` so the
   history stays attached. Do not `update_draft` afterward — on this server
   that detaches the draft from its thread.
