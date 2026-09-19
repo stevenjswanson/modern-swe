@@ -81,6 +81,32 @@
         <ul class="talk__speakers">
           {%- for s in shown_speakers -%}
             <li class="talk__speaker">
+              {%- comment -%}
+                Portrait sits to the RIGHT of the text (row-reverse below), at a
+                size where the face actually reads. No placeholder when we have
+                no photo: at this size an empty disc shouts about the absence,
+                and because the image trails the text, a missing one just lets
+                the paragraph run full width instead of leaving a hole.
+
+                A likeness we found ourselves is NOT publishable until the person
+                says yes, so approval gates it exactly the way "tentative" gates a
+                name: unapproved images appear in local preview (ringed, so you
+                can tell) and never in production. approved == null means asked
+                and waiting.
+              {%- endcomment -%}
+              {%- assign hs = s.materials.headshot -%}
+              {%- assign show_portrait = false -%}
+              {%- if hs.have and hs.approved -%}{%- assign show_portrait = true -%}{%- endif -%}
+              {%- if hs.have and show_unconfirmed -%}{%- assign show_portrait = true -%}{%- endif -%}
+              {%- if show_portrait -%}
+                {%- assign slug = s.name | slugify -%}
+                {%- assign avclass = "talk__avatar" -%}
+                {%- unless hs.approved -%}{%- assign avclass = "talk__avatar talk__avatar--unapproved" -%}{%- endunless -%}
+                <img class="{{ avclass }}" src="{{ '/assets/headshots/' | append: slug | append: '.jpg' | relative_url }}"
+                     alt="" width="192" height="192" loading="lazy" decoding="async"
+                     {%- unless hs.approved %} title="Not yet approved by the speaker -- local preview only"{% endunless %}>
+              {%- endif -%}
+              <span class="talk__speaker-text">
               <span class="talk__speaker-name">
                 {%- if s.links.size > 0 -%}
                   <a href="{{ s.links[0].url }}">{{ s.name }}</a>
@@ -97,6 +123,7 @@
               {%- endif -%}
               {%- if meta != "" %}<span class="talk__speaker-meta"> — {{ meta }}</span>{% endif -%}
               {%- if s.bio and s.bio != "" %}<span class="talk__speaker-bio">{{ s.bio }}</span>{% endif -%}
+              </span>
             </li>
           {%- endfor -%}
         </ul>

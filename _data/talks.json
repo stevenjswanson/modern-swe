@@ -302,16 +302,18 @@
           "tentative": false,
           "role": "Incoming Assistant Professor, UC San Diego · VP of Kernels, Together AI",
           "org": "",
-          "bio": "",
+          "bio": "Dan leads the SandyResearch Lab at UC San Diego and is affiliated with the MLSys group. He is also VP of Kernels at Together AI, building a team focused on low-level performance engineering and GPU kernels. His research is on making machine learning models faster and more efficient, particularly by designing architectures that scale well on modern hardware.",
           "links": [],
           "materials": {
             "format": "panel",
             "display_name": "",
             "headshot": {
-              "have": false,
-              "proposed_url": "",
-              "approved": null,
-              "path": ""
+              "have": true,
+              "proposed_url": "https://danfu.org/images/DanFu3.jpeg",
+              "source": "his own site danfu.org, which states \"Assistant Professor, CSE, UC San Diego\" and \"VP of Kernels, Together AI\" -- both match our role field",
+              "verified": "viewed 2026-09-18: single-person studio portrait, source 3175x3175, cropped square to 480px. APPROVED FOR USE by Steve Swanson (dept chair) 2026-09-18 -- the image is the person's own self-published photo from their own site; they were not asked individually.",
+              "approved": true,
+              "path": "_speakers/2026-11-09-faculty-panel/headshots/dan-fu-proposed.jpg"
             },
             "release": {
               "signed": false
@@ -329,16 +331,18 @@
           "tentative": false,
           "role": "Associate Professor, UC San Diego · Co-founder & Chief Scientist, Cubist",
           "org": "",
-          "bio": "",
+          "bio": "Deian builds principled and practical secure systems, working across security, programming languages, and systems. He and his students work on secure systems -- from web frameworks to new browser designs, sandboxing, and runtime systems -- as well as language-based security, verification, and program analysis tools. He co-founded Intrinsic, a web-security startup acquired by VMware.",
           "links": [],
           "materials": {
             "format": "panel",
             "display_name": "",
             "headshot": {
-              "have": false,
-              "proposed_url": "",
-              "approved": null,
-              "path": ""
+              "have": true,
+              "proposed_url": "https://cseweb.ucsd.edu/~dstefan/images/deian.jpg",
+              "source": "his own UC San Diego faculty page, cseweb.ucsd.edu/~dstefan",
+              "verified": "viewed 2026-09-18: single-person outdoor portrait, source 917x918, cropped square to 480px. APPROVED FOR USE by Steve Swanson (dept chair) 2026-09-18 -- the image is the person's own self-published photo from their own site; they were not asked individually.",
+              "approved": true,
+              "path": "_speakers/2026-11-09-faculty-panel/headshots/deian-stefan-proposed.jpg"
             },
             "release": {
               "signed": false
@@ -356,16 +360,18 @@
           "tentative": false,
           "role": "Incoming Assistant Professor, UC San Diego · Research Scientist, Meta",
           "org": "",
-          "bio": "",
+          "bio": "Tianyu is a Research Scientist at Meta and joins UC San Diego as an assistant professor. He completed his PhD at Princeton and was previously a member of technical staff at OpenAI. His work is on large language models as information-seeking tools -- semantic search, generation with citations for verifiability, and long-context models -- and on making them cheaper to train and fine-tune.",
           "links": [],
           "materials": {
             "format": "panel",
             "display_name": "",
             "headshot": {
-              "have": false,
-              "proposed_url": "",
-              "approved": null,
-              "path": ""
+              "have": true,
+              "proposed_url": "https://gaotianyu.xyz/assets/tianyu_gao_headphoto.jpg",
+              "source": "his own site gaotianyu.xyz, which states \"Research Scientist, Meta MSL TBD Lab\" and \"Incoming Assistant Professor, CSE, UCSD\" -- both match our role field",
+              "verified": "viewed 2026-09-18: single-person outdoor portrait, source 1004x1497 (portrait), centre crop checked by eye before use, 480px. APPROVED FOR USE by Steve Swanson (dept chair) 2026-09-18 -- the image is the person's own self-published photo from their own site; they were not asked individually.",
+              "approved": true,
+              "path": "_speakers/2026-11-09-faculty-panel/headshots/tianyu-gao-proposed.jpg"
             },
             "release": {
               "signed": false
@@ -413,16 +419,18 @@
           "tentative": true,
           "role": "Professor, UC San Diego · Sr. Principal Engineer, AWS S3",
           "org": "",
-          "bio": "",
+          "bio": "George is a Professor in the Systems and Networking Group at UC San Diego, Co-Director of the Center for Networked Systems, and a co-founder of inFocus Networks. He builds networks that enable high-performance, scalable, and sustainable computer systems. He has received a Google Focused Research Award, a NetApp Faculty Fellowship, and the NSF CAREER award.",
           "links": [],
           "materials": {
             "format": "panel",
             "display_name": "",
             "headshot": {
-              "have": false,
-              "proposed_url": "",
-              "approved": null,
-              "path": ""
+              "have": true,
+              "proposed_url": "https://cseweb.ucsd.edu/~gmporter/gmporter-pic.jpg",
+              "source": "his own UC San Diego faculty page, cseweb.ucsd.edu/~gmporter (alt text \"Picture of George Porter\")",
+              "verified": "viewed 2026-09-18: single-person portrait, source only 500x499 -- the smallest of the four and below the ~1000px guideline; fine at the 104px the page renders, ask him for a larger one if it is ever shown big. APPROVED FOR USE by Steve Swanson (dept chair) 2026-09-18 -- the image is the person's own self-published photo from their own site; they were not asked individually.",
+              "approved": true,
+              "path": "_speakers/2026-11-09-faculty-panel/headshots/george-porter-proposed.jpg"
             },
             "release": {
               "signed": false

@@ -414,7 +414,48 @@ a:hover { color: var(--accent-hover); }
 }
 
 .talk__speakers { list-style: none; margin: 0 0 var(--space-3); padding: 0; }
-.talk__speaker { margin-bottom: var(--space-2); line-height: 1.35; }
+
+/* Speaker rows put the text first and the portrait after it, so the source
+   order stays name-then-bio for a screen reader while row-reverse floats the
+   face to the right edge beside the prose. Speakers without a photo simply
+   get the full measure -- nothing to align against on this side. */
+.talk__speaker {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  line-height: 1.35;
+}
+.talk__speaker-text { flex: 1 1 auto; min-width: 0; }
+
+.talk__avatar {
+  flex: 0 0 auto;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: var(--radius-md, 0.5rem);
+  object-fit: cover;
+  background: var(--bg);
+  margin-top: 0.1875rem;   /* optical: line the top of the frame up with the name */
+}
+
+/* Local preview only: a found likeness nobody has approved yet. The ring is
+   deliberately loud -- it should be obvious at a glance which faces are not
+   cleared, because production drops them entirely. */
+.talk__avatar--unapproved {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+  opacity: 0.85;
+}
+
+@media (max-width: 34rem) {
+  /* Below this the portrait and a readable line length stop fitting side by
+     side, so the face drops to a modest disc ahead of the name again. */
+  .talk__speaker { flex-direction: row; gap: var(--space-3); }
+  .talk__avatar { width: 3rem; height: 3rem; border-radius: 50%; }
+}
+}
 .talk__speaker-name { font-weight: 700; }
 .talk__speaker-meta { color: var(--muted); }
 
