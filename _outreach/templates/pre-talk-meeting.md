@@ -95,11 +95,13 @@ doubt, cut.
 
   Two defences, in order:
 
-  1. **Carry one URL, not several.** Send people to
-     `stevenjswanson.github.io/modern-swe/for-speakers/`, which now lists the
-     whole intake checklist and links the release form itself. One short,
-     human-recoverable address beats two long ones, and a mangled version of it
-     is still legible enough to retype.
+  1. **Carry as few URLs as you can.** Every one is a chance to be mangled, and
+     a long PDF address is unrecoverable once it is; a short one like
+     `stevenjswanson.github.io/modern-swe/` can at least be read through the
+     damage and retyped. (An intake checklist briefly lived on
+     `/for-speakers/` so mail could point at one short address instead of two;
+     Steve removed it 2026-09-18, so that page is arrival logistics only and
+     the release URL goes in the mail again.)
   2. **Read the draft back before it is sent** and grep for `source=gmail`. If
      the visible text is broken, the fix in Gmail is to select the URL and
      paste it again with Cmd-Shift-V (paste without formatting); Gmail leaves

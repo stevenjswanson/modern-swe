@@ -452,9 +452,8 @@ Two traps on this Gmail server, both hit in practice:
   appends those parameters to the *visible* text, producing a link that 404s for
   anyone who copies instead of clicking.
 
-  So **keep drafts to a single URL** — `.../for-speakers/`, which carries the
-  intake checklist and the release-form link — rather than embedding a long PDF
-  address, and **re-read any draft before it is sent**:
+  So **keep the URL count down** — a short address survives mangling legibly, a
+  long PDF one does not — and **re-read any draft before it is sent**:
 
   ```bash
   # after the user has edited a draft, before it goes:
