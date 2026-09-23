@@ -101,7 +101,13 @@ def missing_items(speaker, talk):
 
 def build_rows(talks, tracking):
     """One row per speaker, plus a row per empty/TBA slot, in date order."""
+    # people[] only. A speaker who is scheduled in talks.json but still sits in
+    # leads[] -- because nobody promoted them when they confirmed -- used to
+    # render with an empty REPLY cell, which looks identical to an untracked
+    # person and reads as "we lost them". Jamie Benario did exactly that on
+    # 2026-09-21. Flag it loudly instead of rendering a blank.
     by_date = {p["talk_date"]: p for p in tracking["people"] if p.get("talk_date")}
+    _lead_dates = {l.get("talk_date") for l in tracking.get("leads", []) if l.get("talk_date")}
     rows = []
     for t in sorted(talks["talks"], key=lambda x: x["date"]):
         person = by_date.get(t["date"], {})
@@ -121,6 +127,8 @@ def build_rows(talks, tracking):
         for s in t["speakers"]:
             m = members.get(s["name"], {})
             reply = m.get("status") or person.get("status", "")
+            if not reply:
+                reply = ("IN leads[]!" if t["date"] in _lead_dates else "NOT TRACKED!")
             rows.append({
                 "date": t["date"], "slot": slot, "name": s["name"],
                 "role": s.get("role") or s.get("org") or "",
