@@ -342,6 +342,39 @@ a:hover { color: var(--accent-hover); }
   white-space: nowrap;
 }
 
+/* Sits on the page background below the band, not inside it, so it takes the
+   page's colours rather than the band's. Navy ground with band ink on top is
+   the same 14.18:1 pair the box above uses, inverted. */
+.board-cta {
+  /* Block-level flex rather than inline-flex: an inline box picks up line-box
+     leading, which made the gap under the band differ between desktop and
+     mobile. fit-content keeps it hugging its label. */
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: var(--space-2);
+  /* Pull up against the band's own bottom margin for a deliberate gap. */
+  margin-top: calc(var(--space-7) * -1 + var(--space-5));
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--band);
+  color: var(--band-ink);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.board-cta span { transition: transform 120ms ease; }
+.board-cta:hover { background: var(--accent); color: var(--surface); }
+.board-cta:hover span { transform: translateX(3px); }
+
+@media (max-width: 40rem) {
+  .board-cta { justify-content: center; width: 100%; }
+}
+
 /* --- section head -------------------------------------------------------- */
 .section {
   padding-block: var(--space-7);

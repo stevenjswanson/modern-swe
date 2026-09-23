@@ -23,6 +23,11 @@ description:
   - "Each week, practicing software engineers and system builders will share their experience and answer your questions about building software in the age of generative AI."
   - "If you register for credit (Pass/No Pass only), you will need to attend 70% of the days to pass the course. Roll will be taken."
 
+# Button under the logistics box. Remove this block to drop the button.
+question_board:
+  label: "Speaker Question Board"
+  url: "https://script.google.com/a/macros/ucsd.edu/s/AKfycbwxHLe4JZDSCtQIogKS5uMUqrmBBnLB31lai8m4B_xJykr4d4wGPgfxfPnxUXKTll_b/exec"
+
 logistics:
   - label: "When"
     value: "Mondays, 11:00–11:50 am"
