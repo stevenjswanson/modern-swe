@@ -42,7 +42,9 @@ layout: default
 
   {%- if course.question_board and course.question_board.url != "" %}
   <a class="board-cta" href="{{ course.question_board.url }}">
-    {{ course.question_board.label }} <span aria-hidden="true">&rarr;</span>
+    {{ course.question_board.label }}
+    {%- if course.question_board.who %} <span class="logistics__cta-who">{{ course.question_board.who }}</span>{% endif %}
+    <span aria-hidden="true">&rarr;</span>
   </a>
   {%- endif %}
 </section>

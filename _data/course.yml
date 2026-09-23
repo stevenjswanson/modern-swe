@@ -26,6 +26,7 @@ description:
 # Button under the logistics box. Remove this block to drop the button.
 question_board:
   label: "Speaker Question Board"
+  who: "(for enrolled students)"
   url: "https://script.google.com/a/macros/ucsd.edu/s/AKfycbwxHLe4JZDSCtQIogKS5uMUqrmBBnLB31lai8m4B_xJykr4d4wGPgfxfPnxUXKTll_b/exec"
 
 logistics:
@@ -40,7 +41,7 @@ logistics:
 
 # Shown above the schedule while speakers are still being confirmed.
 # Set to an empty string to remove it once the lineup is set.
-schedule_note: "The speaker lineup is being finalized — dates are set, names are on the way. Check back as the quarter approaches."
+schedule_note: ""
 
 footer:
   organized_by: "Organized by the Department of Computer Science and Engineering, the GenAI in CS Education Consortium, CSE's Launch AI initiative, and the CSE Alumni Advisory Board."
