@@ -1,0 +1,95 @@
+<script>
+(function () {
+  'use strict';
+
+  var state = BOOT.data;
+  var debugAs = BOOT.debugAs || '';
+  var busy = false;
+
+  var signupEl = document.getElementById('signup');
+  var noticeEl = document.getElementById('notice');
+  var errorEl = document.getElementById('error');
+
+  if (!signupEl) return;      // the signed-out screen has nothing to drive
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.appendChild(document.createTextNode(text));
+    return node;
+  }
+
+  function showError(message) {
+    errorEl.textContent = message;
+    errorEl.classList.remove('is-hidden');
+  }
+
+  function showNotice(message) {
+    noticeEl.textContent = message;
+    noticeEl.classList.remove('is-hidden');
+  }
+
+  function clearMessages() {
+    errorEl.textContent = '';
+    errorEl.classList.add('is-hidden');
+    noticeEl.textContent = '';
+    noticeEl.classList.add('is-hidden');
+  }
+
+  function setBusy(on) {
+    busy = on;
+    var buttons = signupEl.querySelectorAll('button');
+    for (var i = 0; i < buttons.length; i++) buttons[i].disabled = on;
+  }
+
+  function call(name) {
+    setBusy(true);
+    clearMessages();
+    google.script.run
+      .withSuccessHandler(function (next) {
+        setBusy(false);
+        state = next;
+        render();
+        if (next && next.notice) showNotice(next.notice);
+      })
+      .withFailureHandler(function (err) {
+        setBusy(false);
+        render();
+        showError((err && err.message) ? err.message : 'Something went wrong. Try again.');
+      })[name](debugAs);
+  }
+
+  function render() {
+    signupEl.textContent = '';
+
+    if (state.subscribed) {
+      var onList = el('p', 'signup__lead');
+      onList.appendChild(document.createTextNode('You are on the list. We will email '));
+      onList.appendChild(el('strong', null, state.email));
+      onList.appendChild(document.createTextNode(' about future talks in this series.'));
+      signupEl.appendChild(onList);
+
+      var remove = el('button', 'btn', 'Take me off the list');
+      remove.type = 'button';
+      remove.addEventListener('click', function () { if (!busy) call('unsubscribe'); });
+      signupEl.appendChild(remove);
+
+    } else {
+      var invite = el('p', 'signup__lead');
+      invite.appendChild(document.createTextNode(
+        'Click below to receive notifications about future talks in this series at '));
+      invite.appendChild(el('strong', null, state.email));
+      invite.appendChild(document.createTextNode('.'));
+      signupEl.appendChild(invite);
+
+      var add = el('button', 'cta', 'Yes, email me about future talks');
+      add.type = 'button';
+      add.addEventListener('click', function () { if (!busy) call('subscribe'); });
+      signupEl.appendChild(add);
+    }
+  }
+
+  if (BOOT.error) showError(BOOT.error);
+  render();
+})();
+</script>

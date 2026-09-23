@@ -1,0 +1,631 @@
+<style>
+/* ---------------------------------------------------------------------------
+   Questions board.
+
+   tokens.css and themes.css are loaded from the published site, so the brand
+   colours and the "classic" theme's semantic variables (--ink, --accent, --band,
+   the --space-* scale, --radius-*) arrive already defined and stay in sync.
+
+   site.css is deliberately NOT loaded: it is written against the Jekyll DOM in
+   _layouts/default.html, so it would fight this page's markup on specificity and
+   a future edit there would break this page silently. Instead the handful of
+   component idioms this page needs are restated below against the same variables.
+   Keep them visually in step with assets/css/site.css by hand.
+--------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--ucsd-body-leading, 1.4);
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { max-width: 100%; height: auto; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+a:hover { color: var(--accent-hover); }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.u-visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.is-hidden { display: none !important; }
+
+.wrap {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* --- instructor preview banner, same idiom as the site's devbar ----------- */
+.devbar {
+  margin: 0;
+  padding: var(--space-3) var(--page-pad);
+  background: var(--highlight);
+  color: var(--highlight-ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* --- masthead ------------------------------------------------------------- */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-weight) solid var(--rule);
+}
+.masthead__name {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  max-width: 30ch;
+  line-height: 1.5;
+}
+.masthead__name:hover { color: var(--ink); }
+.masthead__nav { display: flex; gap: var(--space-5); margin-left: auto; margin-right: var(--space-5); }
+.masthead__nav a {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.6875rem;
+  text-decoration: none;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.masthead__nav a:hover { color: var(--ink); text-decoration: underline; }
+.masthead__logo { width: 150px; min-width: 125px; padding: 0.5em; flex: none; }
+
+/* --- type ----------------------------------------------------------------- */
+.section { padding-block: var(--space-7); }
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 0.9;
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  margin: 0 0 var(--space-4);
+  color: var(--ink);
+  text-wrap: balance;
+}
+.page-lead {
+  font-size: clamp(1.0625rem, 1.9vw, 1.25rem);
+  line-height: 1.45;
+  max-width: var(--measure);
+  margin: 0 0 var(--space-5);
+  text-wrap: pretty;
+}
+.section-title {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: var(--ucsd-h2-tracking, 0.175em);
+  line-height: var(--ucsd-h2-leading, 1.6);
+  font-size: 0.9375rem;
+  margin: 0;
+  color: var(--ink);
+}
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin: var(--space-7) 0 var(--space-4);
+}
+.board__meta { margin: 0; font-size: 0.875rem; color: var(--muted); }
+
+.prose { max-width: var(--measure); line-height: 1.55; }
+.prose p { margin: 0 0 var(--space-4); }
+.prose ol, .prose ul { padding-left: 1.25rem; margin: 0 0 var(--space-4); }
+.prose li { margin-bottom: var(--space-2); }
+
+.page-aside {
+  margin: var(--space-7) 0 0;
+  padding-top: var(--space-5);
+  border-top: var(--rule-weight) solid var(--rule);
+  color: var(--muted);
+  max-width: var(--measure);
+  line-height: 1.5;
+}
+
+/* --- notices -------------------------------------------------------------- */
+/* Full width, not the --measure text column: these are callouts framing the
+   page, not body copy. */
+.notice {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  border: var(--rule-weight) solid var(--rule);
+  background: var(--surface-sunk);
+  line-height: 1.5;
+  font-size: 0.9375rem;
+}
+.notice ul { margin: var(--space-2) 0 0; padding-left: 1.15rem; }
+.notice li { margin-bottom: var(--space-1); }
+.notice li:last-child { margin-bottom: 0; }
+
+.notice--info { border-left: 4px solid var(--accent); }
+.notice--warn { border-left: 4px solid var(--highlight); }
+.notice--bad  { border-left: 4px solid var(--ucsd-orange); }
+.notice--ok   { border-left: 4px solid var(--ucsd-green); }
+
+/* --- participation scorecard ---------------------------------------------- */
+.scorecard {
+  margin: var(--space-7) 0 var(--space-6);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  background: var(--surface-sunk);
+  border: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-lg);
+}
+.scorecard__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+/* Badge summary: one mark per period, then the count. */
+.scorecard__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+}
+.scorecard__badge-count {
+  margin-left: var(--space-1);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: var(--rule-weight) solid var(--rule);
+  background: var(--surface);
+  color: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  flex: none;
+}
+.badge--on {
+  /* A darker shade of --ucsd-green: the brand value is only 3.45 against white,
+     which is thin for a glyph. This is 5.84 for the check and 5.5 against the
+     card, so the badge reads as a shape as well as a mark. */
+  background: #4F6E28;
+  border-color: #4F6E28;
+  color: #FFFFFF;
+}
+.scorecard__periods { list-style: none; margin: 0; padding: 0; }
+
+/* name | closes | bar | points | detail */
+.period {
+  display: grid;
+  grid-template-columns: 8.5rem 8rem 1fr 6.75rem;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-3);
+  border-top: var(--rule-weight) solid var(--rule);
+}
+.period:first-child { border-top: 0; }
+.period__name { font-weight: 700; font-size: 0.9375rem; }
+.period__when { font-size: 0.8125rem; color: var(--muted); }
+.period__bar {
+  display: block;
+  height: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--rule);
+  overflow: hidden;
+}
+.period__fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transition: width 200ms ease;
+}
+.period__points {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.period__detail {
+  grid-column: 1 / -1;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.period--met .period__fill { background: var(--ucsd-green); }
+.period--met .period__points { color: #2F6B14; }     /* 5.03 on #F7F8F9 — AA */
+.period--closed .period__name,
+.period--closed .period__when { color: var(--muted); }
+.period--current .period__name { color: var(--accent); }
+
+.chip--now {
+  background: var(--highlight);
+  color: var(--highlight-ink);
+  margin-left: var(--space-2);
+}
+
+.requirement {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: var(--rule-weight) solid var(--rule);
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.requirement--met { border-left-color: #4F6E28; }
+.requirement .badge { margin-top: 0.1rem; }
+.requirement__text { flex: 1 1 auto; }
+
+.scorecard__key {
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-3);
+  border-top: var(--rule-weight) solid var(--rule);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 40rem) {
+  .period {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-1) var(--space-3);
+  }
+  .period__when { grid-column: 1 / -1; order: 3; }
+  .period__bar { grid-column: 1 / -1; order: 4; }
+  .period__detail { order: 5; }
+}
+
+/* --- the board ------------------------------------------------------------ */
+.board { list-style: none; margin: 0; padding: 0; }
+
+/* Two-column grid with hairline rules, matching the site's .talk row — the
+   site separates items with rules, not boxed cards. */
+.q {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: var(--space-5);
+  padding-block: var(--space-5);
+  border-top: var(--rule-weight) solid var(--rule);
+}
+.q:last-child { border-bottom: var(--rule-weight) solid var(--rule); }
+
+.q__vote { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+
+/* .pill from site.css: outline in accent, fills on hover. Pressed = filled. */
+.vote {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  border: var(--rule-weight) solid var(--accent);
+  padding: 0.3125rem var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.vote:hover { background: var(--accent); color: var(--surface); }
+.vote[aria-pressed="true"] { background: var(--accent); color: var(--surface); font-weight: 700; }
+.vote[aria-pressed="true"]:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.vote:disabled { opacity: 0.5; cursor: progress; }
+.vote__arrow { font-size: 0.75rem; line-height: 1; }
+.vote__count { font-variant-numeric: tabular-nums; }
+
+.q__id {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.625rem;
+  color: var(--muted);
+}
+
+.q__body { min-width: 0; }
+.q__text {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin: 0 0 var(--space-3);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+/* --- staff moderation ----------------------------------------------------- */
+.q__admin {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--rule-weight) dashed var(--rule);
+}
+.admin-btn {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  cursor: pointer;
+}
+.admin-btn:hover { color: var(--ink); text-decoration: underline; }
+.admin-btn--danger { color: #A4420B; }          /* 5.34 on white — AA */
+.admin-btn--danger:hover { color: #7A3108; }
+.admin-btn:disabled { opacity: 0.5; cursor: progress; }
+
+.admin-confirm {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.admin-confirm__text {
+  flex: 1 1 22ch;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* A hidden question is dimmed for staff and invisible to students. */
+.q--hidden { opacity: 0.62; }
+.q--hidden .q__text { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.chip {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 0.125rem var(--space-3);
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.5625rem;
+  line-height: 1.6;
+}
+.chip--hidden {
+  background: var(--surface-sunk);
+  color: var(--muted);
+  border: var(--rule-weight) solid var(--rule);
+}
+
+/* --- comments ------------------------------------------------------------- */
+.comments { list-style: none; margin: 0 0 var(--space-3); padding: 0; }
+.comment {
+  border-left: 2px solid var(--rule);
+  padding: 0 0 0 var(--space-4);
+  margin: 0 0 var(--space-3);
+  max-width: var(--measure);
+}
+.comment__text { margin: 0; font-size: 0.9375rem; line-height: 1.5; }
+.comment__when {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.comment--hidden { opacity: 0.62; }
+.comment--hidden .comment__text { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.comment-toggle {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.comment-toggle:hover { color: var(--accent-hover); }
+
+.comment-form { margin: var(--space-3) 0 0; max-width: var(--measure); }
+.comment-form .field { margin-bottom: var(--space-2); }
+
+/* --- fields and buttons --------------------------------------------------- */
+.field {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  resize: vertical;
+}
+.field:focus-visible { border-color: var(--accent); }
+.field--on-band {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.field__note {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin: var(--space-2) 0 var(--space-3);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.field__note--on-band { color: var(--muted); }
+.counter { font-variant-numeric: tabular-nums; }
+.counter.is-over { color: var(--ucsd-orange); font-weight: 700; }
+
+/* .pill, outline flavour — used for the account-chooser link */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  border: var(--rule-weight) solid var(--accent);
+  padding: 0.3125rem var(--space-4);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+}
+.btn:hover { background: var(--accent); color: var(--surface); }
+
+/* The primary action: solid accent blue on the page's light ground, matching
+   the solid .board-cta buttons on the site's homepage. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--surface);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.cta:hover { background: var(--accent-hover); color: var(--surface); }
+.cta:disabled { opacity: 0.6; cursor: progress; }
+
+.actions { margin: var(--space-5) 0 0; }
+
+/* --- the navy band, same as the site's .logistics panel ------------------- */
+/* Light panel. The site's .logistics band is navy, but a dark block here fights
+   the rest of the page, so this keeps the same shape on a light ground. */
+.band {
+  margin-block: var(--space-7);
+  background: var(--surface-sunk);
+  color: var(--ink);
+  border: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  scroll-margin-top: var(--space-5);
+}
+.band__title {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.6875rem;
+  color: var(--accent);
+  margin: 0 0 var(--space-2);
+}
+.band__lead {
+  margin: 0 0 var(--space-4);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  max-width: var(--measure);
+  color: var(--ink);
+}
+.band__actions { margin: var(--space-4) 0 0; }
+.band .notice {
+  background: var(--surface);
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+.board__empty { color: var(--muted); font-size: 1.0625rem; margin: var(--space-5) 0; }
+
+/* --- mailing-list sign-up -------------------------------------------------- */
+.signup {
+  margin: var(--space-5) 0 0;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  background: var(--surface-sunk);
+  border: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-lg);
+  max-width: var(--measure);
+}
+.signup__lead {
+  margin: 0 0 var(--space-5);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* --- footer --------------------------------------------------------------- */
+.foot {
+  border-top: var(--rule-weight) solid var(--rule);
+  padding-block: var(--space-5) var(--space-8);
+  margin-top: var(--space-6);
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.foot p { margin: 0; }
+
+/* --- responsive ----------------------------------------------------------- */
+@media (max-width: 40rem) {
+  .masthead__nav { margin-left: 0; margin-right: 0; order: 3; width: 100%; }
+  .q { grid-template-columns: 1fr; gap: var(--space-3); }
+  .q__vote { flex-direction: row; align-items: center; gap: var(--space-3); }
+  .band { padding: var(--space-5); }
+  .cta { display: flex; justify-content: center; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>

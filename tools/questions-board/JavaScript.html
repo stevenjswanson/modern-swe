@@ -1,0 +1,512 @@
+<script>
+(function () {
+  'use strict';
+
+  // BOOT is rendered into the page by doGet, so the first paint is already
+  // populated — a cold start plus Sheets I/O plus a google.script.run round trip
+  // is 1-3s, and that would be the first thing a student sees.
+  var state = BOOT.data;
+  var debugAs = BOOT.debugAs || '';
+  var busy = false;
+
+  // Comment boxes that are open, and anything typed into them, survive a
+  // re-render. Losing a half-written comment to someone else's upvote would be
+  // maddening.
+  var drafts = {};   // questionId -> text
+  var openFor = {};  // questionId -> true
+
+  var boardEl = document.getElementById('board');
+  var emptyEl = document.getElementById('board-empty');
+  var errorEl = document.getElementById('board-error');
+  var noticeEl = document.getElementById('board-notice');
+  var askEl = document.getElementById('new-question');
+  var askBtn = document.getElementById('new-question-submit');
+  var askCount = document.getElementById('new-question-count');
+  var scoreEl = document.getElementById('scorecard');
+
+  if (!boardEl) return;   // the gate screen has no board
+
+  // -------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    // textContent, never innerHTML: question and comment text is student input
+    // and arrives as JSON, so nothing has escaped it.
+    if (text !== undefined && text !== null) setText(node, text);
+    return node;
+  }
+
+  /** Student text, with line breaks preserved and no markup interpreted. */
+  function setText(node, text) {
+    var lines = String(text).split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      if (i) node.appendChild(document.createElement('br'));
+      node.appendChild(document.createTextNode(lines[i]));
+    }
+  }
+
+  function formatWhen(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
+           ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+
+  /** Server-supplied limits, with defaults for the misconfigured case. */
+  function limits() {
+    var l = state.limits || {};
+    return {
+      question: l.question || 500,
+      comment: l.comment || 2000,
+      commentsPerQuestion: l.commentsPerQuestion || 10
+    };
+  }
+
+  function plural(n, one, many) {
+    return n + ' ' + (n === 1 ? one : many);
+  }
+
+  function showError(message) {
+    setText(errorEl, message);
+    errorEl.classList.remove('is-hidden');
+    errorEl.scrollIntoView({ block: 'nearest' });
+  }
+
+  function clearError() {
+    errorEl.textContent = '';
+    errorEl.classList.add('is-hidden');
+  }
+
+  function showNotice(message) {
+    if (!noticeEl) return;
+    setText(noticeEl, message);
+    noticeEl.classList.remove('is-hidden');
+  }
+
+  function clearNotice() {
+    if (!noticeEl) return;
+    noticeEl.textContent = '';
+    noticeEl.classList.add('is-hidden');
+  }
+
+  function setBusy(on) {
+    busy = on;
+    var controls = document.querySelectorAll('.vote, .cta, .comment-form button, .admin-btn');
+    for (var i = 0; i < controls.length; i++) controls[i].disabled = on;
+  }
+
+  /**
+   * Every server call needs a failure handler — without one an exception goes to
+   * the browser console and the UI just sits there looking broken.
+   */
+  function call(name, args, onDone) {
+    setBusy(true);
+    clearError();
+    clearNotice();
+    var runner = google.script.run
+      .withSuccessHandler(function (payload) {
+        setBusy(false);
+        state = payload;
+        render();
+        if (payload && payload.notice) showNotice(payload.notice);
+        if (onDone) onDone();
+      })
+      .withFailureHandler(function (err) {
+        setBusy(false);
+        render();   // roll back any optimistic change
+        showError((err && err.message) ? err.message : 'Something went wrong. Try again.');
+      });
+    runner[name].apply(runner, args);
+  }
+
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
+
+  function render() {
+    boardEl.textContent = '';
+
+    var questions = state.questions || [];
+    emptyEl.classList.toggle('is-hidden', questions.length > 0);
+
+    questions.forEach(function (q) {
+      boardEl.appendChild(renderQuestion(q));
+    });
+
+    renderScorecard();
+    updateCounter(askEl, askCount, limits().question);
+  }
+
+  /**
+   * Participation tally, for staff as well as students, so staff can see exactly
+   * what a student sees. The numbers come from the server, never from counting
+   * the DOM. A staff member's own rows are tagged Role = staff and are excluded
+   * from participation counts at grading time, which the card says outright.
+   */
+  function renderScorecard() {
+    if (!scoreEl || !state.score) return;
+    scoreEl.textContent = '';
+
+    var score = state.score;
+    var head = el('div', 'scorecard__head');
+    head.appendChild(el('h2', 'section-title',
+      state.staff ? 'Participation (staff view)' : 'Your participation'));
+
+    // One badge per period, never a pooled score: the periods are separate
+    // hurdles, and a single total would imply they trade off against each other.
+    var summary = el('p', 'scorecard__badges');
+    score.periods.forEach(function (p) {
+      var mark = el('span', 'badge' + (p.earned ? ' badge--on' : ''),
+                    p.earned ? '\u2713' : '');
+      mark.setAttribute('aria-hidden', 'true');
+      mark.title = p.label + (p.earned ? ' — completed' : ' — not yet completed');
+      summary.appendChild(mark);
+    });
+    summary.appendChild(el('span', 'scorecard__badge-count',
+      score.badges + ' of ' + score.badgeTarget +
+      (score.badgeTarget === 1 ? ' period' : ' periods') + ' completed'));
+    head.appendChild(summary);
+    scoreEl.appendChild(head);
+
+    var list = el('ol', 'scorecard__periods');
+    score.periods.forEach(function (p) {
+      var item = el('li', 'period' +
+        (p.current ? ' period--current' : '') +
+        (p.closed ? ' period--closed' : '') +
+        (p.earned ? ' period--met' : ''));
+
+      var name = el('span', 'period__name', p.label);
+      if (p.current) name.appendChild(el('span', 'chip chip--now', 'Now'));
+      item.appendChild(name);
+
+      item.appendChild(el('span', 'period__when',
+        (p.closed ? 'closed ' : 'closes ') + p.endsLabel));
+
+      var bar = el('span', 'period__bar');
+      var fill = el('span', 'period__fill');
+      fill.style.width = Math.min(100, Math.round((p.points / p.target) * 100)) + '%';
+      bar.appendChild(fill);
+      item.appendChild(bar);
+
+      var points = el('span', 'period__points');
+      if (p.earned) {
+        var earnedMark = el('span', 'badge badge--on', '\u2713');
+        earnedMark.setAttribute('aria-hidden', 'true');
+        points.appendChild(earnedMark);
+      }
+      points.appendChild(document.createTextNode(p.points + ' / ' + p.target));
+      item.appendChild(points);
+
+      var parts = [];
+      if (p.counts.questions) parts.push(plural(p.counts.questions, 'question', 'questions'));
+      if (p.counts.upvotes) parts.push(plural(p.counts.upvotes, 'upvote', 'upvotes'));
+      if (p.counts.comments) parts.push(plural(p.counts.comments, 'comment', 'comments'));
+      item.appendChild(el('span', 'period__detail',
+        parts.length ? parts.join(' · ') : 'nothing yet'));
+
+      list.appendChild(item);
+    });
+    scoreEl.appendChild(list);
+
+    // The requirement itself, stated plainly and with the student's standing
+    // against it — a static rule next to a live tally invites the question
+    // "so am I there yet?".
+    if (score.periods.length) {
+      var first = score.periods[0];
+      var rest = score.periods.slice(1);
+      var restNames = rest.map(function (p) { return p.label; }).join(' or ');
+      // "at least one of B or C" states the rule; "complete B and/or C" is the
+      // instruction, where doing both is equally welcome.
+      var restEither = rest.map(function (p) { return p.label; }).join(' and/or ');
+
+      var req = el('p', 'requirement' + (score.requirementMet ? ' requirement--met' : ''));
+      var mark = el('span', 'badge' + (score.requirementMet ? ' badge--on' : ''),
+                    score.requirementMet ? '\u2713' : '');
+      mark.setAttribute('aria-hidden', 'true');
+      req.appendChild(mark);
+
+      var words = el('span', 'requirement__text');
+      var rule = el('strong', null,
+        'To get participation credit you need ' + first.label +
+        (rest.length ? ', plus at least one of ' + restNames : '') + '.');
+      words.appendChild(rule);
+      words.appendChild(document.createTextNode(' '));
+
+      var status;
+      if (score.requirementMet) {
+        status = 'You have done that.';
+      } else if (!score.firstDone && score.laterDone) {
+        status = first.label + ' is the one still missing — the later periods do not ' +
+                 'substitute for it.';
+      } else if (!score.firstDone) {
+        status = first.label + ' is not complete yet.';
+      } else {
+        status = first.label + ' is done. Next: complete ' + restEither + '.';
+      }
+      words.appendChild(document.createTextNode(status));
+      req.appendChild(words);
+      scoreEl.appendChild(req);
+    }
+
+    scoreEl.appendChild(el('p', 'scorecard__key',
+      'Proposing a question ' + score.values.question + ' · ' +
+      'upvoting ' + score.values.upvote + ' · ' +
+      'commenting ' + score.values.comment + '. ' +
+      'Reach ' + score.target + ' in a period to complete it; there is nothing ' +
+      'to gain beyond that, and periods do not pool — a surplus in one will not ' +
+      'cover a shortfall in another. Every action counts in exactly one period, an ' +
+      'upvote you take back does not count, and anything after the last deadline ' +
+      'earns nothing.'));
+
+    if (state.staff) {
+      scoreEl.appendChild(el('p', 'scorecard__key',
+        'This is your own activity, scored the way a student would be. Your rows are ' +
+        'tagged Role = staff, so they are excluded from student participation counts.'));
+    }
+  }
+
+  function renderQuestion(q) {
+    var li = el('li', 'q' + (q.hidden ? ' q--hidden' : ''));
+    li.setAttribute('data-id', q.id);
+
+    // --- vote column ---
+    var voteCell = el('div', 'q__vote');
+    var vote = el('button', 'vote');
+    vote.type = 'button';
+    vote.setAttribute('aria-pressed', q.youUpvoted ? 'true' : 'false');
+    vote.setAttribute('aria-label',
+      (q.youUpvoted ? 'Remove your upvote from question ' : 'Upvote question ') +
+      q.id + ', currently ' + plural(q.upvotes, 'vote', 'votes'));
+    vote.appendChild(el('span', 'vote__arrow', '▲'));
+    vote.appendChild(el('span', 'vote__count', String(q.upvotes)));
+    vote.addEventListener('click', function () { onVote(q, vote); });
+    voteCell.appendChild(vote);
+    voteCell.appendChild(el('span', 'q__id', q.id));
+    if (q.hidden) voteCell.appendChild(el('span', 'chip chip--hidden', 'Hidden'));
+    li.appendChild(voteCell);
+
+    // --- body ---
+    var body = el('div', 'q__body');
+    body.appendChild(el('p', 'q__text', q.text));
+
+    if (q.comments && q.comments.length) {
+      var list = el('ul', 'comments');
+      q.comments.forEach(function (c) {
+        var item = el('li', 'comment' + (c.hidden ? ' comment--hidden' : ''));
+        item.appendChild(el('p', 'comment__text', c.text));
+
+        var meta = el('span', 'comment__when');
+        var when = formatWhen(c.at);
+        if (when) meta.appendChild(document.createTextNode(when));
+        if (c.hidden) meta.appendChild(el('span', 'chip chip--hidden', 'Hidden'));
+
+        // Staff only. The server re-checks staff membership on the call itself.
+        if (state.staff && c.id) {
+          var toggle = el('button', 'admin-btn', c.hidden ? 'Unhide' : 'Hide');
+          toggle.type = 'button';
+          toggle.title = c.hidden
+            ? 'Show this comment again and let it count'
+            : 'Hide from students and stop it counting. Nothing is deleted.';
+          toggle.addEventListener('click', function () {
+            if (busy) return;
+            call('setCommentHidden', [c.id, !c.hidden, debugAs]);
+          });
+          meta.appendChild(toggle);
+        }
+
+        item.appendChild(meta);
+        list.appendChild(item);
+      });
+      body.appendChild(list);
+    }
+
+    body.appendChild(renderCommentControls(q));
+    if (state.staff) body.appendChild(renderStaffControls(q));
+    li.appendChild(body);
+    return li;
+  }
+
+  /**
+   * Staff-only moderation. Rendering is a convenience, not the gate — the server
+   * re-checks staff membership on every one of these calls.
+   */
+  function renderStaffControls(q) {
+    var wrap = el('div', 'q__admin');
+
+    var hide = el('button', 'admin-btn', q.hidden ? 'Unhide' : 'Hide');
+    hide.type = 'button';
+    hide.title = q.hidden
+      ? 'Show this question to students again'
+      : 'Hide from students. Nothing is deleted.';
+    hide.addEventListener('click', function () {
+      if (busy) return;
+      call('setQuestionHidden', [q.id, !q.hidden, debugAs]);
+    });
+
+    var del = el('button', 'admin-btn admin-btn--danger', 'Delete');
+    del.type = 'button';
+    del.title = 'Permanently remove this question and every vote and comment on it';
+
+    // Two-step confirm rather than window.confirm(): a destructive, irreversible
+    // action deserves to say exactly what it will destroy.
+    var confirmWrap = el('span', 'admin-confirm is-hidden');
+    confirmWrap.appendChild(el('span', 'admin-confirm__text',
+      'Delete ' + q.id + ' and every vote and comment on it? ' +
+      'This cannot be undone, and it erases the participation record for everyone ' +
+      'who took part.'));
+    var yes = el('button', 'admin-btn admin-btn--danger', 'Yes, delete');
+    yes.type = 'button';
+    var no = el('button', 'admin-btn', 'Cancel');
+    no.type = 'button';
+    confirmWrap.appendChild(yes);
+    confirmWrap.appendChild(no);
+
+    function arm(on) {
+      hide.classList.toggle('is-hidden', on);
+      del.classList.toggle('is-hidden', on);
+      confirmWrap.classList.toggle('is-hidden', !on);
+    }
+    del.addEventListener('click', function () { arm(true); });
+    no.addEventListener('click', function () { arm(false); });
+    yes.addEventListener('click', function () {
+      if (busy) return;
+      call('deleteQuestion', [q.id, debugAs]);
+    });
+
+    wrap.appendChild(hide);
+    wrap.appendChild(del);
+    wrap.appendChild(confirmWrap);
+    return wrap;
+  }
+
+  function renderCommentControls(q) {
+    var wrap = el('div');
+
+    var atLimit = q.yourComments >= limits().commentsPerQuestion;
+    var toggle = el('button', 'comment-toggle',
+      q.comments.length ? 'Add a comment' : 'Be the first to comment');
+    toggle.type = 'button';
+
+    var form = el('div', 'comment-form');
+    var box = el('textarea', 'field');
+    box.rows = 2;
+    box.maxLength = limits().comment;
+    box.placeholder = 'Your thoughts...';
+    box.value = drafts[q.id] || '';
+    box.setAttribute('aria-label', 'Your comment on question ' + q.id);
+
+    var note = el('p', 'field__note');
+    note.appendChild(document.createTextNode('Visible to the whole class.'));
+    var counter = el('span', 'counter');
+    note.appendChild(counter);
+
+    var post = el('button', 'btn', 'Post comment');
+    post.type = 'button';
+
+    form.appendChild(box);
+    form.appendChild(note);
+    form.appendChild(post);
+
+    if (!openFor[q.id]) form.classList.add('is-hidden');
+
+    toggle.addEventListener('click', function () {
+      openFor[q.id] = !openFor[q.id];
+      form.classList.toggle('is-hidden', !openFor[q.id]);
+      if (openFor[q.id]) box.focus();
+    });
+
+    box.addEventListener('input', function () {
+      drafts[q.id] = box.value;
+      updateCounter(box, counter, limits().comment);
+    });
+
+    post.addEventListener('click', function () {
+      if (busy) return;
+      var text = box.value.trim();
+      if (!text) { showError('Write something before posting.'); box.focus(); return; }
+      call('addComment', [q.id, text, debugAs], function () {
+        delete drafts[q.id];
+        openFor[q.id] = false;
+        render();
+      });
+    });
+
+    if (atLimit) {
+      toggle.disabled = true;
+      wrap.appendChild(el('p', 'field__note',
+        'You have reached the comment limit on this question.'));
+    }
+
+    wrap.appendChild(toggle);
+    wrap.appendChild(form);
+    updateCounter(box, counter, limits().comment);
+    return wrap;
+  }
+
+  function updateCounter(field, counter, max) {
+    if (!field || !counter) return;
+    var used = field.value.length;
+    var left = max - used;
+    counter.textContent = left < 0
+      ? (-left) + ' over the limit'
+      : left + ' characters left';
+    counter.classList.toggle('is-over', left < 0);
+  }
+
+  // -------------------------------------------------------------------------
+  // Actions
+  // -------------------------------------------------------------------------
+
+  function onVote(q, button) {
+    if (busy) return;
+
+    // Optimistic: flip the button immediately, then let the server's reply
+    // become the truth. On failure, render() from unchanged state rolls it back.
+    var nextPressed = !q.youUpvoted;
+    button.setAttribute('aria-pressed', nextPressed ? 'true' : 'false');
+    var count = button.querySelector('.vote__count');
+    if (count) count.textContent = String(q.upvotes + (nextPressed ? 1 : -1));
+
+    call('toggleUpvote', [q.id, debugAs]);
+  }
+
+  if (askBtn) {
+    askBtn.addEventListener('click', function () {
+      if (busy) return;
+      var text = askEl.value.trim();
+      if (!text) { showError('Write your question before posting.'); askEl.focus(); return; }
+      call('addQuestion', [text, debugAs], function () {
+        askEl.value = '';
+        updateCounter(askEl, askCount, limits().question);
+      });
+    });
+  }
+
+  if (askEl) {
+    askEl.addEventListener('input', function () {
+      updateCounter(askEl, askCount, limits().question);
+    });
+  }
+
+  // In-page jump. The <base target="_top"> that external links need would send a
+  // bare "#ask" href to the sandbox's own URL and blank the tab, so scroll by hand.
+  var jump = document.getElementById('jump-to-ask');
+  if (jump) {
+    jump.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = document.getElementById('ask');
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (askEl) askEl.focus({ preventScroll: true });
+    });
+  }
+
+  if (BOOT.error) showError(BOOT.error);
+
+  render();
+})();
+</script>

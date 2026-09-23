@@ -1,0 +1,9 @@
+# Everything that is repo bookkeeping, not part of the Apps Script project.
+**/**
+!Code.gs
+!Index.html
+!Styles.html
+!JavaScript.html
+!Subscribe.html
+!SubscribeJs.html
+!appsscript.json

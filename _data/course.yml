@@ -23,10 +23,24 @@ description:
   - "Each week, practicing software engineers and system builders will share their experience and answer your questions about building software in the age of generative AI."
   - "If you register for credit (Pass/No Pass only), you will need to attend 70% of the days to pass the course. Roll will be taken."
 
+# Talk-notification sign-up (/notifications/). Both values are required before
+# the page can do anything; until they are filled in it says so plainly.
+#   client_id — OAuth 2.0 Web client ID from Google Cloud, with
+#               https://stevenjswanson.github.io as an authorized JavaScript origin.
+#   endpoint  — the Apps Script deployment that accepts the signed token. This must
+#               be the deployment whose access is "Anyone", NOT the domain-only one
+#               the question board uses.
+notifications:
+  # Remove label to drop the button from the home page.
+  label: "Get Talk Notifications"
+  who: "for everyone"
+  client_id: "41803804612-idi3j5k4b7m778mf06ef7f2i7npdvnhb.apps.googleusercontent.com"
+  endpoint: "https://script.google.com/macros/s/AKfycbwbD6w39toxeHkwalzR13bPREla4IOJuf3DgT6ne789o5LMq4gpVzz2Umi50sw5d94i/exec"
+
 # Button under the logistics box. Remove this block to drop the button.
 question_board:
   label: "Speaker Question Board"
-  who: "(for enrolled students)"
+  who: "for enrolled students"
   url: "https://script.google.com/a/macros/ucsd.edu/s/AKfycbwxHLe4JZDSCtQIogKS5uMUqrmBBnLB31lai8m4B_xJykr4d4wGPgfxfPnxUXKTll_b/exec"
 
 logistics:

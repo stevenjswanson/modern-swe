@@ -214,6 +214,25 @@ none. The `check-speaker-replies` skill regenerates it at the end of every check
 Output is gitignored, and `_outreach/` is excluded from Jekyll, so none of it
 reaches the website.
 
+## Student question board
+
+`tools/questions-board/` is a Google Apps Script web app where enrolled students
+post questions for the speakers, upvote each other's, and comment. It is backed by
+the Fa2026 Grade Sheet, not by this repo, and it authenticates against the
+`@ucsd.edu` addresses in the roster — students never get access to the sheet
+itself.
+
+It authenticates by header name, not column letter, so a reshaped TSS export cannot
+silently lock the class out. You and any TAs listed in the script's `STAFF` constant
+can see the board too, and staff posts are tagged `Role = staff` so they drop out of
+participation counts.
+
+The source lives here so it is versioned and reviewable; it is deployed with
+`clasp`. See `tools/questions-board/README.md` for setup, the sheet columns it
+writes, and how to release a change without breaking the students' bookmarks.
+
+`tools` is in the Jekyll `exclude:` list, so none of it is published to the site.
+
 ## Before you push
 
 ```bash

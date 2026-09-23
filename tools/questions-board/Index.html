@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="classic">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&family=Teko:wght@500;600;700&display=swap">
+
+<link rel="stylesheet" href="<?= site ?>/assets/css/tokens.css?v=<?= cssVersion ?>">
+<link rel="stylesheet" href="<?= site ?>/assets/css/themes.css?v=<?= cssVersion ?>">
+<?!= include('Styles') ?>
+</head>
+<body>
+
+<a class="u-visually-hidden" href="#main">Skip to content</a>
+
+<? if (data.debug) { ?>
+<p class="devbar">Instructor preview — showing the board as <?= data.email ?>. Posting is live.</p>
+<? } ?>
+
+<header class="wrap masthead">
+  <a class="masthead__name" href="<?= site ?>/">Tales of Modern Software Engineering</a>
+  <nav class="masthead__nav">
+    <a href="<?= site ?>/">Schedule</a>
+  </nav>
+  <a class="masthead__logo" href="https://ucsd.edu" aria-label="UC San Diego">
+    <img src="<?= site ?>/assets/img/logos/ucsd-logo-blue.svg" alt="UC San Diego" width="289" height="55">
+  </a>
+</header>
+
+<main id="main" class="wrap section">
+
+<? if (error) { ?>
+
+  <h1 class="page-title">Something is misconfigured</h1>
+  <p class="page-lead">The board could not be loaded. This is a setup problem, not
+  something you did — please let the instructor know.</p>
+  <p class="notice notice--bad"><?= error ?></p>
+
+<? } else if (!data.enrolled) { ?>
+
+  <h1 class="page-title">Sign in to ask a question</h1>
+  <p class="page-lead">This board is for students enrolled in CSE&nbsp;090-SE /
+  CSE&nbsp;290-SE. Open it while signed in to your UC&nbsp;San&nbsp;Diego Google
+  account — the one ending in <strong>@ucsd.edu</strong>.</p>
+
+  <div class="notice notice--warn">
+    <? if (data.email) { ?>
+      You appear to be signed in as <strong><?= data.email ?></strong>, which is not
+      on the roster for this course.
+    <? } else { ?>
+      You do not appear to be signed in to a Google account at all.
+    <? } ?>
+  </div>
+
+  <div class="prose">
+    <p>If you are enrolled and seeing this, the usual cause is being signed in to more
+    than one Google account at once — your browser picked the wrong one.</p>
+    <ol>
+      <li>Switch to your <strong>@ucsd.edu</strong> account, or open this page in a
+        private/incognito window and sign in there.</li>
+      <li>Reload this page.</li>
+    </ol>
+    <p>If you just enrolled, it can take a day for the roster to update. If it still
+    does not work after that, email the instructor.</p>
+  </div>
+
+  <? if (appUrl) { ?>
+  <p class="actions">
+    <a class="btn" href="https://accounts.google.com/AccountChooser?continue=<?= encodeURIComponent(appUrl) ?>">Choose a different account</a>
+  </p>
+  <? } ?>
+
+  <p class="page-aside"><strong>Before you post:</strong> anything you write on this
+  board — questions and comments alike — is visible to everyone in the class. Your
+  name is not shown next to it, but your instructor can see who posted what, and
+  posts cannot be edited or deleted once submitted.</p>
+
+<? } else { ?>
+
+  <h1 class="page-title">Questions for our speakers</h1>
+  <p class="page-lead">Ask (or upvote) what you actually want to know.  Your suggestions will guide the conversation.</p>
+
+  <? if (data.staff) { ?>
+  <div class="notice notice--warn">
+    <strong>You are signed in as course staff</strong>, not as an enrolled student.
+    Anything you post is recorded with <code>Role = staff</code> in the submissions
+    log, so it can be excluded from participation counts.
+  </div>
+  <? } ?>
+
+  <div class="notice notice--info">
+    <strong>Remember:</strong>
+    <ul>
+      <li>Everything you post here is visible to everyone in the class.</li>
+      <li>Your name is not shown next to your questions or comments, but your instructor
+        can see who posted what.</li>
+      <li>Posts cannot be edited or deleted once submitted.</li>
+      <li>Keep your questions short and to the point — a couple of sentences at most.</li>
+      <li>Be civil and constructive. Posting inappropriate content will result in a failing grade.</li>
+    </ul>
+  </div>
+
+  <div class="section__head">
+    <h2 class="section-title">Proposed Questions</h2>
+    <!-- target="_self" is required: the <base target="_top"> above (which external
+         links need) would otherwise send this in-page jump to the bare sandbox URL
+         and land the whole tab on a blank page. -->
+    <p class="board__meta"><a href="#ask" target="_self" id="jump-to-ask">Propose a question</a></p>
+  </div>
+
+  <p class="notice notice--bad is-hidden" id="board-error" role="alert"></p>
+  <p class="notice notice--ok is-hidden" id="board-notice" role="status"></p>
+
+  <ol class="board" id="board"></ol>
+  <p class="board__empty is-hidden" id="board-empty">No questions yet. Be the first —
+  the box is just below.</p>
+
+  <section class="band" id="ask">
+    <h2 class="band__title">Propose a question</h2>
+    <p class="band__lead">What do you want to know about modern software engineering
+    and the impact of GenAI?</p>
+
+    <label class="u-visually-hidden" for="new-question">Your question</label>
+    <textarea id="new-question" class="field field--on-band" rows="3"
+      maxlength="<?= data.limits.question ?>"
+      placeholder="What would you ask someone who ships software for a living, now that AI writes some of it?"></textarea>
+
+    <p class="field__note field__note--on-band">
+      Visible to the whole class. <span class="counter" id="new-question-count"></span>
+    </p>
+
+    <p class="band__actions">
+      <button type="button" class="cta" id="new-question-submit">Suggest question</button>
+    </p>
+  </section>
+
+  <section class="scorecard" id="scorecard" aria-label="Participation score"></section>
+
+<? } ?>
+
+</main>
+
+<footer class="wrap foot">
+  <p>CSE 090-SE / CSE 290-SE &middot; UC San Diego &middot;
+    <a href="<?= site ?>/">Seminar schedule</a></p>
+</footer>
+
+<script>
+  var BOOT = <?!= bootJson ?>;
+</script>
+<?!= include('JavaScript') ?>
+</body>
+</html>

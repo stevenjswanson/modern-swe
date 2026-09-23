@@ -27,26 +27,49 @@ layout: default
       </div>
       {%- endfor %}
     </div>
-    <div class="logistics__actions">
-      <a class="logistics__cta" href="{{ '/finding-the-seminar/' | relative_url }}">
-        Finding the seminar <span class="logistics__cta-who">(for students)</span>
-        <span aria-hidden="true">&rarr;</span>
-      </a>
-      <a class="logistics__cta logistics__cta--ghost" href="{{ '/for-speakers/' | relative_url }}">
-        Arrival logistics <span class="logistics__cta-who">(for speakers)</span>
-        <span aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
   </div>
   {%- endif %}
 
-  {%- if course.question_board and course.question_board.url != "" %}
-  <a class="board-cta" href="{{ course.question_board.url }}">
-    {{ course.question_board.label }}
-    {%- if course.question_board.who %} <span class="logistics__cta-who">{{ course.question_board.who }}</span>{% endif %}
-    <span aria-hidden="true">&rarr;</span>
-  </a>
-  {%- endif %}
+  {%- comment %}
+    Four equal-width cards in one row. The audience sits on its own line under
+    each label: that is what lets all four fit across the page, and it reads
+    better than a parenthetical trailing the action. The two student-facing
+    links are solid, the other two outlined.
+  {%- endcomment %}
+  <div class="board-ctas">
+    <a class="board-cta" href="{{ '/finding-the-seminar/' | relative_url }}">
+      <span class="board-cta__top">
+        <span class="board-cta__label">Finding the seminar</span>
+        <span class="board-cta__arrow" aria-hidden="true">&rarr;</span>
+      </span>
+      <span class="board-cta__who">for students</span>
+    </a>
+    {%- if course.question_board and course.question_board.url != "" %}
+    <a class="board-cta" href="{{ course.question_board.url }}">
+      <span class="board-cta__top">
+        <span class="board-cta__label">{{ course.question_board.label }}</span>
+        <span class="board-cta__arrow" aria-hidden="true">&rarr;</span>
+      </span>
+      {%- if course.question_board.who %}<span class="board-cta__who">{{ course.question_board.who }}</span>{% endif %}
+    </a>
+    {%- endif %}
+    <a class="board-cta board-cta--quiet" href="{{ '/for-speakers/' | relative_url }}">
+      <span class="board-cta__top">
+        <span class="board-cta__label">Arrival logistics</span>
+        <span class="board-cta__arrow" aria-hidden="true">&rarr;</span>
+      </span>
+      <span class="board-cta__who">for speakers</span>
+    </a>
+    {%- if course.notifications and course.notifications.label and course.notifications.label != "" %}
+    <a class="board-cta board-cta--quiet" href="{{ '/notifications/' | relative_url }}">
+      <span class="board-cta__top">
+        <span class="board-cta__label">{{ course.notifications.label }}</span>
+        <span class="board-cta__arrow" aria-hidden="true">&rarr;</span>
+      </span>
+      {%- if course.notifications.who %}<span class="board-cta__who">{{ course.notifications.who }}</span>{% endif %}
+    </a>
+    {%- endif %}
+  </div>
 </section>
 
 {%- if course.show_schedule %}

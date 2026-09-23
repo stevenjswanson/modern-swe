@@ -243,10 +243,15 @@ a:hover { color: var(--accent-hover); }
 .intro p:last-child { margin-bottom: 0; }
 
 /* --- logistics ---------------------------------------------------------- */
+/* A light panel rather than the navy band: the page reads as one continuous
+   light surface, and the only solid blocks left are the two primary buttons
+   below, which is where the eye should go. Sunk grey is barely off the page
+   background, so the hairline rule is what actually draws the box. */
 .logistics {
   margin-block: var(--space-7);
-  background: var(--band);
-  color: var(--band-ink);
+  background: var(--surface-sunk);
+  color: var(--ink);
+  border: var(--rule-weight) solid var(--rule);
   border-radius: var(--radius-lg);
   padding: var(--space-5) var(--space-6) var(--space-6);
 }
@@ -256,51 +261,59 @@ a:hover { color: var(--accent-hover); }
   gap: var(--space-5);
 }
 
-/* Sits inside the band, so it needs to read against navy rather than the page.
-   Yellow on navy is 9.45:1 and navy on yellow 9.45:1 — AA either way. */
-.logistics__actions {
-  display: flex;
-  flex-wrap: wrap;
+/* The four calls to action, on the page below the logistics box rather than
+   inside it.
+
+   A grid rather than a flex row: equal columns line the four up and give them a
+   common height, which a fit-content flex row cannot. auto-fit means the count
+   falls to 3, 2 and 1 on its own as the page narrows, with no extra breakpoints.
+   The row carries the pull-up against the band's bottom margin. */
+.board-ctas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   gap: var(--space-3);
-  margin-top: var(--space-6);
+  margin-top: calc(var(--space-7) * -1 + var(--space-5));
 }
-.logistics__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-pill);
-  background: var(--band-accent);
-  color: var(--band);
+
+.board-cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--band);
+  color: var(--band-ink);
   text-decoration: none;
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.9375rem;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  transition: transform 120ms ease, background-color 120ms ease;
+  line-height: 1.35;
+  transition: background-color 120ms ease, color 120ms ease;
 }
-.logistics__cta span { transition: transform 120ms ease; }
-/* Names the audience without competing with the action. */
-.logistics__cta-who { font-weight: 500; opacity: 0.75; }
-.logistics__cta:hover {
-  background: var(--band-ink);
-  color: var(--band);
+.board-cta__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
-.logistics__cta:hover span { transform: translateX(3px); }
-.logistics__cta:focus-visible { outline-color: var(--band-accent); }
+.board-cta__label { font-weight: 700; font-size: 0.875rem; letter-spacing: 0.01em; }
+.board-cta__arrow { transition: transform 120ms ease; }
+.board-cta:hover .board-cta__arrow { transform: translateX(3px); }
 
-/* Secondary action — outlined so the two buttons do not compete.
-   Band ink on navy is the same pair as the body text in this box. */
-.logistics__cta--ghost {
+/* Names the audience without competing with the action. */
+.board-cta__who { font-size: 0.75rem; font-weight: 500; color: var(--band-muted); }
+
+.board-cta:hover { background: var(--accent); color: var(--surface); }
+.board-cta:hover .board-cta__who { color: var(--surface); }
+
+/* Secondary — outlined, so four buttons do not all shout at once. */
+.board-cta--quiet {
   background: transparent;
-  color: var(--band-ink);
-  box-shadow: inset 0 0 0 var(--rule-weight) var(--band-accent);
-}
-.logistics__cta--ghost:hover {
-  background: var(--band-accent);
   color: var(--band);
+  box-shadow: inset 0 0 0 var(--rule-weight) var(--rule-strong);
 }
+.board-cta--quiet .board-cta__who { color: var(--muted); }
+.board-cta--quiet:hover { background: var(--band); color: var(--band-ink); }
+.board-cta--quiet:hover .board-cta__who { color: var(--band-muted); }
 
 /* Cross-link between the two directions pages. */
 .page-aside {
@@ -315,64 +328,31 @@ a:hover { color: var(--accent-hover); }
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: 0.6875rem;
-  color: var(--band-accent);
+  color: var(--accent);
   margin: 0 0 var(--space-1);
 }
 .logistics__value { margin: 0; font-size: 1.0625rem; line-height: 1.35; }
 /* A rule about the room, not part of the address -- stepped back so the venue
-   still reads first. Stone on navy is 6.65:1, AA. */
+   still reads first. Muted on sunk grey is 5.09:1, AA. */
 .logistics__value .note {
   display: inline-block;
   margin-top: var(--space-2);
   font-size: 0.875rem;
   line-height: 1.35;
-  color: var(--band-muted);
+  color: var(--muted);
 }
 
 /* TSS section IDs — the string students actually type into the enrollment
    system, so they get the accent color to be findable at a glance.
-   Yellow on navy is 9.45:1 and turquoise on navy 6.79:1, both AA. */
+   Blue on sunk grey is 6.13:1, AA. */
 .sid {
   display: inline-block;
-  color: var(--band-accent);
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   font-weight: 500;
   font-size: 0.9375rem;
   white-space: nowrap;
-}
-
-/* Sits on the page background below the band, not inside it, so it takes the
-   page's colours rather than the band's. Navy ground with band ink on top is
-   the same 14.18:1 pair the box above uses, inverted. */
-.board-cta {
-  /* Block-level flex rather than inline-flex: an inline box picks up line-box
-     leading, which made the gap under the band differ between desktop and
-     mobile. fit-content keeps it hugging its label. */
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: var(--space-2);
-  /* Pull up against the band's own bottom margin for a deliberate gap. */
-  margin-top: calc(var(--space-7) * -1 + var(--space-5));
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-pill);
-  background: var(--band);
-  color: var(--band-ink);
-  text-decoration: none;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.9375rem;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-.board-cta span { transition: transform 120ms ease; }
-.board-cta:hover { background: var(--accent); color: var(--surface); }
-.board-cta:hover span { transform: translateX(3px); }
-
-@media (max-width: 40rem) {
-  .board-cta { justify-content: center; width: 100%; }
 }
 
 /* --- section head -------------------------------------------------------- */
@@ -640,8 +620,7 @@ a:hover { color: var(--accent-hover); }
   .talk__when { flex-direction: row; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .talk__date { font-size: 1.25rem; }
   .logistics { padding: var(--space-5); }
-  .logistics__actions { flex-direction: column; }
-  .logistics__cta { display: flex; justify-content: center; width: 100%; }
+  /* auto-fit already collapses to one column here; nothing to override. */
 }
 
 /* The logo row fits on one line down to about 1024px. Below that it wraps, and
@@ -664,3 +643,62 @@ a:hover { color: var(--accent-hover); }
   body { background: #fff; color: #000; }
   .footer__logos { display: none; }
 }
+
+/* --- notification sign-up (/notifications/) ------------------------------- */
+.is-hidden { display: none !important; }
+
+.notice {
+  margin: var(--space-5) 0 0;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  border: var(--rule-weight) solid var(--rule);
+  background: var(--surface-sunk);
+  max-width: var(--measure);
+  line-height: 1.5;
+  font-size: 0.9375rem;
+}
+.notice--ok  { border-left: 4px solid var(--ucsd-green); }
+.notice--bad { border-left: 4px solid var(--ucsd-orange); }
+
+.signup {
+  margin: var(--space-5) 0 0;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  background: var(--surface-sunk);
+  border: var(--rule-weight) solid var(--rule);
+  border-radius: var(--radius-lg);
+  max-width: var(--measure);
+}
+.signup__lead {
+  margin: 0 0 var(--space-5);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.signup__lead:last-child { margin-bottom: 0; }
+
+/* The action button, matching .board-cta but filled with the accent. */
+.signup__action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--surface);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.signup__action:hover { background: var(--accent-hover); }
+.signup__action:disabled { opacity: 0.6; cursor: progress; }
+
+.signup__action--quiet {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 var(--rule-weight) var(--accent);
+}
+.signup__action--quiet:hover { background: var(--accent); color: var(--surface); }

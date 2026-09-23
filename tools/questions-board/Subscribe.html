@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="classic">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&family=Teko:wght@500;600;700&display=swap">
+
+<link rel="stylesheet" href="<?= site ?>/assets/css/tokens.css?v=<?= cssVersion ?>">
+<link rel="stylesheet" href="<?= site ?>/assets/css/themes.css?v=<?= cssVersion ?>">
+<?!= include('Styles') ?>
+</head>
+<body>
+
+<a class="u-visually-hidden" href="#main">Skip to content</a>
+
+<header class="wrap masthead">
+  <a class="masthead__name" href="<?= site ?>/">Tales of Modern Software Engineering</a>
+  <nav class="masthead__nav">
+    <a href="<?= site ?>/">Schedule</a>
+  </nav>
+  <a class="masthead__logo" href="https://ucsd.edu" aria-label="UC San Diego">
+    <img src="<?= site ?>/assets/img/logos/ucsd-logo-blue.svg" alt="UC San Diego" width="289" height="55">
+  </a>
+</header>
+
+<main id="main" class="wrap section">
+
+<? if (error) { ?>
+
+  <h1 class="page-title">Something is misconfigured</h1>
+  <p class="page-lead">The sign-up page could not be loaded. This is a setup
+  problem, not something you did — please let the organizers know.</p>
+  <p class="notice notice--bad"><?= error ?></p>
+
+<? } else if (!data.known) { ?>
+
+  <h1 class="page-title">Talk notifications</h1>
+  <p class="page-lead">Sign in with your UC&nbsp;San&nbsp;Diego Google account —
+  the one ending in <strong>@ucsd.edu</strong> — and reload this page. We use the
+  address you are signed in with, so there is nothing to type.</p>
+
+  <? if (appUrl) { ?>
+  <p class="actions">
+    <a class="btn" href="https://accounts.google.com/AccountChooser?continue=<?= encodeURIComponent(appUrl + '?page=subscribe') ?>">Choose an account</a>
+  </p>
+  <? } ?>
+
+<? } else { ?>
+
+  <h1 class="page-title">Talk notifications</h1>
+
+  <p class="notice notice--ok is-hidden" id="notice" role="status"></p>
+  <p class="notice notice--bad is-hidden" id="error" role="alert"></p>
+
+  <section class="signup" id="signup"></section>
+
+  <p class="page-aside">We will only use this address to tell you about talks in
+  this series. You can take yourself off the list from this page at any time, and
+  removing yourself deletes the address rather than just flagging it.</p>
+
+<? } ?>
+
+</main>
+
+<footer class="wrap foot">
+  <p>CSE 090-SE / CSE 290-SE &middot; UC San Diego &middot;
+    <a href="<?= site ?>/">Seminar schedule</a></p>
+</footer>
+
+<script>
+  var BOOT = <?!= bootJson ?>;
+</script>
+<?!= include('SubscribeJs') ?>
+</body>
+</html>
