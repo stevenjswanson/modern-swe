@@ -1,6 +1,6 @@
 {
   "_comment": "Outreach state for the seminar. Deliberately contains NO email addresses: this repo is public. Addresses live in _outreach/contacts.local.json, which is gitignored. Updated by the check-speaker-replies skill; see .claude/skills/check-speaker-replies/SKILL.md. thread_tails maps each thread id to the last message seen in IT specifically; last_seen_message alone cannot be compared against several threads.",
-  "last_checked": "2026-09-18T16:45:00Z",
+  "last_checked": "2026-09-22T23:55:00Z",
   "people": [
     {
       "name": "Kylie Taitano",
@@ -16,7 +16,7 @@
       "notes": "Shares a thread with the Whova group; it began as outreach to YY Zhou. Confirmed 9/28. Said she would send the remaining items by the end of the week of Aug 24 — check whether the logistics form and video release actually arrived. [2026-09-14 check] Still nothing from Kylie since 2026-08-25; her promised 'end of the week' package is ~17 days overdue and she speaks 2026-09-28. Steve sent a pre-talk email 21:29Z (thread tail) asking for the 7 outstanding items by end of this week and asking Mauricio to find 30 min on Zoom. NOTE: the shared thread's tail is usually NOT hers -- read per sender. [2026-09-15 check] Steve's pre-talk email went out 2026-09-14 21:29Z and Mauricio offered Zoom times 23:16Z (Fri Sep 18 2:00/2:30pm, Tue Sep 22 2:00/2:30pm, with Steve AND Leo). Kylie has still sent NOTHING since 2026-08-25 -- no reply to either. She speaks in 13 days and all 7 items are outstanding. NOTE: the release link in the sent email went out as a mangled google.com/url?q= redirect (Gmail web-compose rewrote it); it resolves but is ugly. [2026-09-16 check] FULL PACKAGE ARRIVED 05:22Z, 22 days after she promised it and 12 days before her talk. All seven items: display name 'Kylie Taitano, Manager, Software Engineering | Intuit | UCSD BS in Computer Science '14'; headshot (2160x1620, extracted, viewed, Geisel Library backdrop); 160-word bio; title 'From a 2.8 GPA to Leading AI Platform Development at Scale'; 92-word abstract; signed release (extracted, gitignored); parking NOT needed -- \"I'll be taking the trolley!\", which also confirms she is LOCAL in her own words. She asked to stay for Q&A and lunch, and offered Tue Sep 22 at 2 or 2:30 for the Zoom -- both times Mauricio had offered. NOT YET IN talks.json; bio/abstract await review. [2026-09-18 check] Steve sent the trim proposal 2026-09-16 16:10Z and KYLIE APPROVED 2026-09-16 23:22Z: \"Edits look great Steve, thanks! Talk to you all soon.\" The 99-word bio and 69-word abstract are cleared for the site. Her Zoom is BOOKED: Tue 2026-09-22 2:00pm, GCal invite sent by Mauricio, Leo accepted. Nothing outstanding from her -- intake complete. [2026-09-18 applied] Everything now in talks.json: title, 69w abstract, 99w bio, role line, display_name, headshot (tracked), release (gitignored), parking=false, travel local+confirmed. Materials extracted to _speakers/2026-09-28-kylie-taitano/. Sep 28 publishes complete. INTAKE COMPLETE.",
       "logistics_form_due": "2026-09-11",
       "thread_tails": {
-        "19fabb06b4d9db5f": "1a0ac87a8fcdbdf5"
+        "19fabb06b4d9db5f": "1a0c67355fb6c33e"
       }
     },
     {
@@ -33,7 +33,7 @@
       "notes": "Introduced by YY Zhou; Rahul Chityala answers for the group of four. Confirmed Oct 5 on 2026-08-25 18:39Z: \"Yes, that date works for us and we are interested in the meetings with students afterwards.\" He also flagged that the video release attachment was missing; Steve sent the link at 18:47Z and asked for names/titles at 18:49Z, and Rahul replied 00:41Z: \"Thank you, the link works well. We will send you the necessary information as soon as possible.\" Awaiting names as they should appear, titles, bios, headshots, release forms. NOTE: shares thread 19fabb06b4d9db5f with Kylie Taitano -- read the tail per sender. [2026-08-27 check] No new mail since 00:41Z. Names as they should appear, titles, bios, headshots and release forms are still outstanding. Published on the site as of this check. [2026-09-14 check] PACKAGE ARRIVED 19:00Z: Rahul sent names, short bios and headshots for all four, plus four signed release PDFs (ucsd-model-release-form-signed-tony.pdf, ucsd-model-release-form-Haochen-Huang.pdf, ucsd-model-release-form-signed.pdf, UCSD-Model-Image-Release-signed-Louis-Lesmana.pdf) and four inline images. NOT YET EXTRACTED to _speakers/2026-10-05-whova/ and NOT yet in talks.json -- bios still need the user's review per Step 3.6. Rahul also asked: 'As for the Zoom chat, shall we set this up soon?' -- unanswered. [2026-09-14 applied] Package EXTRACTED to _speakers/2026-10-05-whova/: 4 headshots (tracked, matched to people by Content-ID order in the HTML body, each viewed), 4 signed releases (gitignored). talks.json updated: bios verbatim, all four roles set to Engineering Manager (Tony Wu's had wrongly read 'Senior Software Engineer' on the live site), format corrected to panel, display_name set, travel already confirmed local. ONLY PARKING REMAINS for all four. The unnamed release PDF is attributed to Rahul by elimination -- unverified. [2026-09-15 check] Steve sent the parking-and-Zoom reply 2026-09-14 23:17Z. No reply from Rahul yet. Parking remains the only outstanding item for all four. [2026-09-16 check] PARKING ANSWERED 01:04Z: \"We will need parking for one car that day as we will be carpooling.\" That is the last outstanding item -- all four are now intake-complete pending the parking field going into talks.json. The Zoom chat still needs scheduling by Mauricio. [2026-09-18 applied] parking=true for all four (one car, carpooling). INTAKE COMPLETE for all four.",
       "logistics_form_due": "2026-09-11",
       "thread_tails": {
-        "19fabb06b4d9db5f": "1a0ac87a8fcdbdf5"
+        "19fabb06b4d9db5f": "1a0c67355fb6c33e"
       }
     },
     {
@@ -46,13 +46,13 @@
         "1a021186ab8c9b7f",
         "1a039d212d10321c"
       ],
-      "last_seen_message": "1a043a0cd73e5e69",
-      "last_seen_at": "2026-08-27T14:29:48Z",
-      "notes": "Leo owns this relationship and is his host for the day. Bill accepted to Leo off-thread before any reply was visible in Steve's mail, then confirmed Oct 12 in Leo's planning thread: \"Yes, Oct 12th works very well for me. More soon.\" The canonical example of why this skill searches by address, not by thread id. Owes the speaker logistics form (format, headshot, bio, title, abstract, video release, parking) by Sept 11. Travel (2026-08-27 14:29Z): weekend in San Francisco, arriving Sunday Oct 11 afternoon (1:44pm or 3:54pm, undecided), departing 8am Tue Oct 13 -- Mauricio needs this for hotel/flight booking. Mauricio has his travel details and offered to purchase flights directly (2026-08-27 16:05Z); he needs personal info from Bill to book.",
+      "last_seen_message": "1a0c558f1d39c467",
+      "last_seen_at": "2026-09-21T19:01:04Z",
+      "notes": "Leo owns this relationship and is his host for the day. Bill accepted to Leo off-thread before any reply was visible in Steve's mail, then confirmed Oct 12 in Leo's planning thread: \"Yes, Oct 12th works very well for me. More soon.\" The canonical example of why this skill searches by address, not by thread id. Owes the speaker logistics form (format, headshot, bio, title, abstract, video release, parking) by Sept 11. Travel (2026-08-27 14:29Z): weekend in San Francisco, arriving Sunday Oct 11 afternoon (1:44pm or 3:54pm, undecided), departing 8am Tue Oct 13 -- Mauricio needs this for hotel/flight booking. Mauricio has his travel details and offered to purchase flights directly (2026-08-27 16:05Z); he needs personal info from Bill to book. [2026-09-20 check] Steve sent the materials request 2026-09-19 00:23Z. Bill replied 14:29Z: \"I'll have those to you early next week, Monday or Tuesday.\" HE ALSO ASKED A QUESTION THAT IS STILL UNANSWERED and shapes the whole talk: he had planned a talk aimed at the CS department and curriculum reform, with sections (1) How is software development changing? (2) What should CS graduates know? (3) What do we know about how AI impacts learning? (4) How might the CS curriculum be updated? (5) the more urgent question, updating intro programming. He notes \"the talk series is more just focused on just how software development is changing\" and asks \"Are all of the items above appropriate for my talk at UCSD?\" Steve answered the separate recording question 15:03Z (YouTube plus short-form snippets) but not the scope one. [2026-09-21 check] MATERIALS ARRIVED 19:01Z, as promised: name \"Bill Pugh\", title \"Professor of CS, UMD\", a 70-word bio, talk title \"The CS Curriculum in the Age of Coding Agents\", a 72-word abstract, and headshot.jpeg (480x480, extracted to _speakers/2026-10-12-bill-pugh/headshots/, viewed: single-person portrait). STILL MISSING: signed release and parking. He never got an explicit answer to his scope question, but resolved it himself -- he kept the curriculum framing and opened the abstract on industry practice (\"At the companies furthest along, most code is now typed by AI\"), which bridges to the series' topic. Mauricio opened travel booking 17:05Z. [2026-09-21 applied] In talks.json: title, 72w abstract, 70w bio, role \"Professor of CS, UMD\", display_name, headshot (tracked + served). Oct 12 now publishes complete except release and parking.",
       "logistics_form_due": "2026-09-11",
       "thread_tails": {
         "1a021186ab8c9b7f": "1a021186ab8c9b7f",
-        "1a039d212d10321c": "1a043a0cd73e5e69"
+        "1a039d212d10321c": "1a0c7c384c78109e"
       }
     },
     {
@@ -69,7 +69,7 @@
       "notes": "Introduced by Geoff Voelker. Confirmed Oct 26 (2026-08-27 02:45Z). Sent the full intake package 2026-08-29 03:25Z: format=presentation, name, headshot, bio, title, abstract, signed release, parking=yes, and \"I will be traveling to SD from Seattle\" (Microsoft/XBOX). Also shared draft slides on Google Drive and asked for feedback -- that request is still unanswered. Mauricio needs to book his flights. Draft reply prepared 2026-08-29 (not sent): proposes a 54-word compressed abstract for his approval, and introduces Mauricio to handle Seattle travel directly. Bio, title and abstract stay off the schedule until Roy signs off. Approved the compressed abstract 2026-08-29 20:11Z (\"looks great, so please go ahead and use it\") and is reworking the deck shorter and more AI-focused. Geoff Voelker confirmed 2026-08-31 he will host on Oct 26. Mauricio contacted Roy about travel 2026-08-31. Bio approved by Steve 2026-09-03 and live. Intake complete. Role on the schedule stays \"Game Developer\" (Steve's call, 2026-09-03) even though his bio describes a Microsoft/XBOX engineer -- decided, do not re-raise.",
       "logistics_form_due": "2026-09-11",
       "thread_tails": {
-        "19fd27aefea445b1": "1a0586ab3ca654ed"
+        "19fd27aefea445b1": "1a0c501b4fa6bb17"
       }
     },
     {
@@ -160,12 +160,27 @@
         "19fcdab5fe1ca3af"
       ],
       "thread_tails": {
-        "19fcdab5fe1ca3af": "1a0a719542ff5a24"
+        "19fcdab5fe1ca3af": "1a0c501b72379689"
       },
       "last_seen_message": "1a0a719542ff5a24",
       "last_seen_at": "2026-09-15T22:03:53Z",
       "logistics_form_due": "2026-09-11",
       "notes": "Leo's invitee (CMU). Confirmed Nov 30 on 2026-09-04 17:13Z: \"November 30th works for me, thanks!\" Leo offered that date specifically as the safest given Austin's baby is due in October. NOT YET IN talks.json -- Nov 30 is still a TBA slot. Leo owns this relationship; none of the nine intake items has been requested yet. [2026-09-14 applied] tentative flipped to false; Nov 30 now publishes his name. Travel still an unconfirmed guess (Pittsburgh). [2026-09-15 22:20Z] Steve looped Mauricio in for travel booking 18:43Z, and Leo sent the full visit-logistics mail 22:03Z: host, day plan, format options, video-release explanation, and -- NEW -- an intake GOOGLE FORM (forms.gle/5uK8nqGNFKgkTHxT9) due OCTOBER 9th covering items 1-8. Austin's intake is now routed through that form, not email replies."
+    },
+    {
+      "name": "Jamie Benario (Google)",
+      "contact_key": "jaime-benario",
+      "source_thread": "19fcdab7cc9ffafa",
+      "at": "2026-08-04T16:46:21Z",
+      "invited_by": "leo",
+      "status": "confirmed",
+      "thread_tails": {
+        "19fcdab7cc9ffafa": "1a0c529f58a2971d"
+      },
+      "notes": "GAP -- was never in this file. Leo invited her at her work address (see contacts.local.json) on 2026-08-04. NO REPLY in Steve's mail in 35 days, and the invitation is still unread in Steve's mailbox. Leo owns this one and nudged Cory and Austin on Aug 27 but appears not to have nudged here -- worth asking Leo before assuming silence. Note spelling: Jaime, not Jamie. [2026-09-15 22:20Z] LEO OFFERED HER NOVEMBER 16th at 22:06Z, using the standard logistics template that opens \"Thank you for agreeing to come to speak at UCSD on November 16th!\" while also asking \"Will November 16th work for you?\" She has still never replied in Steve's mailbox (42 days), so either Leo has an agreement Steve cannot see -- exactly the Bill Pugh pattern, where Leo's logistics mail was the first sign of a yes -- or the template is being used optimistically. DO NOT treat Nov 16 as confirmed until she answers. Also carries the Oct 9 form. (Leo's greeting misspells her name as 'Jamie'.) [2026-09-20 check] CONFIRMED NOV 16: \"The date looks good for me!\" (2026-09-21 02:23Z, i.e. Sun evening PDT). SPELLING CORRECTION: her own signature reads JAMIE Benario, not Jaime -- the earlier note in this file asserting the opposite was wrong, and Leo's first mail used Jaime too. Her signature block also gives her title: \"User Experience Researcher, PhD Computer Science and Learning Sciences\", Google. She has the Oct 9 intake form. Nothing else received yet -- no bio, headshot, release, title, abstract, parking, or travel. [2026-09-21 check] Steve's reply went out 04:38Z and she answered 15:23Z with two things. (1) TRAVEL CONFIRMED IN HER OWN WORDS: \"I am traveling from Chicago!\" -- no longer a guess. (2) She shared a Google Slides deck she presented at a Northwestern conference on the software development industry and GenAI, and asked \"Does this topics look interesting to you?\" -- THAT IS AN OPEN QUESTION AWAITING STEVE. It is effectively a proposed talk topic, so answering it settles her format, title and abstract in one go. Still outstanding: display name, headshot, bio, title, abstract, release, parking. [2026-09-21 check] TOPIC SETTLED. Steve replied 17:11Z that the Northwestern slides look interesting but \"seem a little bit more geared towards educators and researchers\" and asked for a shift toward how students should prepare; Jamie answered 18:10Z: \"I can absolutely do that!\" So the talk is agreed in substance. Still owes display name, headshot, bio, title, abstract, release, parking. Travel already confirmed (Chicago). [2026-09-21] PROMOTED from leads[] to people[]: she is a scheduled speaker now, and the dashboard only reads people[], so while she sat in leads[] her row rendered with an empty REPLY column -- indistinguishable from an untracked person. Promote on confirmation, not later. [2026-09-22 check] PUBLISHED on the live site. Re-verified against the thread before flipping: newest message is still her 18:10:40Z \"I can absolutely do that!\", and the Nov 16 yes is her own \"The date looks good for me!\" (2026-09-21 02:23Z), not Leo's optimistic template. Still owes display name, headshot, bio, title, abstract, release, parking.",
+      "last_seen_message": "1a0c529f58a2971d",
+      "last_seen_at": "2026-09-21T18:10:40Z",
+      "talk_date": "2026-11-16"
     }
   ],
   "leads": [
@@ -212,20 +227,6 @@
         "19fec832edf8aa6c": "19ff4558247196dc"
       },
       "notes": "GAP -- was never in this file, so no address search has covered him since Aug 12. CSE Alumni Advisory Board member; ran the AAB generative-coding student workshop in May 2026 (built on an AWS-style internal workshop he ran at Striim) and reported using Augment AI with Opus 4.5/Sonnet 4.5/GPT-5.1. Steve invited him 2026-08-10; he replied 2026-08-12: \"This is fantastic. I've submitted a form result with open Mondays dates.\" NOTHING SINCE -- 27 days. His availability is in the form, not in the mail; check the form before offering a date."
-    },
-    {
-      "name": "Jaime Benario (Google)",
-      "contact_key": "jaime-benario",
-      "source_thread": "19fcdab7cc9ffafa",
-      "at": "2026-08-04T16:46:21Z",
-      "invited_by": "leo",
-      "status": "invited",
-      "thread_tails": {
-        "19fcdab7cc9ffafa": "1a0a71b5a8ade542"
-      },
-      "notes": "GAP -- was never in this file. Leo invited her at her work address (see contacts.local.json) on 2026-08-04. NO REPLY in Steve's mail in 35 days, and the invitation is still unread in Steve's mailbox. Leo owns this one and nudged Cory and Austin on Aug 27 but appears not to have nudged here -- worth asking Leo before assuming silence. Note spelling: Jaime, not Jamie. [2026-09-15 22:20Z] LEO OFFERED HER NOVEMBER 16th at 22:06Z, using the standard logistics template that opens \"Thank you for agreeing to come to speak at UCSD on November 16th!\" while also asking \"Will November 16th work for you?\" She has still never replied in Steve's mailbox (42 days), so either Leo has an agreement Steve cannot see -- exactly the Bill Pugh pattern, where Leo's logistics mail was the first sign of a yes -- or the template is being used optimistically. DO NOT treat Nov 16 as confirmed until she answers. Also carries the Oct 9 form. (Leo's greeting misspells her name as 'Jamie'.)",
-      "last_seen_message": "1a0a71b5a8ade542",
-      "last_seen_at": "2026-09-15T22:06:06Z"
     },
     {
       "name": "Alex Gantman — Qualcomm speaker (broker)",
@@ -278,11 +279,26 @@
         "1a0a6cd473c9aa19"
       ],
       "thread_tails": {
-        "1a0a6cd473c9aa19": "1a0ac015a3bb4f39"
+        "1a0a6cd473c9aa19": "1a0b6d26b9d14913"
       },
       "last_seen_message": "1a0ac015a3bb4f39",
       "last_seen_at": "2026-09-16T20:55:41Z",
-      "notes": "GAP found by the first working address search (2026-09-18). Mia Minnes introduced him 2026-09-15 20:40Z: \"Matt is a UCSD CSE alum who's working at Anthropic teaching developers how to build with Claude.\" Mia also notes he is \"working on a panel discussion about job paths for CS majors\" with Wendy Yamamoto. Steve replied 20:44Z asking to chat about \"other ways you might engage with the department\" -- NOT specifically a seminar invitation. Mauricio offered times 2026-09-16 20:55Z (Mon Sep 21 11:30am; Tue Sep 22 1:30 or 2:30pm); Matt has not replied. On topic fit he is close to ideal for this series, but nobody has actually invited him to speak."
+      "notes": "GAP found by the first working address search (2026-09-18). Mia Minnes introduced him 2026-09-15 20:40Z: \"Matt is a UCSD CSE alum who's working at Anthropic teaching developers how to build with Claude.\" Mia also notes he is \"working on a panel discussion about job paths for CS majors\" with Wendy Yamamoto. Steve replied 20:44Z asking to chat about \"other ways you might engage with the department\" -- NOT specifically a seminar invitation. Mauricio offered times 2026-09-16 20:55Z (Mon Sep 21 11:30am; Tue Sep 22 1:30 or 2:30pm); Matt has not replied. On topic fit he is close to ideal for this series, but nobody has actually invited him to speak. [2026-09-20 check] Mauricio nudged again 2026-09-18 23:19Z. Matt still has not replied to either offer of times. Nobody has yet invited him to speak at the seminar."
+    },
+    {
+      "name": "Arun Kumar -- Medium article review (not seminar)",
+      "contact_key": "arun-article",
+      "status": "question",
+      "kind": "note",
+      "threads": [
+        "1a0bb869d683c0c0"
+      ],
+      "thread_tails": {
+        "1a0bb869d683c0c0": "1a0bb869d683c0c0"
+      },
+      "last_seen_message": "1a0bb869d683c0c0",
+      "last_seen_at": "2026-09-19T21:13:00Z",
+      "notes": "Not a seminar item, tracked only so it is not mistaken for one and so the ask does not get lost: Arun (Nov 9 panelist) sent Steve a PDF of a Medium draft, \"Agent Science and Engineering: The Future of CS and Data Science\", on 2026-09-19 and asked for \"frank feedback\" because he wants to publish \"in the next few days\" -- so this is time-critical and may already be stale. He also offered Steve a named or anonymous comment to append to the article."
     }
   ],
   "notes": [
@@ -335,6 +351,11 @@
       "at": "2026-09-18T16:30:00Z",
       "topic": "search_threads parameter",
       "text": "ROOT CAUSE of the four 'degraded' checks 2026-09-14 through 2026-09-16: search_threads takes `query`, NOT `q`. Every call used `q` and the server returned a generic execution failure with no schema hint until 2026-09-18, when it started saying 'Unknown name \"q\": Cannot find field.' This was never a server outage. Rule 1 was silently disabled for four consecutive checks and only thread-id re-reads were running -- exactly the failure mode the skill exists to prevent. It cost the discovery of the Matt Roknich introduction and the QI venue thread, both found within minutes of the first correct call."
+    },
+    {
+      "at": "2026-09-21T20:00:00Z",
+      "topic": "travel funding and booking",
+      "text": "2026-09-21: Mauricio opened travel booking with all three non-local confirmed speakers in one pass -- Bill Pugh 17:05Z, Austin Henley 17:26Z, Roy Guo 17:26Z -- offering to book flights and lodging directly. Jennie confirmed the chartstring for speaker travel the same day and asked for the speaker list; Mauricio sent her the website. Jamie Benario (Chicago) is the fourth traveller and is not yet in that batch."
     }
   ]
 }

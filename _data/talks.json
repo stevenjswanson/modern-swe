@@ -182,23 +182,25 @@
       "location": "",
       "status": "confirmed",
       "tentative": false,
-      "title": "",
-      "abstract": "",
+      "title": "The CS Curriculum in the Age of Coding Agents",
+      "abstract": "At the companies furthest along, most code is now typed by AI, and nobody reads every line. What remains for humans is deciding what to build, designing systems that survive change, and knowing whether what got built is what was meant. What does that mean for what CS students should learn, how they learn it, how we teach the first programming course, and advice for current CS students. More questions than answers.",
       "speakers": [
         {
           "name": "Bill Pugh",
-          "role": "Professor Emeritus, University of Maryland",
+          "role": "Professor of CS, UMD",
           "org": "",
-          "bio": "",
+          "bio": "Bill Pugh worked on Skip Lists, the Omega Project, the Java Memory Model, FindBugs, and Marmoset, a system for managing student programming project submission, testing, and code review. He has worked at both Google and Apple. He officially retired from UMD in 2012, but re-engaged with the department in 2025 to help figure out how CS curricula should be updated to reflect the impact of generative AI on software development.",
           "links": [],
           "materials": {
-            "format": null,
-            "display_name": "",
+            "format": "presentation",
+            "display_name": "Bill Pugh, Professor of CS, UMD",
             "headshot": {
-              "have": false,
+              "have": true,
               "proposed_url": "",
-              "approved": null,
-              "path": ""
+              "source": "sent by Bill Pugh himself, 2026-09-21 19:01Z",
+              "verified": "viewed 2026-09-21: single-person portrait, 480x480 as received -- already the size the site serves, no crop applied",
+              "approved": true,
+              "path": "_speakers/2026-10-12-bill-pugh/headshots/bill-pugh.jpeg"
             },
             "release": {
               "signed": false
@@ -453,11 +455,39 @@
       "date": "2026-11-16",
       "time": "",
       "location": "",
-      "status": "tba",
+      "status": "confirmed",
       "tentative": false,
       "title": "",
       "abstract": "",
-      "speakers": [],
+      "speakers": [
+        {
+          "name": "Jamie Benario",
+          "tentative": false,
+          "role": "User Experience Researcher, Google",
+          "org": "",
+          "bio": "",
+          "links": [],
+          "materials": {
+            "format": null,
+            "display_name": "",
+            "headshot": {
+              "have": false,
+              "proposed_url": "",
+              "approved": null,
+              "path": ""
+            },
+            "release": {
+              "signed": false
+            },
+            "parking": null,
+            "travel": {
+              "local": false,
+              "confirmed": true,
+              "note": "Jamie, 2026-09-21: \"I am traveling from Chicago!\""
+            }
+          }
+        }
+      ],
       "slides": [],
       "videos": [],
       "links": [],
