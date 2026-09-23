@@ -504,6 +504,11 @@ a:hover { color: var(--accent-hover); }
 /* When the abstract leads, it sits directly under the title and the speaker
    block follows it, so it needs its own breathing room below. */
 .talk__abstract--lead { margin: var(--space-3) 0 var(--space-5); }
+/* Single-talk day: the name sits alone under the title, so it carries no
+   portrait and no trailing gap -- the abstract follows immediately. The
+   portrait reappears beside the bio below, where there is text to balance it. */
+.talk__speaker--byline { margin-bottom: 0; }
+.talk__speaker--biocard { margin: var(--space-4) 0 0; }
 .talk__bio-label {
   font-weight: 700;
   color: var(--ink);

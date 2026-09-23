@@ -74,27 +74,35 @@
       {%- endif -%}
 
       {%- comment -%}
-        A panel day is one whose title begins "Panel:". On those, the speaker
-        list is the point and the abstract stays below it. On a single-talk day
-        the abstract describes the talk, so it comes first and the speaker's
-        background follows it, labelled.
+        Layout depends on the shape of the day.
+
+        Panel ("Panel:" title): the roster is the point, so the speaker list
+        leads and any abstract follows it.
+
+        Single-talk day, one speaker: title, then who is giving it, then what
+        it is about, then their background. The portrait moves down to sit
+        beside the bio -- next to a lone name it would leave a tall empty band.
+
+        Single-talk day, several speakers (e.g. Whova): the abstract leads, and
+        each bio stays attached to its own name.
       {%- endcomment -%}
       {%- assign is_panel = false -%}
       {%- assign title_head = t.title | slice: 0, 6 -%}
       {%- if title_head == "Panel:" -%}{%- assign is_panel = true -%}{%- endif -%}
 
-      {%- if is_panel == false and t.abstract and t.abstract != "" -%}
+      {%- assign single_talk = false -%}
+      {%- if is_panel == false and shown_speakers.size == 1 -%}
+        {%- assign single_talk = true -%}
+      {%- endif -%}
+
+      {%- if is_panel == false and single_talk == false and t.abstract and t.abstract != "" -%}
         <p class="talk__abstract talk__abstract--lead">{{ t.abstract }}</p>
       {%- endif -%}
 
-      {%- comment -%}
-        One speaker list for every case, so a talk with a title and a talk
-        without one can never render their speakers differently.
-      {%- endcomment -%}
       {%- if shown_speakers.size > 0 -%}
         <ul class="talk__speakers">
           {%- for s in shown_speakers -%}
-            <li class="talk__speaker">
+            <li class="talk__speaker{% if single_talk %} talk__speaker--byline{% endif %}">
               {%- comment -%}
                 Portrait sits to the RIGHT of the text (row-reverse below), at a
                 size where the face actually reads. No placeholder when we have
@@ -112,7 +120,7 @@
               {%- assign show_portrait = false -%}
               {%- if hs.have and hs.approved -%}{%- assign show_portrait = true -%}{%- endif -%}
               {%- if hs.have and show_unconfirmed -%}{%- assign show_portrait = true -%}{%- endif -%}
-              {%- if show_portrait -%}
+              {%- if show_portrait and single_talk == false -%}
                 {%- assign slug = s.name | slugify -%}
                 {%- assign avclass = "talk__avatar" -%}
                 {%- unless hs.approved -%}{%- assign avclass = "talk__avatar talk__avatar--unapproved" -%}{%- endunless -%}
@@ -136,13 +144,38 @@
                 {%- else -%}{%- assign meta = s.org -%}{%- endif -%}
               {%- endif -%}
               {%- if meta != "" %}<span class="talk__speaker-meta"> — {{ meta }}</span>{% endif -%}
-              {%- if s.bio and s.bio != "" %}<span class="talk__speaker-bio">
+              {%- if single_talk == false and s.bio and s.bio != "" %}<span class="talk__speaker-bio">
                 {%- if is_panel == false %}<span class="talk__bio-label">Speaker bio:</span> {% endif -%}
                 {{ s.bio }}</span>{% endif -%}
               </span>
             </li>
           {%- endfor -%}
         </ul>
+      {%- endif -%}
+
+      {%- if single_talk -%}
+        {%- assign lead = shown_speakers | first -%}
+        {%- if t.abstract and t.abstract != "" -%}
+          <p class="talk__abstract">{{ t.abstract }}</p>
+        {%- endif -%}
+        {%- if lead.bio and lead.bio != "" -%}
+          {%- assign hs = lead.materials.headshot -%}
+          {%- assign show_portrait = false -%}
+          {%- if hs.have and hs.approved -%}{%- assign show_portrait = true -%}{%- endif -%}
+          {%- if hs.have and show_unconfirmed -%}{%- assign show_portrait = true -%}{%- endif -%}
+          <div class="talk__speaker talk__speaker--biocard">
+            {%- if show_portrait -%}
+              {%- assign slug = lead.name | slugify -%}
+              {%- assign avclass = "talk__avatar" -%}
+              {%- unless hs.approved -%}{%- assign avclass = "talk__avatar talk__avatar--unapproved" -%}{%- endunless -%}
+              <img class="{{ avclass }}" src="{{ '/assets/headshots/' | append: slug | append: '.jpg' | relative_url }}"
+                   alt="" width="192" height="192" loading="lazy" decoding="async"
+                   {%- unless hs.approved %} title="Not yet approved by the speaker -- local preview only"{% endunless %}>
+            {%- endif -%}
+            <span class="talk__speaker-text"><span class="talk__speaker-bio">
+              <span class="talk__bio-label">Speaker bio:</span> {{ lead.bio }}</span></span>
+          </div>
+        {%- endif -%}
       {%- endif -%}
 
       {%- comment -%}
