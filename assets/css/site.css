@@ -488,7 +488,6 @@ a:hover { color: var(--accent-hover); }
   .talk__speaker { flex-direction: row; gap: var(--space-3); }
   .talk__avatar { width: 3rem; height: 3rem; border-radius: 50%; }
 }
-}
 .talk__speaker-name { font-weight: 700; }
 .talk__speaker-meta { color: var(--muted); }
 
