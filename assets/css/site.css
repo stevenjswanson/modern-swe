@@ -501,6 +501,13 @@ a:hover { color: var(--accent-hover); }
   max-width: var(--measure);
 }
 .talk__abstract { margin: var(--space-3) 0 0; line-height: 1.55; max-width: var(--measure); }
+/* When the abstract leads, it sits directly under the title and the speaker
+   block follows it, so it needs its own breathing room below. */
+.talk__abstract--lead { margin: var(--space-3) 0 var(--space-5); }
+.talk__bio-label {
+  font-weight: 700;
+  color: var(--ink);
+}
 
 /* --- resource pills ------------------------------------------------------ */
 .pills { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; }

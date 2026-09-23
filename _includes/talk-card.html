@@ -74,6 +74,20 @@
       {%- endif -%}
 
       {%- comment -%}
+        A panel day is one whose title begins "Panel:". On those, the speaker
+        list is the point and the abstract stays below it. On a single-talk day
+        the abstract describes the talk, so it comes first and the speaker's
+        background follows it, labelled.
+      {%- endcomment -%}
+      {%- assign is_panel = false -%}
+      {%- assign title_head = t.title | slice: 0, 6 -%}
+      {%- if title_head == "Panel:" -%}{%- assign is_panel = true -%}{%- endif -%}
+
+      {%- if is_panel == false and t.abstract and t.abstract != "" -%}
+        <p class="talk__abstract talk__abstract--lead">{{ t.abstract }}</p>
+      {%- endif -%}
+
+      {%- comment -%}
         One speaker list for every case, so a talk with a title and a talk
         without one can never render their speakers differently.
       {%- endcomment -%}
@@ -122,7 +136,9 @@
                 {%- else -%}{%- assign meta = s.org -%}{%- endif -%}
               {%- endif -%}
               {%- if meta != "" %}<span class="talk__speaker-meta"> — {{ meta }}</span>{% endif -%}
-              {%- if s.bio and s.bio != "" %}<span class="talk__speaker-bio">{{ s.bio }}</span>{% endif -%}
+              {%- if s.bio and s.bio != "" %}<span class="talk__speaker-bio">
+                {%- if is_panel == false %}<span class="talk__bio-label">Speaker bio:</span> {% endif -%}
+                {{ s.bio }}</span>{% endif -%}
               </span>
             </li>
           {%- endfor -%}
@@ -152,7 +168,7 @@
         <p class="talk__tba">Talk title to be announced.{% if t.tentative %}<span class="chip chip--tentative">Tentative</span>{% endif %}</p>
       {%- endif -%}
 
-      {%- if t.abstract and t.abstract != "" -%}
+      {%- if is_panel and t.abstract and t.abstract != "" -%}
         <p class="talk__abstract">{{ t.abstract }}</p>
       {%- endif -%}
 
